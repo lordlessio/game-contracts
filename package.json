@@ -1,0 +1,20 @@
+{
+  "name": "LDB-NFT",
+  "version": "0.0.1",
+  "description": "the contract for lordless.io",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "LORDLESS",
+  "license": "MIT",
+  "dependencies": {
+    "zeppelin-solidity": "^1.9.0"
+  },
+  "devDependencies": {
+    "truffle": "^4.1.8"
+  }
+}
