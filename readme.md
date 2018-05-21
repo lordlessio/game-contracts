@@ -2,12 +2,16 @@
  <img src="https://olxvlcccu.qnssl.com/blog/wwmuz.jpg?imageslim" width = "500" alt="lordless.io" align=center />
 </div>
 
-## LDB-NFT 
-This repo is about LDB's erc721 smart contract code
-### LDB 
-<img src="http://lordless.io/_nuxt/img/ld-glossary-coin.b430188.png" width = "300" alt="lordless.io" align=center />
+## LDB-NFT
+
+<h3>
+LDB
+&nbsp;&nbsp; <img src="http://lordless.io/_nuxt/img/ld-glossary-coin.b430188.png" width = "25" alt="lordless.io" align=center />
+</h3>
+
 > LDB, LORDLESS Building, is the core digital asset in LORDLESS. Most of the interactions in the virtual world are dependent on LDB. The core information of the LDB will be stored on the blockchain to ensure the immutability of the digital assets.
 > -- lordless.io
+ 
 
 
 ### Community
