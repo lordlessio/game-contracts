@@ -5,8 +5,6 @@
 # LDB-NFT 
 [![Build Status](https://img.shields.io/travis/lordlessio/LDB-NFT.svg?branch=master&style=flat-square)](https://travis-ci.org/lordlessio/LDB-NFT)
 
-### LDB 
-
 <h3>
 LDB
 &nbsp;&nbsp; <img src="http://lordless.io/_nuxt/img/ld-glossary-coin.b430188.png" width = "25" alt="lordless.io" align=center />
