@@ -2,7 +2,8 @@
  <img src="https://olxvlcccu.qnssl.com/blog/wwmuz.jpg?imageslim" width = "500" alt="lordless.io" align=center />
 </div>
 
-## LDB-NFT
+# LDB-NFT 
+[![Build Status](https://img.shields.io/travis/lordlessio/LDB-NFT.svg?branch=master&style=flat-square)](https://travis-ci.org/lordlessio/LDB-NFT)
 
 <h3>
 LDB

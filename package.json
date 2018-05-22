@@ -1,20 +1,38 @@
 {
-  "name": "LDB-NFT",
-  "version": "0.0.1",
+  "name": "ldb-nft",
+  "version": "0.0.2",
   "description": "the contract for lordless.io",
-  "main": "truffle-config.js",
-  "directories": {
-    "test": "test"
-  },
+  "files": [
+    "contracts",
+    "test"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "scripts/test.sh"
   },
-  "author": "LORDLESS",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lordlessio/LDB-NFT.git"
+  },
+  "keywords": [
+    "lordless",
+    "nft",
+    "solidity",
+    "ethereum",
+    "smart",
+    "contracts"
+  ],
+  "author": "Eury Chen <https://github.com/netpi>",
   "license": "MIT",
   "dependencies": {
     "zeppelin-solidity": "^1.9.0"
   },
+  "homepage": "https://github.com/lordlessio/LDB-NFT",
   "devDependencies": {
-    "truffle": "^4.1.8"
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^2.0.2",
+    "ganache-cli": "^6.1.0",
+    "truffle": "^4.1.8",
+    "truffle-hdwallet-provider": "0.0.5"
   }
 }

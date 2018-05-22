@@ -9,3 +9,4 @@ run/
 .DS_Store
 local-test
 build
+.out.sol
