@@ -8,8 +8,7 @@
 ![license](https://img.shields.io/github/license/lordlessio/LDB-NFT.svg)
 
 <h3>
-LDB
-&nbsp;&nbsp; <img src="http://lordless.io/_nuxt/img/ld-glossary-coin.b430188.png" width = "30" alt="lordless.io" align=center />
+LDB :european_castle:
 </h3>
 
 > LDB, LORDLESS Building, is the core digital asset in LORDLESS. Most of the interactions in the virtual world are dependent on LDB. The core information of the LDB will be stored on the blockchain to ensure the immutability of the digital assets.
@@ -32,12 +31,6 @@ npm console
 
 ```
 
-
-
-
-###
-
-``
 
 ### Community
 * [知乎专栏](https://zhuanlan.zhihu.com/lordless)
