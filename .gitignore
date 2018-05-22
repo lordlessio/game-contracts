@@ -9,4 +9,5 @@ run/
 .DS_Store
 local-test
 build
-.out.sol
+out.sol
+ldbNFT.flattener.sol
