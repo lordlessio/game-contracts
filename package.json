@@ -1,0 +1,49 @@
+{
+  "name": "ldb-nft",
+  "version": "0.0.2",
+  "description": "the contract for lordless.io",
+  "files": [
+    "contracts",
+    "test"
+  ],
+  "scripts": {
+    "test": "scripts/test.sh",
+    "console": "truffle console",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "flattener": "truffle-flattener contracts/ldbNFT.sol > ldbNFT.flattener.sol"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lordlessio/LDB-NFT.git"
+  },
+  "keywords": [
+    "lordless",
+    "nft",
+    "solidity",
+    "ethereum",
+    "smart",
+    "contracts"
+  ],
+  "author": "Eury Chen <https://github.com/netpi>",
+  "license": "MPL",
+  "dependencies": {
+    "zeppelin-solidity": "^1.9.0"
+  },
+  "homepage": "https://github.com/lordlessio/LDB-NFT",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^2.0.2",
+    "ganache-cli": "^6.1.0",
+    "truffle": "^4.1.8",
+    "truffle-hdwallet-provider": "0.0.5",
+    "truffle-flattener": "^1.2.5",
+    "eslint": "^4.11.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1"
+  }
+}
