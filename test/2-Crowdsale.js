@@ -9,16 +9,8 @@ require('chai')
 
 contract('LdbNFTCrowdsale', function (accounts) {
   before(async function () {
-    // Advance to the next block to correctly read time in the solidity "now" function interpreted by ganache
-    await new Promise((resolve, reject) => {
-      web3.currentProvider.sendAsync({
-        jsonrpc: '2.0',
-        method: 'evm_mine',
-        id: Date.now(),
-      }, (err, res) => {
-        return err ? reject(err) : resolve(res);
-      });
-    });
+    // Maximum allowable error
+    this.maError = parseInt(web3.toWei(1, 'gwei'));
   });
   beforeEach(async function () {
     this.ldbNFT = await LdbNFT.new('LDB NFT', 'LDB', { from: accounts[0] });
@@ -67,9 +59,10 @@ contract('LdbNFTCrowdsale', function (accounts) {
       });
 
       it('shuould add price_count ether to seller', async function () {
-        const finalCount = web3.fromWei((await web3.eth.getBalance(this.seller)).toNumber(), 'gwei');
-        const computedCount = web3.fromWei(this.preBalance + this.price, 'gwei');
-        parseInt(finalCount).should.be.equal(parseInt(computedCount));
+        const finalCount = (await web3.eth.getBalance(this.seller)).toNumber();
+        const computedCount = this.preBalance + this.price;
+        // error less than 1gwei
+        (finalCount - computedCount).should.be.below(this.maError);
       });
     });
     
@@ -94,7 +87,7 @@ contract('LdbNFTCrowdsale', function (accounts) {
         const afterDefrayBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
         const gasCost = receipt.receipt.gasUsed * gasPrice;
         // defrayExcess should be return of
-        (afterDefrayBalance - (preBalance - this.price - gasCost)).should.be.below(gasPrice * 1);
+        (afterDefrayBalance - (preBalance - this.price - gasCost)).should.be.below(this.maError);
       });
     });
   });
@@ -117,7 +110,7 @@ contract('LdbNFTCrowdsale', function (accounts) {
       const computedCount = depositCount.toNumber() - gasCost;
       const infactCount = finalCount - preBalance;
 
-      (computedCount - infactCount).should.be.below(gasPrice * 1);
+      (computedCount - infactCount).should.be.below(this.maError);
     });
     it('revert: withdrawBalance with another address', async function () {
       await this.LdbNFTCrowdsale.withdrawBalance({ from: accounts[1] }).should.be.rejectedWith('revert');
