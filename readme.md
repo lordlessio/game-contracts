@@ -4,7 +4,6 @@
 
 # LDB-NFT 
 [![Build Status](https://img.shields.io/travis/lordlessio/LDB-NFT.svg)](https://travis-ci.org/lordlessio/LDB-NFT)
-(https://github.com/lordlessio/LDB-NFT/pulls?q=is%3Apr+is%3Aclosed)
 ![license](https://img.shields.io/github/license/lordlessio/LDB-NFT.svg)
 
 <h3>
