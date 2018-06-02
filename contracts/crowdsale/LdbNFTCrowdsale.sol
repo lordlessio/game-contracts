@@ -44,10 +44,15 @@ contract Ownable {
 
 contract NftCrowdsaleBase {
 
+  // Represents a order on LDB Crowdsale
   struct Order {
+    // Seller of LDB 
     address seller;
+    //  Price(wei) of LDB
     uint128 price;
-    uint64 startedAt;
+    //  Order startAt
+    uint64 startAt;
+    //  tokenId at ERC721 contract (nftContract)
     uint256 tokenId;
   }
 
@@ -98,13 +103,14 @@ contract NftCrowdsaleBase {
   }
 
   function _isOnSale(Order storage _order) internal view returns (bool) {
-    return (_order.startedAt > 0);
+    return (_order.startAt > 0);
   }
 }
 
 contract LdbNFTCrowdsale is NftCrowdsaleBase, Ownable{
 
-  // bytes4 constant InterfaceSignature_ERC721 = bytes4(0x9a20483d);  
+  //  TODO:
+  // bytes4 constant InterfaceSignature_ERC721 = bytes4(0x);  
 
   function () external payable {
   }
@@ -139,24 +145,33 @@ contract LdbNFTCrowdsale is NftCrowdsaleBase, Ownable{
 
     tokenIdToOrder[_tokenId] = _order;
   }
-  /*****/
+
+  /**
+   * @dev defray a order 
+   * @param _tokenId ldb tokenid
+   */
   function defray (uint256 _tokenId) external payable{
     _defray(_tokenId, msg.value);
     _transfer(msg.sender, _tokenId);
   }
 
+  /**
+   * @dev get a order detail by _tokenId
+   * @param _tokenId ldb tokenid
+   */
+
   function getOrder(uint256 _tokenId) external view
   returns (
     address seller,
     uint128 price,
-    uint64 startedAt,
+    uint64 startAt,
     uint256 tokenId
   ){
     Order storage order = tokenIdToOrder[_tokenId];
     require(_isOnSale(order));
     seller = order.seller;
     price = order.price;
-    startedAt = order.startedAt;
+    startAt = order.startAt;
     tokenId = order.tokenId;
   } 
 }
