@@ -8,10 +8,9 @@ require('chai')
 contract('LdbNFT', function (accounts) {
   beforeEach(async function () {
     this.ldbNFT = await LdbNFT.new('LDB NFT', 'LDB', { from: accounts[0] });
-    // console.log('this.LdbNFT', this.LdbNFT)
   });
 
-  describe('erc721 basic test', function () {
+  describe('LdbNFT basic test', function () {
     it('should set title and name when deployed', async function () {
       const nane = await this.ldbNFT.name.call();
       const symbol = await this.ldbNFT.symbol.call();
