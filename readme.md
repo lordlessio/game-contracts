@@ -21,13 +21,13 @@ LDB :european_castle:
 ```sh
 
 #test
-npm test
+npm run test
 
 # flattener
-npm flattener
+npm run flattener
 
 # console
-npm console
+npm run console
 
 ```
 
