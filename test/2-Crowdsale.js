@@ -67,7 +67,9 @@ contract('LdbNFTCrowdsale', function (accounts) {
       });
 
       it('shuould add price_count ether to seller', async function () {
-        (await web3.eth.getBalance(this.seller)).toNumber().should.be.equal(this.preBalance + this.price);
+        const finalCount = web3.fromWei((await web3.eth.getBalance(this.seller)).toNumber(), 'gwei');
+        const computedCount = web3.fromWei(this.preBalance + this.price, 'gwei');
+        parseInt(finalCount).should.be.equal(parseInt(computedCount));
       });
     });
     
