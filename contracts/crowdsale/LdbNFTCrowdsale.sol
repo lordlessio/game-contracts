@@ -1,75 +1,51 @@
 pragma solidity ^0.4.21;
 
+
+import "../../node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "../../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721.sol";
-
-
-/**
- * @title Ownable
- * @dev The Ownable contract has an owner address, and provides basic authorization control
- * functions, this simplifies the implementation of "user permissions".
- */
-contract Ownable {
-  address public owner;
-
-  /**
-   * @dev The Ownable constructor sets the original `owner` of the contract to the sender
-   * account.
-   */
-  function Ownable () public {
-    owner = msg.sender;
-  }
-
-
-  /**
-   * @dev Throws if called by any account other than the owner.
-   */
-  modifier onlyOwner() {
-    require(msg.sender == owner);
-    _;
-  }
-
-
-  /**
-   * @dev Allows the current owner to transfer control of the contract to a newOwner.
-   * @param newOwner The address to transfer ownership to.
-   */
-  function transferOwnership(address newOwner) public onlyOwner {
-    if (newOwner != address(0)) {
-      owner = newOwner;
-    }
-  }
-
-}
-
+import "../../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
+import "../../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol";
+import "../../node_modules/zeppelin-solidity/contracts/lifecycle/Pausable.sol";
+import "./EthPausable.sol";
 
 contract NftCrowdsaleBase {
 
+  using SafeMath for uint256;
+
+  ERC20 public erc20Contract;
+  ERC721 public erc721Contract;
+  // eth(price)/erc20(price)
+  uint public eth2erc20;
   // Represents a order on LDB Crowdsale
   struct Order {
     // Seller of LDB 
     address seller;
-    //  Price(wei) of LDB
-    uint128 price;
+    // erc20 price(wei) of LDB
+    uint256 price;
     //  Order startAt
     uint64 startAt;
-    //  tokenId at ERC721 contract (nftContract)
+    //  tokenId at ERC721 contract (erc721Contract)
     uint256 tokenId;
   }
 
-  ERC721 public nftContract;
+  function NftCrowdsaleBase(address _erc721Address,address _erc20Address, uint _eth2erc20) public {
+    erc721Contract = ERC721(_erc721Address);
+    erc20Contract = ERC20(_erc20Address);
+    eth2erc20 = _eth2erc20;
+  }
 
   mapping (uint256 => Order) tokenIdToOrder;
 
   function _isOwner(address owner, uint256 _tokenId) internal view returns (bool){
-    return (nftContract.ownerOf(_tokenId) == owner);
+    return (erc721Contract.ownerOf(_tokenId) == owner);
   }
 
   function _escrow(address _owner, uint256 _tokenId) internal {
-    nftContract.transferFrom(_owner, this, _tokenId);
+    erc721Contract.transferFrom(_owner, this, _tokenId);
   }
 
   function _transfer(address _receiver, uint256 _tokenId) internal {
-    nftContract.safeTransferFrom(this, _receiver, _tokenId);
+    erc721Contract.safeTransferFrom(this, _receiver, _tokenId);
   }
 
   function _newSale(uint256 _tokenId, Order _order) internal {
@@ -77,29 +53,38 @@ contract NftCrowdsaleBase {
   }
 
   function _cancelOrder(uint256 _tokenId, address _seller) internal {
-    _removeOrder(_tokenId);
+    // _removeOrder(_tokenId);
     _transfer(_seller, _tokenId);
   }
 
-  function _removeOrder(uint256 _tokenId) internal {
-    delete tokenIdToOrder[_tokenId];
-  }
-
-  function _defray(uint256 _tokenId, uint256 _amount) internal {
+  function _defrayByEth(uint256 _tokenId, uint256 _ethAmount) internal {
 
     Order storage order = tokenIdToOrder[_tokenId];
-    uint256 price = uint256(order.price);
-
+    uint256 price = order.price;
+    uint256 computedEthPrice = price.div(eth2erc20);
     require(_isOnSale(order));
-    require(_amount >= price);
+    require(_ethAmount >= computedEthPrice);
 
-    uint256 defrayExcess = _amount - price;
+    uint256 defrayExcess = _ethAmount.sub(computedEthPrice);
 
     if(price > 0) {
-      order.seller.transfer(price);
+      order.seller.transfer(computedEthPrice);
     }
     msg.sender.transfer(defrayExcess);
  
+  }
+
+  function _defrayByErc20(uint256 _tokenId) internal {
+
+    Order storage order = tokenIdToOrder[_tokenId];
+    uint256 price = uint256(order.price);
+    uint256 balance = erc20Contract.balanceOf(msg.sender);
+    require( balance >= price);
+    require(_isOnSale(order));
+
+    if(price > 0) {
+      erc20Contract.transferFrom(msg.sender, order.seller, price);
+    }
   }
 
   function _isOnSale(Order storage _order) internal view returns (bool) {
@@ -107,25 +92,20 @@ contract NftCrowdsaleBase {
   }
 }
 
-contract LdbNFTCrowdsale is NftCrowdsaleBase, Ownable{
-
-  //  TODO:
-  // bytes4 constant InterfaceSignature_ERC721 = bytes4(0x);  
+contract LdbNFTCrowdsale is NftCrowdsaleBase, Ownable, EthPausable, Pausable{
 
   function () external payable {
   }
 
-  function LdbNFTCrowdsale(address _nftAddress) public {
-    ERC721 _nftCntract = ERC721(_nftAddress);
-    nftContract = _nftCntract;
-  }
+  function LdbNFTCrowdsale(address _erc721Address, address _erc20Address, uint _eth2erc20) public 
+  NftCrowdsaleBase(_erc721Address, _erc20Address, _eth2erc20){}
 
   function withdrawBalance() external {
     require(msg.sender == owner);
     owner.transfer(this.balance);
   }
 
-  function newSale(uint128 _price, uint256 _tokenId) external {
+  function newSale(uint128 _price, uint256 _tokenId) whenNotPaused external {
 
     require(_price == uint256(uint128(_price)));
 
@@ -147,11 +127,20 @@ contract LdbNFTCrowdsale is NftCrowdsaleBase, Ownable{
   }
 
   /**
-   * @dev defray a order 
+   * @dev defray a order by eth
    * @param _tokenId ldb tokenid
    */
-  function defray (uint256 _tokenId) external payable{
-    _defray(_tokenId, msg.value);
+  function defrayByEth (uint256 _tokenId) whenNotEthPaused external payable {
+    _defrayByEth(_tokenId, msg.value);
+    _transfer(msg.sender, _tokenId);
+  }
+
+  /**
+   * @dev defray a order by erc20 Token
+   * @param _tokenId ldb tokenid
+   */
+  function defrayByErc20 (uint256 _tokenId) whenNotPaused external payable{
+    _defrayByErc20(_tokenId);
     _transfer(msg.sender, _tokenId);
   }
 
@@ -163,7 +152,7 @@ contract LdbNFTCrowdsale is NftCrowdsaleBase, Ownable{
   function getOrder(uint256 _tokenId) external view
   returns (
     address seller,
-    uint128 price,
+    uint256 price,
     uint64 startAt,
     uint256 tokenId
   ){

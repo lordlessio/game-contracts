@@ -1,5 +1,6 @@
-var LdbNFT = artifacts.require('LdbNFT');
-var LdbNFTCrowdsale = artifacts.require('LdbNFTCrowdsale');
+const LdbNFT = artifacts.require('LdbNFT');
+const LdbNFTCrowdsale = artifacts.require('LdbNFTCrowdsale');
+const Erc20TokenMock = artifacts.require('LORDLESS_TOKEN');
 const { balanceOf, ether2wei } = require('../helper/etherUtils');
 const BigNumber = web3.BigNumber;
 require('chai')
@@ -11,24 +12,31 @@ contract('LdbNFTCrowdsale', function (accounts) {
   before(async function () {
     // Maximum allowable error
     this.maError = parseInt(web3.toWei(1, 'gwei'));
-  });
-  beforeEach(async function () {
-    this.ldbNFT = await LdbNFT.new('LDB NFT', 'LDB', { from: accounts[0] });
-    this.LdbNFTCrowdsale = await LdbNFTCrowdsale.new(this.ldbNFT.address, { from: accounts[0] });
+    this.eth2erc20 = 41666;
     this.price = 0.5e18;
+    this.ethPrice = parseInt(this.price / this.eth2erc20);
     this._tokenId = 1;
     this.seller = accounts[0];
     this.buyer = accounts[1];
+  });
+  beforeEach(async function () {
+    this.ldbNFT = await LdbNFT.new('LDB NFT', 'LDB', { from: accounts[0] });
+    this.erc20Token = await Erc20TokenMock.new();
+    this.ldbNFTCrowdsale = await LdbNFTCrowdsale.new(this.ldbNFT.address, this.erc20Token.address, this.eth2erc20);
+    // mint erc20 token
+    await this.erc20Token.mint(accounts[0], 5e27);
+    await this.erc20Token.mint(accounts[1], 5e27);
+    // mint erc721 token
     await this.ldbNFT.mint(accounts[0], this._tokenId);
     // Set Approval For Crowdsale Contract
-    await this.ldbNFT.setApprovalForAll(this.LdbNFTCrowdsale.address, true, { from: accounts[0] });
+    await this.ldbNFT.setApprovalForAll(this.ldbNFTCrowdsale.address, true, { from: accounts[0] });
 
-    await this.LdbNFTCrowdsale.newSale(this.price, this._tokenId, { from: this.seller });
+    await this.ldbNFTCrowdsale.newSale(this.price, this._tokenId, { from: this.seller });
   });
 
   describe('get method test', function () {
     it('should get order success', async function () {
-      const order = await this.LdbNFTCrowdsale.getOrder(this._tokenId);
+      const order = await this.ldbNFTCrowdsale.getOrder(this._tokenId);
       // should be seller
       order[0].should.be.equal(accounts[0]);
       // should be price
@@ -43,11 +51,11 @@ contract('LdbNFTCrowdsale', function (accounts) {
    * Defray Function Test
    */
   describe('defray test', function () {
-    describe('defray: success', function () {
+    describe('defray by eth: success', function () {
       beforeEach(async function () {
         // defray success
         this.preBalance = (await web3.eth.getBalance(this.seller)).toNumber();
-        await this.LdbNFTCrowdsale.defray(this._tokenId, {
+        await this.ldbNFTCrowdsale.defrayByEth(this._tokenId, {
           value: this.price,
           from: this.buyer,
         });
@@ -66,28 +74,52 @@ contract('LdbNFTCrowdsale', function (accounts) {
       });
     });
     
-    describe('defray:revert or accident', function () {
+    describe('defray by eth:revert or accident', function () {
       it('less ether defray: should revert', async function () {
         const buyer = accounts[1];
-        await this.LdbNFTCrowdsale.defray(this._tokenId, {
-          value: this.price / 2,
+        await this.ldbNFTCrowdsale.defrayByEth(this._tokenId, {
+          value: parseInt(this.ethPrice / 2),
           from: buyer,
         }).should.be.rejectedWith('revert');
       });
 
       it('defray with defray excess be should return of ', async function () {
-        const defrayExcess = 1e18;
+        const defrayExcess = parseInt(1e18 / this.eth2erc20);
         const gasPrice = web3.toWei(1.5, 'gwei');
         const preBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
-        const receipt = await this.LdbNFTCrowdsale.defray(this._tokenId, {
+        const receipt = await this.ldbNFTCrowdsale.defrayByEth(this._tokenId, {
           gasPrice,
-          value: this.price + defrayExcess,
+          value: this.ethPrice + defrayExcess,
           from: this.buyer,
         });
         const afterDefrayBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
         const gasCost = receipt.receipt.gasUsed * gasPrice;
         // defrayExcess should be return of
-        (afterDefrayBalance - (preBalance - this.price - gasCost)).should.be.below(this.maError);
+        (afterDefrayBalance - (preBalance - this.ethPrice - gasCost)).should.be.below(this.maError);
+      });
+    });
+
+    describe('defray by erc20: success', function () {
+      beforeEach(async function () {
+        // defray success
+        this.preBalance = (await web3.eth.getBalance(this.seller)).toNumber();
+        await this.erc20Token.approve(this.ldbNFTCrowdsale.address, 1e27, { from: this.buyer });
+        await this.ldbNFTCrowdsale.defrayByErc20(this._tokenId, {
+          value: this.price,
+          from: this.buyer,
+        });
+      });
+
+      it('shuould change token ownership', async function () {
+        // check ownership of _tokenId should be change to buyer
+        (await this.ldbNFT.ownerOf(this._tokenId)).should.be.equal(this.buyer);
+      });
+
+      it('shuould add price_count ether to seller', async function () {
+        const finalCount = (await web3.eth.getBalance(this.seller)).toNumber();
+        const computedCount = this.preBalance + this.price;
+        // error less than 1gwei
+        (finalCount - computedCount).should.be.below(this.maError);
       });
     });
   });
@@ -99,10 +131,10 @@ contract('LdbNFTCrowdsale', function (accounts) {
       const gasPrice = web3.toWei(1.5, 'gwei');
       
       // send ether
-      await this.LdbNFTCrowdsale.sendTransaction({ value: depositCount, from: accounts[1] });
+      await this.ldbNFTCrowdsale.sendTransaction({ value: depositCount, from: accounts[1] });
       
       // withdrawBalance
-      const receipt = await this.LdbNFTCrowdsale.withdrawBalance({ gasPrice });
+      const receipt = await this.ldbNFTCrowdsale.withdrawBalance({ gasPrice });
       const finalCount = (await balanceOf(accounts[0])).toNumber();
       const gasCost = receipt.receipt.gasUsed * gasPrice;
 
@@ -113,7 +145,7 @@ contract('LdbNFTCrowdsale', function (accounts) {
       (computedCount - infactCount).should.be.below(this.maError);
     });
     it('revert: withdrawBalance with another address', async function () {
-      await this.LdbNFTCrowdsale.withdrawBalance({ from: accounts[1] }).should.be.rejectedWith('revert');
+      await this.ldbNFTCrowdsale.withdrawBalance({ from: accounts[1] }).should.be.rejectedWith('revert');
     });
   });
 });
