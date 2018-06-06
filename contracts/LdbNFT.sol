@@ -3,7 +3,6 @@ pragma solidity ^0.4.21;
 // import "../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
 
 import "./LdbERC721Token.sol";
-import "./LdbAccessControl.sol";
 import "../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /**
