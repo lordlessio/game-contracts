@@ -1,6 +1,6 @@
 const LdbNFT = artifacts.require('./LdbNFT.sol');
 const fs = require('fs');
-const dbPath = require('path').join(require('os').homedir(), '.lordlessenv');
+const dbPath = require('path').join(require('os').homedir(), '.lordless/dev.conf');
 module.exports = async function (deployer, network, accounts) {
   await liveDeploy(deployer, accounts);
 };
