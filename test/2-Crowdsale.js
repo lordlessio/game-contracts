@@ -35,15 +35,15 @@ contract('LdbNFTCrowdsale', function (accounts) {
   });
 
   describe('get method test', function () {
-    it('should get order success', async function () {
-      const order = await this.ldbNFTCrowdsale.getOrder(this._tokenId);
+    it('should get auction success', async function () {
+      const auction = await this.ldbNFTCrowdsale.getAuction(this._tokenId);
       // should be seller
-      order[0].should.be.equal(accounts[0]);
+      auction[0].should.be.equal(accounts[0]);
       // should be price
-      order[1].should.be.bignumber.equal(this.price);
+      auction[1].should.be.bignumber.equal(this.price);
       // Todo:should be time
       // should be token_id
-      order[3].should.be.bignumber.equal(this._tokenId);
+      auction[3].should.be.bignumber.equal(this._tokenId);
     });
   });
 

@@ -16,17 +16,22 @@ contract NftCrowdsaleBase {
   ERC721 public erc721Contract;
   // eth(price)/erc20(price)
   uint public eth2erc20;
-  // Represents a order on LDB Crowdsale
-  struct Order {
+  // Represents a auction on LDB Crowdsale
+  struct Auction {
     // Seller of LDB 
     address seller;
     // erc20 price(wei) of LDB
     uint256 price;
-    //  Order startAt
+    //  Auction startAt
     uint64 startAt;
     //  tokenId at ERC721 contract (erc721Contract)
     uint256 tokenId;
   }
+
+  
+   /* Event */
+
+
 
   function NftCrowdsaleBase(address _erc721Address,address _erc20Address, uint _eth2erc20) public {
     erc721Contract = ERC721(_erc721Address);
@@ -34,7 +39,7 @@ contract NftCrowdsaleBase {
     eth2erc20 = _eth2erc20;
   }
 
-  mapping (uint256 => Order) tokenIdToOrder;
+  mapping (uint256 => Auction) tokenIdToAuction;
 
   function _isOwner(address owner, uint256 _tokenId) internal view returns (bool){
     return (erc721Contract.ownerOf(_tokenId) == owner);
@@ -48,27 +53,27 @@ contract NftCrowdsaleBase {
     erc721Contract.safeTransferFrom(this, _receiver, _tokenId);
   }
 
-  function _newSale(uint256 _tokenId, Order _order) internal {
-    tokenIdToOrder[_tokenId] = _order;
+  function _newSale(uint256 _tokenId, Auction _auction) internal {
+    tokenIdToAuction[_tokenId] = _auction;
   }
 
-  function _cancelOrder(uint256 _tokenId, address _seller) internal {
+  function _cancelAuction(uint256 _tokenId, address _seller) internal {
     // _removeOrder(_tokenId);
     _transfer(_seller, _tokenId);
   }
 
   function _defrayByEth(uint256 _tokenId, uint256 _ethAmount) internal {
 
-    Order storage order = tokenIdToOrder[_tokenId];
-    uint256 price = order.price;
+    Auction storage auction = tokenIdToAuction[_tokenId];
+    uint256 price = auction.price;
     uint256 computedEthPrice = price.div(eth2erc20);
-    require(_isOnSale(order));
+    require(_isOnSale(auction));
     require(_ethAmount >= computedEthPrice);
 
     uint256 defrayExcess = _ethAmount.sub(computedEthPrice);
 
     if(price > 0) {
-      order.seller.transfer(computedEthPrice);
+      auction.seller.transfer(computedEthPrice);
     }
     msg.sender.transfer(defrayExcess);
  
@@ -76,18 +81,18 @@ contract NftCrowdsaleBase {
 
   function _defrayByErc20(uint256 _tokenId) internal {
 
-    Order storage order = tokenIdToOrder[_tokenId];
-    uint256 price = uint256(order.price);
+    Auction storage auction = tokenIdToAuction[_tokenId];
+    uint256 price = uint256(auction.price);
     uint256 balance = erc20Contract.balanceOf(msg.sender);
     require( balance >= price);
-    require(_isOnSale(order));
+    require(_isOnSale(auction));
 
     if(price > 0) {
-      erc20Contract.transferFrom(msg.sender, order.seller, price);
+      erc20Contract.transferFrom(msg.sender, auction.seller, price);
     }
   }
 
-  function _isOnSale(Order storage _order) internal view returns (bool) {
+  function _isOnSale(Auction storage _order) internal view returns (bool) {
     return (_order.startAt > 0);
   }
 }
@@ -116,18 +121,18 @@ contract LdbNFTCrowdsale is NftCrowdsaleBase, Ownable, EthPausable, Pausable{
     _escrow(_seller, _tokenId);
 
     
-    Order memory _order = Order(
+    Auction memory _order = Auction(
       _seller,
       uint128(_price),
       uint64(now),
       _tokenId
     );
 
-    tokenIdToOrder[_tokenId] = _order;
+    tokenIdToAuction[_tokenId] = _order;
   }
 
   /**
-   * @dev defray a order by eth
+   * @dev defray a auction by eth
    * @param _tokenId ldb tokenid
    */
   function defrayByEth (uint256 _tokenId) whenNotEthPaused external payable {
@@ -136,7 +141,7 @@ contract LdbNFTCrowdsale is NftCrowdsaleBase, Ownable, EthPausable, Pausable{
   }
 
   /**
-   * @dev defray a order by erc20 Token
+   * @dev defray a auction by erc20 Token
    * @param _tokenId ldb tokenid
    */
   function defrayByErc20 (uint256 _tokenId) whenNotPaused external payable{
@@ -145,22 +150,22 @@ contract LdbNFTCrowdsale is NftCrowdsaleBase, Ownable, EthPausable, Pausable{
   }
 
   /**
-   * @dev get a order detail by _tokenId
+   * @dev get a auction detail by _tokenId
    * @param _tokenId ldb tokenid
    */
 
-  function getOrder(uint256 _tokenId) external view
+  function getAuction(uint256 _tokenId) external view
   returns (
     address seller,
     uint256 price,
     uint64 startAt,
     uint256 tokenId
   ){
-    Order storage order = tokenIdToOrder[_tokenId];
-    require(_isOnSale(order));
-    seller = order.seller;
-    price = order.price;
-    startAt = order.startAt;
-    tokenId = order.tokenId;
+    Auction storage auction = tokenIdToAuction[_tokenId];
+    require(_isOnSale(auction));
+    seller = auction.seller;
+    price = auction.price;
+    startAt = auction.startAt;
+    tokenId = auction.tokenId;
   } 
 }
