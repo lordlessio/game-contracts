@@ -1,7 +1,8 @@
 const LdbNFT = artifacts.require('LdbNFT');
 const LdbNFTCrowdsale = artifacts.require('LdbNFTCrowdsale');
 const Erc20TokenMock = artifacts.require('LORDLESS_TOKEN');
-const { balanceOf, ether2wei } = require('../helper/etherUtils');
+const { balanceOf, ether2wei } = require('./helpers/etherUtils');
+const { duration } = require('./helpers/increaseTime');
 const BigNumber = web3.BigNumber;
 require('chai')
   .use(require('chai-as-promised'))
@@ -18,6 +19,7 @@ contract('LdbNFTCrowdsale', function (accounts) {
     this._tokenId = 1;
     this.seller = accounts[0];
     this.buyer = accounts[1];
+    this.endAt = web3.eth.getBlock('latest').timestamp + duration.minutes(5);
   });
   beforeEach(async function () {
     this.ldbNFT = await LdbNFT.new('LDB NFT', 'LDB', { from: accounts[0] });
@@ -31,7 +33,7 @@ contract('LdbNFTCrowdsale', function (accounts) {
     // Set Approval For Crowdsale Contract
     await this.ldbNFT.setApprovalForAll(this.ldbNFTCrowdsale.address, true, { from: accounts[0] });
 
-    await this.ldbNFTCrowdsale.newSale(this.price, this._tokenId, { from: this.seller });
+    await this.ldbNFTCrowdsale.newAuction(this.price, this._tokenId, this.endAt, { from: this.seller });
   });
 
   describe('get method test', function () {
@@ -42,6 +44,7 @@ contract('LdbNFTCrowdsale', function (accounts) {
       // should be price
       auction[1].should.be.bignumber.equal(this.price);
       // Todo:should be time
+      console.log('auction[2]', auction[2].toNumber());
       // should be token_id
       auction[3].should.be.bignumber.equal(this._tokenId);
     });

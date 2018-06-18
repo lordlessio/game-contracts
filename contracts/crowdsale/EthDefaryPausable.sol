@@ -1,4 +1,4 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.4.23;
 
 
 import "../../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
@@ -8,7 +8,7 @@ import "../../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
  * @title Pausable
  * @dev Base contract which allows children to implement an emergency stop mechanism.
  */
-contract EthPausable is Ownable {
+contract EthDefaryPausable is Ownable {
   event EthPause();
   event UnEthPause();
 
