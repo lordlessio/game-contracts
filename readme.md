@@ -1,5 +1,6 @@
 <div align="center">
- <img src="https://olxvlcccu.qnssl.com/blog/wwmuz.jpg?imageslim" width = "500" alt="lordless.io" align=center />
+ <img 
+ src="https://olxvlcccu.qnssl.com/blog/pkqgb.png?imageslim" width = "400" alt="lordless.io" align=center />
 </div>
 
 # LDB-NFT
