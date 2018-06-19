@@ -2,8 +2,9 @@
  <img src="https://olxvlcccu.qnssl.com/blog/wwmuz.jpg?imageslim" width = "500" alt="lordless.io" align=center />
 </div>
 
-# LDB-NFT 
+# LDB-NFT
 [![Build Status](https://img.shields.io/travis/lordlessio/LDB-NFT.svg)](https://travis-ci.org/lordlessio/LDB-NFT)
+[![Coverage Status](https://coveralls.io/repos/github/lordlessio/LDB-NFT/badge.svg?branch=master)](https://coveralls.io/github/lordlessio/LDB-NFT?branch=master)
 ![license](https://img.shields.io/github/license/lordlessio/LDB-NFT.svg)
 
 <h3>
