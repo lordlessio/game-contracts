@@ -11,3 +11,8 @@ local-test
 build
 out.sol
 ldbNFT.flattener.sol
+
+# Coverage 
+coverage
+coverage.json
+coverageEnv

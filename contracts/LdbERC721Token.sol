@@ -1,8 +1,10 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.21;
 
 
 import "../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721BasicToken.sol";
+
+
 /**
  * @title Full ERC721 Token
  * This implementation includes all the required and some optional functionality of the ERC721 standard
@@ -29,7 +31,7 @@ contract LdbERC721Token is ERC721, ERC721BasicToken {
   mapping(uint256 => uint256) internal allTokensIndex;
 
   // The decimals
-  uint8 public constant ldbGeoDecimals = 6;
+  uint8 public constant DECIMALS = 6;
 
   // @dev LORDLESS Building Structs--> Ldb Structs
   struct LDB {
@@ -55,7 +57,7 @@ contract LdbERC721Token is ERC721, ERC721BasicToken {
   /**
    * @dev Constructor function
    */
-  function LdbERC721Token(string _name, string _symbol) public {
+  constructor(string _name, string _symbol) public {
     name_ = _name;
     symbol_ = _symbol;
   }
@@ -92,13 +94,11 @@ contract LdbERC721Token is ERC721, ERC721BasicToken {
    * @param _tokenId uint256 ID of the token to query
    */
   function LdbNFT(uint256 _tokenId) public view returns (
-    uint256 tokenId,
-    uint32 lat,
-    uint32 lon
+    uint256,
+    uint32,
+    uint32
     ) {
-    tokenId = _tokenId;
-    lat = tokenLDBs[_tokenId].lat;
-    lon = tokenLDBs[_tokenId].lon;
+    return (_tokenId, tokenLDBs[_tokenId].lat, tokenLDBs[_tokenId].lon);
   }
 
   /**

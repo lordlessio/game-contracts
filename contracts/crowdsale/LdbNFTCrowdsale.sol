@@ -8,6 +8,7 @@ import "../../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol";
 import "../../node_modules/zeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "./EthDefaryPausable.sol";
 
+
 contract NftCrowdsaleBase is Ownable {
 
   using SafeMath for uint256;
@@ -37,8 +38,6 @@ contract NftCrowdsaleBase is Ownable {
     erc20Contract = ERC20(_erc20Address);
     eth2erc20 = _eth2erc20;
   }
-
-  
 
   function _isTokenOwner(address _seller, uint256 _tokenId) internal view returns (bool){
     return (erc721Contract.ownerOf(_tokenId) == _seller);
@@ -85,7 +84,7 @@ contract NftCrowdsaleBase is Ownable {
 
     uint256 defrayExcess = _ethAmount.sub(computedEthPrice);
 
-    if(price > 0) {
+    if (price > 0) {
       auction.seller.transfer(computedEthPrice);
     }
     msg.sender.transfer(defrayExcess);
@@ -98,10 +97,10 @@ contract NftCrowdsaleBase is Ownable {
     Auction storage auction = tokenIdToAuction[_tokenId];
     uint256 price = uint256(auction.price);
     uint256 balance = erc20Contract.balanceOf(msg.sender);
-    require( balance >= price);
+    require(balance >= price);
     require(_isOnAuction(auction));
 
-    if(price > 0) {
+    if (price > 0) {
       erc20Contract.transferFrom(msg.sender, auction.seller, price);
     }
     _transfer(msg.sender, _tokenId);
@@ -118,15 +117,18 @@ contract NftCrowdsaleBase is Ownable {
   }
 }
 
+
 contract LdbNFTCrowdsale is NftCrowdsaleBase, EthDefaryPausable, Pausable{
 
-  function () external payable {}
+  
 
   constructor(address _erc721Address, address _erc20Address, uint _eth2erc20) public 
   NftCrowdsaleBase(_erc721Address, _erc20Address, _eth2erc20){}
 
+  function () external payable {}
+
   function withdrawBalance() onlyOwner external {
-    owner.transfer(this.balance);
+    owner.transfer(address(this).balance);
   }
 
   function newAuction(uint128 _price, uint256 _tokenId, uint256 _endAt) whenNotPaused external {
@@ -164,15 +166,12 @@ contract LdbNFTCrowdsale is NftCrowdsaleBase, EthDefaryPausable, Pausable{
 
   function getAuction(uint256 _tokenId) external view
   returns (
-    address seller,
-    uint256 price,
-    uint256 endAt,
-    uint256 tokenId
+    address,
+    uint256,
+    uint256,
+    uint256
   ){
     Auction storage auction = tokenIdToAuction[_tokenId];
-    seller = auction.seller;
-    price = auction.price;
-    endAt = auction.endAt;
-    tokenId = auction.tokenId;
-  } 
+    return (auction.seller, auction.price, auction.endAt, auction.tokenId);
+  }
 }

@@ -55,5 +55,12 @@ else
 fi
 
 
-node_modules/.bin/truffle test "$@"
+if [ "$SOLIDITY_COVERAGE" = true ]; then
+  node_modules/.bin/solidity-coverage
 
+  if [ "$CONTINUOUS_INTEGRATION" = true ]; then
+    cat coverage/lcov.info | node_modules/.bin/coveralls
+  fi
+else
+  node_modules/.bin/truffle test "$@"
+fi

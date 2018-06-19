@@ -5,12 +5,13 @@ pragma solidity ^0.4.23;
 import "./LdbERC721Token.sol";
 import "../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
 
+
 /**
  * @title LdbERC721Token
  * This contract just provides a public mint / burn / setLdbNFTToken functions 
  */
 contract LdbNFT is LdbERC721Token, Ownable {
-  function LdbNFT(string name, string symbol) public
+  constructor(string name, string symbol) public
     LdbERC721Token(name, symbol)
   {}
 

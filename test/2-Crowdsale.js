@@ -88,7 +88,7 @@ contract('LdbNFTCrowdsale', function (accounts) {
 
       it('defray with defray excess be should return of ', async function () {
         const defrayExcess = parseInt(1e18 / this.eth2erc20);
-        const gasPrice = web3.toWei(1.5, 'gwei');
+        const gasPrice = 100;
         const preBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
         const receipt = await this.ldbNFTCrowdsale.defrayByEth(this._tokenId, {
           gasPrice,
@@ -131,8 +131,8 @@ contract('LdbNFTCrowdsale', function (accounts) {
     it('should withdrawBalance success', async function () {
       const preBalance = (await balanceOf(accounts[0])).toNumber();
       const depositCount = ether2wei(1); // ether
-      const gasPrice = web3.toWei(1.5, 'gwei');
-      
+      const gasPrice = 100;
+
       // send ether
       await this.ldbNFTCrowdsale.sendTransaction({ value: depositCount, from: accounts[1] });
       
