@@ -1,15 +1,11 @@
 pragma solidity ^0.4.23;
 
-
-import "../../node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "../../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "../../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
 import "../../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol";
-import "../../node_modules/zeppelin-solidity/contracts/lifecycle/Pausable.sol";
-import "./EthDefaryPausable.sol";
+import "../../node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+import "../../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 
-
-contract NftCrowdsaleBase is Ownable {
+contract NFTsCrowdsaleBase is Ownable {
 
   using SafeMath for uint256;
 
@@ -127,54 +123,5 @@ contract NftCrowdsaleBase is Ownable {
     _transfer(msg.sender, _tokenId);
     delete tokenIdToAuction[_tokenId];
   }
-
   
-}
-
-
-contract LdbNFTCrowdsale is NftCrowdsaleBase, EthDefaryPausable, Pausable{
-
-  
-
-  constructor(address _erc721Address, address _erc20Address, uint _eth2erc20) public 
-  NftCrowdsaleBase(_erc721Address, _erc20Address, _eth2erc20){}
-
-  function () external payable {}
-
-  function withdrawBalance() onlyOwner external {
-    owner.transfer(address(this).balance);
-  }
-
-  function newAuction(uint128 _price, uint256 _tokenId, uint256 _endAt) whenNotPaused external {
-    _newAuction(_price, _tokenId, _endAt);
-  }
-
-  /**
-   * @dev defray a auction by eth
-   * @param _tokenId ldb tokenid
-   */
-  function defrayByEth (uint256 _tokenId) whenNotEthPaused external payable {
-    _defrayByEth(_tokenId); 
-  }
-
-  /**
-   * @dev defray a auction by erc20 Token
-   * @param _tokenId ldb tokenid
-   */
-  function defrayByErc20 (uint256 _tokenId) whenNotPaused external {
-    _defrayByErc20(_tokenId);
-  }
-
-  /**
-   * @dev cancel a auction
-   * @param _tokenId ldb tokenid
-   */
-  function cancelAuction (uint256 _tokenId) external {
-    _cancelAuction(_tokenId);
-  }
-
-  /**
-   * @dev get a auction detail by _tokenId
-   * @param _tokenId ldb tokenid
-   */
 }
