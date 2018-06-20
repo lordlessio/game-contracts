@@ -5,4 +5,4 @@ cache:
   directories:
     - "node_modules"
 after_script:
-  - npm run coverage && cat coverage/lcov.info | coveralls
+  - npm run cov && cat coverage/lcov.info | coveralls

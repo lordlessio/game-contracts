@@ -4,7 +4,7 @@
 </div>
 
 # LDB-NFT
-[![Build Status](https://img.shields.io/travis/lordlessio/LDB-NFT.svg)](https://travis-ci.org/lordlessio/LDB-NFT)
+[![Build Status](https://img.shields.io/travis/lordlessio/LDB-NFT.svg?branch=master)](https://travis-ci.org/lordlessio/LDB-NFT)
 [![Coverage Status](https://coveralls.io/repos/github/lordlessio/LDB-NFT/badge.svg?branch=master)](https://coveralls.io/github/lordlessio/LDB-NFT?branch=master)
 ![license](https://img.shields.io/github/license/lordlessio/LDB-NFT.svg)
 
