@@ -41,7 +41,7 @@ contract EthDefaryPausable is Ownable {
   /**
    * @dev called by the owner to unpause, returns to normal state
    */
-  function ethUnpause() onlyOwner whenEthPaused public {
+  function ethUnPause() onlyOwner whenEthPaused public {
     ethPaused = false;
     emit UnEthPause();
   }

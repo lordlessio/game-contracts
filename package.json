@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "test": "scripts/test.sh",
-    "coverage": "SOLIDITY_COVERAGE=true node_modules/.bin/solidity-coverage",
+    "cov": "SOLIDITY_COVERAGE=true node_modules/.bin/solidity-coverage",
     "console": "truffle console",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

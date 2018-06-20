@@ -39,6 +39,26 @@ contract NftCrowdsaleBase is Ownable {
     eth2erc20 = _eth2erc20;
   }
 
+  function getAuction(uint256 _tokenId) external view
+  returns (
+    address,
+    uint256,
+    uint256,
+    uint256
+  ){
+    Auction storage auction = tokenIdToAuction[_tokenId];
+    return (auction.seller, auction.price, auction.endAt, auction.tokenId);
+  }
+
+  function isOnAuction(uint256 _tokenId) external view returns (bool) {
+    return _isOnAuction(_tokenId);
+  }
+
+  function _isOnAuction(uint256 _tokenId) internal view returns (bool) {
+    Auction storage _auction = tokenIdToAuction[_tokenId];
+    return (_auction.endAt > now);
+  }
+
   function _isTokenOwner(address _seller, uint256 _tokenId) internal view returns (bool){
     return (erc721Contract.ownerOf(_tokenId) == _seller);
   }
@@ -68,24 +88,25 @@ contract NftCrowdsaleBase is Ownable {
     tokenIdToAuction[_tokenId] = _order;
   }
 
-  function _cancelAuction(uint256 _tokenId, address _seller) internal {
-    require(erc721Contract.ownerOf(_tokenId) == _seller || msg.sender == owner);
-    _transfer(_seller, _tokenId);
+  function _cancelAuction(uint256 _tokenId) internal {
+    address tokenOwner = erc721Contract.ownerOf(_tokenId);
+    require(tokenOwner == msg.sender || msg.sender == owner);
+    delete tokenIdToAuction[_tokenId];
     
   }
 
   function _defrayByEth(uint256 _tokenId) internal {
     uint256 _ethAmount = msg.value;
-    Auction storage auction = tokenIdToAuction[_tokenId];
-    uint256 price = auction.price;
+    Auction storage _auction = tokenIdToAuction[_tokenId];
+    uint256 price = _auction.price;
     uint256 computedEthPrice = price.div(eth2erc20);
-    require(_isOnAuction(auction));
+    require(_isOnAuction(_auction.tokenId));
     require(_ethAmount >= computedEthPrice);
 
     uint256 defrayExcess = _ethAmount.sub(computedEthPrice);
 
     if (price > 0) {
-      auction.seller.transfer(computedEthPrice);
+      _auction.seller.transfer(computedEthPrice);
     }
     msg.sender.transfer(defrayExcess);
     _transfer(msg.sender, _tokenId);
@@ -94,27 +115,20 @@ contract NftCrowdsaleBase is Ownable {
 
   function _defrayByErc20(uint256 _tokenId) internal {
 
-    Auction storage auction = tokenIdToAuction[_tokenId];
-    uint256 price = uint256(auction.price);
+    Auction storage _auction = tokenIdToAuction[_tokenId];
+    uint256 price = uint256(_auction.price);
     uint256 balance = erc20Contract.balanceOf(msg.sender);
     require(balance >= price);
-    require(_isOnAuction(auction));
+    require(_isOnAuction(_auction.tokenId));
 
     if (price > 0) {
-      erc20Contract.transferFrom(msg.sender, auction.seller, price);
+      erc20Contract.transferFrom(msg.sender, _auction.seller, price);
     }
     _transfer(msg.sender, _tokenId);
     delete tokenIdToAuction[_tokenId];
   }
 
-  function _isOnAuction(Auction storage _auction) internal view returns (bool) {
-    return (_auction.endAt > now);
-  }
-
-  function _cancelAuction(address _seller, uint256 _tokenId) internal {
-    require(erc721Contract.ownerOf(_tokenId) == _seller || msg.sender == owner);
-    delete tokenIdToAuction[_tokenId];
-  }
+  
 }
 
 
@@ -147,7 +161,7 @@ contract LdbNFTCrowdsale is NftCrowdsaleBase, EthDefaryPausable, Pausable{
    * @dev defray a auction by erc20 Token
    * @param _tokenId ldb tokenid
    */
-  function defrayByErc20 (uint256 _tokenId) whenNotPaused external payable{
+  function defrayByErc20 (uint256 _tokenId) whenNotPaused external {
     _defrayByErc20(_tokenId);
   }
 
@@ -155,23 +169,12 @@ contract LdbNFTCrowdsale is NftCrowdsaleBase, EthDefaryPausable, Pausable{
    * @dev cancel a auction
    * @param _tokenId ldb tokenid
    */
-  function cancelAuction (uint256 _tokenId) whenNotPaused external payable{
-    _cancelAuction(msg.sender, _tokenId);
+  function cancelAuction (uint256 _tokenId) external {
+    _cancelAuction(_tokenId);
   }
 
   /**
    * @dev get a auction detail by _tokenId
    * @param _tokenId ldb tokenid
    */
-
-  function getAuction(uint256 _tokenId) external view
-  returns (
-    address,
-    uint256,
-    uint256,
-    uint256
-  ){
-    Auction storage auction = tokenIdToAuction[_tokenId];
-    return (auction.seller, auction.price, auction.endAt, auction.tokenId);
-  }
 }

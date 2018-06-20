@@ -36,18 +36,16 @@ contract('LdbNFTCrowdsale', function (accounts) {
     await this.ldbNFTCrowdsale.newAuction(this.price, this._tokenId, this.endAt, { from: this.seller });
   });
 
-  describe('get method test', function () {
-    it('should get auction success', async function () {
-      const auction = await this.ldbNFTCrowdsale.getAuction(this._tokenId);
-      // should be seller
-      auction[0].should.be.equal(accounts[0]);
-      // should be price
-      auction[1].should.be.bignumber.equal(this.price);
-      // Todo:should be time
-      console.log('auction[2]', auction[2].toNumber());
-      // should be token_id
-      auction[3].should.be.bignumber.equal(this._tokenId);
-    });
+  it('should get auction success', async function () {
+    const auction = await this.ldbNFTCrowdsale.getAuction(this._tokenId);
+    // should be seller
+    auction[0].should.be.equal(accounts[0]);
+    // should be price
+    auction[1].should.be.bignumber.equal(this.price);
+    //  should be endAt
+    auction[2].should.be.bignumber.equal(this.endAt);
+    // should be token_id
+    auction[3].should.be.bignumber.equal(this._tokenId);
   });
 
   /**
@@ -77,29 +75,27 @@ contract('LdbNFTCrowdsale', function (accounts) {
       });
     });
     
-    describe('defray by eth:revert or accident', function () {
-      it('less ether defray: should revert', async function () {
-        const buyer = accounts[1];
-        await this.ldbNFTCrowdsale.defrayByEth(this._tokenId, {
-          value: parseInt(this.ethPrice / 2),
-          from: buyer,
-        }).should.be.rejectedWith('revert');
-      });
+    it('less ether defray: should revert', async function () {
+      const buyer = accounts[1];
+      await this.ldbNFTCrowdsale.defrayByEth(this._tokenId, {
+        value: parseInt(this.ethPrice / 2),
+        from: buyer,
+      }).should.be.rejectedWith('revert');
+    });
 
-      it('defray with defray excess be should return of ', async function () {
-        const defrayExcess = parseInt(1e18 / this.eth2erc20);
-        const gasPrice = 100;
-        const preBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
-        const receipt = await this.ldbNFTCrowdsale.defrayByEth(this._tokenId, {
-          gasPrice,
-          value: this.ethPrice + defrayExcess,
-          from: this.buyer,
-        });
-        const afterDefrayBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
-        const gasCost = receipt.receipt.gasUsed * gasPrice;
-        // defrayExcess should be return of
-        (afterDefrayBalance - (preBalance - this.ethPrice - gasCost)).should.be.below(this.maError);
+    it('defray with defray excess be should return of ', async function () {
+      const defrayExcess = parseInt(1e18 / this.eth2erc20);
+      const gasPrice = 100;
+      const preBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
+      const receipt = await this.ldbNFTCrowdsale.defrayByEth(this._tokenId, {
+        gasPrice,
+        value: this.ethPrice + defrayExcess,
+        from: this.buyer,
       });
+      const afterDefrayBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
+      const gasCost = receipt.receipt.gasUsed * gasPrice;
+      // defrayExcess should be return of
+      (afterDefrayBalance - (preBalance - this.ethPrice - gasCost)).should.be.below(this.maError);
     });
 
     describe('defray by erc20: success', function () {
@@ -108,7 +104,6 @@ contract('LdbNFTCrowdsale', function (accounts) {
         this.preBalance = (await web3.eth.getBalance(this.seller)).toNumber();
         await this.erc20Token.approve(this.ldbNFTCrowdsale.address, 1e27, { from: this.buyer });
         await this.ldbNFTCrowdsale.defrayByErc20(this._tokenId, {
-          value: this.price,
           from: this.buyer,
         });
       });
@@ -126,29 +121,52 @@ contract('LdbNFTCrowdsale', function (accounts) {
       });
     });
   });
+  it('should withdrawBalance success', async function () {
+    const preBalance = (await balanceOf(accounts[0])).toNumber();
+    const depositCount = ether2wei(1); // ether
+    const gasPrice = 100;
 
-  describe('withdrawBalance test', function () {
-    it('should withdrawBalance success', async function () {
-      const preBalance = (await balanceOf(accounts[0])).toNumber();
-      const depositCount = ether2wei(1); // ether
-      const gasPrice = 100;
+    // send ether
+    await this.ldbNFTCrowdsale.sendTransaction({ value: depositCount, from: accounts[1] });
+    
+    // withdrawBalance
+    const receipt = await this.ldbNFTCrowdsale.withdrawBalance({ gasPrice });
+    const finalCount = (await balanceOf(accounts[0])).toNumber();
+    const gasCost = receipt.receipt.gasUsed * gasPrice;
 
-      // send ether
-      await this.ldbNFTCrowdsale.sendTransaction({ value: depositCount, from: accounts[1] });
-      
-      // withdrawBalance
-      const receipt = await this.ldbNFTCrowdsale.withdrawBalance({ gasPrice });
-      const finalCount = (await balanceOf(accounts[0])).toNumber();
-      const gasCost = receipt.receipt.gasUsed * gasPrice;
+    // check balance
+    const computedCount = depositCount.toNumber() - gasCost;
+    const infactCount = finalCount - preBalance;
 
-      // check balance
-      const computedCount = depositCount.toNumber() - gasCost;
-      const infactCount = finalCount - preBalance;
+    (computedCount - infactCount).should.be.below(this.maError);
+  });
 
-      (computedCount - infactCount).should.be.below(this.maError);
-    });
-    it('revert: withdrawBalance with another address', async function () {
-      await this.ldbNFTCrowdsale.withdrawBalance({ from: accounts[1] }).should.be.rejectedWith('revert');
-    });
+  it('revert: withdrawBalance with another address', async function () {
+    await this.ldbNFTCrowdsale.withdrawBalance({ from: accounts[1] }).should.be.rejectedWith('revert');
+  });
+
+  it('isOnAuction should be true', async function () {
+    (await this.ldbNFTCrowdsale.isOnAuction(this._tokenId)).should.be.equal(true);
+  });
+
+  it('isOnAuction should be false after cancelAuction ', async function () {
+    await this.ldbNFTCrowdsale.cancelAuction(this._tokenId);
+    (await this.ldbNFTCrowdsale.isOnAuction(this._tokenId)).should.be.equal(false);
+  });
+
+  it('ethPause & ethUnPause', async function () {
+    // test ethPause
+    await this.ldbNFTCrowdsale.ethPause();
+    await this.ldbNFTCrowdsale.defrayByEth(this._tokenId, {
+      value: this.price,
+      from: this.buyer,
+    }).should.be.rejectedWith('revert');
+
+    // test ethUnPause
+    await this.ldbNFTCrowdsale.ethUnPause();
+    await this.ldbNFTCrowdsale.defrayByEth(this._tokenId, {
+      value: this.price,
+      from: this.buyer,
+    }).should.to.not.rejectedWith('revert');
   });
 });
