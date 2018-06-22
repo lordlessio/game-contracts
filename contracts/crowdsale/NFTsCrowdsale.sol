@@ -12,7 +12,7 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, EthDefaryPausable, Pausable{
 
   function () external payable {}
 
-  function withdrawBalance() onlyOwner external {
+  function withdrawBalance() onlyOwnerOrSuperuser external {
     owner.transfer(address(this).balance);
   }
 

@@ -1,11 +1,11 @@
 pragma solidity ^0.4.23;
 
-import "../../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
+import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
 import "../../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol";
 import "../../node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "../../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 
-contract NFTsCrowdsaleBase is Ownable {
+contract NFTsCrowdsaleBase is Superuser {
 
   using SafeMath for uint256;
 
@@ -47,10 +47,6 @@ contract NFTsCrowdsaleBase is Ownable {
   }
 
   function isOnAuction(uint256 _tokenId) external view returns (bool) {
-    return _isOnAuction(_tokenId);
-  }
-
-  function _isOnAuction(uint256 _tokenId) internal view returns (bool) {
     Auction storage _auction = tokenIdToAuction[_tokenId];
     return (_auction.endAt > now);
   }
@@ -96,7 +92,7 @@ contract NFTsCrowdsaleBase is Ownable {
     Auction storage _auction = tokenIdToAuction[_tokenId];
     uint256 price = _auction.price;
     uint256 computedEthPrice = price.div(eth2erc20);
-    require(_isOnAuction(_auction.tokenId));
+    require(this.isOnAuction(_auction.tokenId));
     require(_ethAmount >= computedEthPrice);
 
     uint256 defrayExcess = _ethAmount.sub(computedEthPrice);
@@ -115,7 +111,7 @@ contract NFTsCrowdsaleBase is Ownable {
     uint256 price = uint256(_auction.price);
     uint256 balance = erc20Contract.balanceOf(msg.sender);
     require(balance >= price);
-    require(_isOnAuction(_auction.tokenId));
+    require(this.isOnAuction(_auction.tokenId));
 
     if (price > 0) {
       erc20Contract.transferFrom(msg.sender, _auction.seller, price);
