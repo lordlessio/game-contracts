@@ -46,7 +46,7 @@ contract NFTsCrowdsaleBase is Superuser {
     return (auction.seller, auction.price, auction.endAt, auction.tokenId);
   }
 
-  function isOnAuction(uint256 _tokenId) external view returns (bool) {
+  function isOnAuction(uint256 _tokenId) public view returns (bool) {
     Auction storage _auction = tokenIdToAuction[_tokenId];
     return (_auction.endAt > now);
   }
@@ -92,7 +92,7 @@ contract NFTsCrowdsaleBase is Superuser {
     Auction storage _auction = tokenIdToAuction[_tokenId];
     uint256 price = _auction.price;
     uint256 computedEthPrice = price.div(eth2erc20);
-    require(this.isOnAuction(_auction.tokenId));
+    require(isOnAuction(_auction.tokenId));
     require(_ethAmount >= computedEthPrice);
 
     uint256 defrayExcess = _ethAmount.sub(computedEthPrice);
@@ -111,7 +111,7 @@ contract NFTsCrowdsaleBase is Superuser {
     uint256 price = uint256(_auction.price);
     uint256 balance = erc20Contract.balanceOf(msg.sender);
     require(balance >= price);
-    require(this.isOnAuction(_auction.tokenId));
+    require(isOnAuction(_auction.tokenId));
 
     if (price > 0) {
       erc20Contract.transferFrom(msg.sender, _auction.seller, price);
