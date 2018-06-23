@@ -10,7 +10,8 @@
   <a href='https://github.com/lordlessio/LDB-NFT/blob/master/LICENSE'>
     <img src='https://img.shields.io/github/license/lordlessio/LDB-NFT.svg' alt='License' />
   </a>
-  <h1>LORDLESS Building Contract :european_castle:<h1>  
+  <h1>LORDLESS Building Contract :european_castle:</h1>
+    
   <p>
     LDB (LORDLESS Building), is the core digital asset in LORDLESS. Most of the interactions in the virtual world are dependent on LDB. The core information of the LDB will be stored on the blockchain to ensure the immutability of the digital assets.
   </p>
