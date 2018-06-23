@@ -1,19 +1,24 @@
-<div align="center">
- <img 
- src="https://olxvlcccu.qnssl.com/blog/pkqgb.png?imageslim" width = "400" alt="lordless.io" align=center />
-</div>
+<p align="center"><img src="https://olxvlcccu.qnssl.com/blog/l4ck6.png?imageslim" width="64" /></p>
 
-# LDB-NFT
-[![Build Status](https://img.shields.io/travis/lordlessio/LDB-NFT.svg?branch=master)](https://travis-ci.org/lordlessio/LDB-NFT)
-[![Coverage Status](https://coveralls.io/repos/github/lordlessio/LDB-NFT/badge.svg?branch=master)](https://coveralls.io/github/lordlessio/LDB-NFT?branch=master)
-![license](https://img.shields.io/github/license/lordlessio/LDB-NFT.svg)
+<p align="center">
+  <a href="https://travis-ci.org/lordlessio/LDB-NFT">
+    <img src="https://img.shields.io/travis/lordlessio/LDB-NFT.svg?branch=master" />
+  </a>
+  <a href='https://coveralls.io/github/lordlessio/LDB-NFT?branch=master'>
+    <img src='https://coveralls.io/repos/github/lordlessio/LDB-NFT/badge.svg?branch=master' alt='Coverage Status' />
+  </a>
+  <a href='https://github.com/lordlessio/LDB-NFT/blob/master/LICENSE'>
+    <img src='https://img.shields.io/github/license/lordlessio/LDB-NFT.svg' alt='License' />
+  </a>
+  
+</p>
 
-<h3>
-LDB :european_castle:
-</h3>
 
-> LDB, LORDLESS Building, is the core digital asset in LORDLESS. Most of the interactions in the virtual world are dependent on LDB. The core information of the LDB will be stored on the blockchain to ensure the immutability of the digital assets.
-> -- lordless.io
+# LORDLESS Building Contract :european_castle:
+
+
+LDB (LORDLESS Building), is the core digital asset in LORDLESS. Most of the interactions in the virtual world are dependent on LDB. The core information of the LDB will be stored on the blockchain to ensure the immutability of the digital assets.
+
  
 ### Development
 
@@ -32,11 +37,11 @@ npm run console
 
 ```
 
-
 ### Community
-* [知乎专栏](https://zhuanlan.zhihu.com/lordless)
+* [Website](http://lordless.io)
+* [Zhihu](https://zhuanlan.zhihu.com/lordless)
 * [Telegram](https://t.me/lordlessio)
-* [twitter](https://twitter.com/lordlessio)
+* [Twitter](https://twitter.com/lordlessio)
 
 ### Business
 :email: [eury@lordless.io](mailto:eury@lordless.io)
