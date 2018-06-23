@@ -56,6 +56,11 @@ contract('Building', function ([_, owner]) {
     // console.log(influence);
   });
 
+  it('ldb isBuilt', async function () {
+    (await this.Building.isBuilt(this.tokenId)).should.be.equal(true);
+    (await this.Building.isBuilt(2333)).should.be.equal(false);
+  });
+
   it('reputationSetting', async function () {
     const reputation = 1;
     await this.Building.reputationSetting(this.tokenId, reputation);
