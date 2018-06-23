@@ -12,11 +12,10 @@
   </a>
   
   <h1>LORDLESS Building Contract :european_castle:</h1>  
-  <p>
-    LDB (LORDLESS Building), is the core digital asset in LORDLESS. Most of the interactions in the virtual world are dependent on LDB. The core information of the LDB will be stored on the blockchain to ensure the immutability of the digital assets.
-  </p>
 </div>
-
+<p>
+  LDB (LORDLESS Building), is the core digital asset in LORDLESS. Most of the interactions in the virtual world are dependent on LDB. The core information of the LDB will be stored on the blockchain to ensure the immutability of the digital assets.
+</p>
 
  
 ### Development
