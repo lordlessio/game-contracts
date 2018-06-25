@@ -1,14 +1,14 @@
 pragma solidity ^0.4.23;
 
 
-import "../../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
+import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
 
 
 /**
  * @title Pausable
  * @dev Base contract which allows children to implement an emergency stop mechanism.
  */
-contract EthDefaryPausable is Ownable {
+contract EthDefaryPausable is Superuser {
   event EthPause();
   event UnEthPause();
 
@@ -33,7 +33,7 @@ contract EthDefaryPausable is Ownable {
   /**
    * @dev called by the owner to pause, triggers stopped state
    */
-  function ethPause() onlyOwner whenNotEthPaused public {
+  function ethPause() onlyOwnerOrSuperuser whenNotEthPaused public {
     ethPaused = true;
     emit EthPause();
   }
@@ -41,7 +41,7 @@ contract EthDefaryPausable is Ownable {
   /**
    * @dev called by the owner to unpause, returns to normal state
    */
-  function ethUnPause() onlyOwner whenEthPaused public {
+  function ethUnPause() onlyOwnerOrSuperuser whenEthPaused public {
     ethPaused = false;
     emit UnEthPause();
   }

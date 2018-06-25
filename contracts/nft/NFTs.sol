@@ -11,15 +11,15 @@ contract LDBNFTs is ERC721Token, Superuser {
     ERC721Token(name, symbol)
   { }
 
-  function mint(address _to, uint256 _tokenId) onlyOwner public {
+  function mint(address _to, uint256 _tokenId) onlySuperuser public {
     super._mint(_to, _tokenId);
   }
 
-  function burn(uint256 _tokenId) onlyOwner public {
+  function burn(uint256 _tokenId) onlySuperuser public {
     super._burn(ownerOf(_tokenId), _tokenId);
   }
 
-  function setTokenURI(uint256 _tokenId, string _uri) onlyOwner public {
+  function setTokenURI(uint256 _tokenId, string _uri) onlyOwnerOrSuperuser public {
     super._setTokenURI(_tokenId, _uri);
   }
 }
