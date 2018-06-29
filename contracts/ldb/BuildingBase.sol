@@ -42,7 +42,7 @@ contract BuildingBase {
     uint256 oActivity,
     uint256 newActivity
   );
-  
+
   event ReputationSetting (
     uint256 indexed tokenId,
     uint256 oReputation,
@@ -101,7 +101,9 @@ contract BuildingBase {
 
   function _reputationSetting(uint256 _tokenId, uint8 _reputation) internal {
     require(_isBuilt(_tokenId));
+    uint8 oReputation = tokenLDBs[_tokenId].reputation;
     tokenLDBs[_tokenId].reputation = _reputation;
+    emit ReputationSetting(_tokenId, oReputation, _reputation);
   }
 
   function _mutiReputationSetting(uint256 _tokenId, uint256 _Reputation) internal {
@@ -112,6 +114,6 @@ contract BuildingBase {
     uint64 _param
   ) internal pure returns (bool){
     return( uint256(_param) < 10 ** uint256(decimals + 1));
-  }
+  } 
 
 }
