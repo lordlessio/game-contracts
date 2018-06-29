@@ -28,6 +28,26 @@ contract BuildingBase {
 
   mapping(uint256 => LDB) internal tokenLDBs;
 
+  /* Events */
+
+  event Build (
+    uint256 indexed tokenId,
+    uint64 _latitude,
+    uint64 _longitude,
+    uint8 _reputation
+  );
+
+  event ActivityUpgrade (
+    uint256 indexed tokenId,
+    uint256 oActivity,
+    uint256 newActivity
+  );
+  
+  event ReputationSetting (
+    uint256 indexed tokenId,
+    uint256 oReputation,
+    uint256 newReputation
+  );
   function _building(uint256 _tokenId) internal view returns (uint256, uint64, uint64, uint8, uint256) {
     LDB storage ldb = tokenLDBs[_tokenId];
     return (ldb.initAt, ldb.latitude, ldb.longitude, ldb.reputation, ldb.activity);
@@ -55,11 +75,12 @@ contract BuildingBase {
 
     require(_isValidGEO(_latitude));
     require(_isValidGEO(_longitude));
-
+    uint256 time = block.timestamp;
     LDB memory ldb = LDB(
-      block.timestamp, _latitude, _longitude, _reputation, uint256(0)
+      time, _latitude, _longitude, _reputation, uint256(0)
     );
     tokenLDBs[_tokenId] = ldb;
+    emit Build(time, _latitude, _longitude, _reputation);
   }
   
   function _mutiBuild(uint256 _tokenId, uint256 _activity) internal {
@@ -68,8 +89,11 @@ contract BuildingBase {
 
   function _activityUpgrade(uint256 _tokenId, uint256 _activity) internal {
     LDB storage ldb = tokenLDBs[_tokenId];
-    ldb.activity = ldb.activity.add(_activity);
+    uint256 oActivity = ldb.activity;
+    uint256 newActivity = ldb.activity.add(_activity);
+    ldb.activity = newActivity;
     tokenLDBs[_tokenId] = ldb;
+    emit ActivityUpgrade(_tokenId, oActivity, newActivity);
   }
   function _mutiActivityUpgrade(uint256 _tokenId, uint256 _activity) internal {
      // todo

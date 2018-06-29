@@ -27,7 +27,35 @@ contract NFTsCrowdsaleBase is Superuser {
 
   mapping (uint256 => Auction) tokenIdToAuction;
   
-   /* Event */
+   /* Events */
+
+  event NewAuction (
+    address indexed seller,
+    uint256 price,
+    uint256 endAt,
+    uint256 indexed tokenId
+  );
+
+  event PayByEthSuccess (
+    address indexed seller,
+    address indexed buyer,
+    uint256 price,
+    uint256 endAt,
+    uint256 indexed tokenId
+  );
+
+  event PayByErc20Success (
+    address indexed seller,
+    address indexed buyer, 
+    uint256 price,
+    uint256 endAt,
+    uint256 indexed tokenId
+  );
+
+  event CancelAuction (
+    address indexed seller,
+    uint256 indexed tokenId
+  );
 
   constructor(address _erc721Address,address _erc20Address, uint _eth2erc20) public {
     erc721Contract = ERC721(_erc721Address);
@@ -63,8 +91,8 @@ contract NFTsCrowdsaleBase is Superuser {
     erc721Contract.safeTransferFrom(this, _receiver, _tokenId);
   }
 
-  function _newAuction(uint128 _price, uint256 _tokenId, uint256 _endAt) internal {
-    require(_price == uint256(uint128(_price)));
+  function _newAuction(uint256 _price, uint256 _tokenId, uint256 _endAt) internal {
+    require(_price == uint256(_price));
     address _seller = msg.sender;
 
     require(_isTokenOwner(_seller, _tokenId));
@@ -78,16 +106,18 @@ contract NFTsCrowdsaleBase is Superuser {
     );
 
     tokenIdToAuction[_tokenId] = _order;
+    emit NewAuction(_seller, _price, _endAt, _tokenId);
   }
 
   function _cancelAuction(uint256 _tokenId) internal {
     address tokenOwner = erc721Contract.ownerOf(_tokenId);
     require(tokenOwner == msg.sender || msg.sender == owner);
+    Auction storage _auction = tokenIdToAuction[_tokenId];
+    emit CancelAuction(_auction.seller, _tokenId);
     delete tokenIdToAuction[_tokenId];
-    
   }
 
-  function _defrayByEth(uint256 _tokenId) internal {
+  function _payByEth(uint256 _tokenId) internal {
     uint256 _ethAmount = msg.value;
     Auction storage _auction = tokenIdToAuction[_tokenId];
     uint256 price = _auction.price;
@@ -95,17 +125,19 @@ contract NFTsCrowdsaleBase is Superuser {
     require(isOnAuction(_auction.tokenId));
     require(_ethAmount >= computedEthPrice);
 
-    uint256 defrayExcess = _ethAmount.sub(computedEthPrice);
+    uint256 payExcess = _ethAmount.sub(computedEthPrice);
 
     if (price > 0) {
       _auction.seller.transfer(computedEthPrice);
     }
-    msg.sender.transfer(defrayExcess);
-    _transfer(msg.sender, _tokenId);
+    address buyer = msg.sender;
+    buyer.transfer(payExcess);
+    _transfer(buyer, _tokenId);
+    emit PayByEthSuccess(_auction.seller, msg.sender, _auction.price, _auction.endAt, _auction.tokenId);
     delete tokenIdToAuction[_tokenId];
   }
 
-  function _defrayByErc20(uint256 _tokenId) internal {
+  function _payByErc20(uint256 _tokenId) internal {
 
     Auction storage _auction = tokenIdToAuction[_tokenId];
     uint256 price = uint256(_auction.price);
@@ -117,6 +149,7 @@ contract NFTsCrowdsaleBase is Superuser {
       erc20Contract.transferFrom(msg.sender, _auction.seller, price);
     }
     _transfer(msg.sender, _tokenId);
+    emit PayByErc20Success(_auction.seller, msg.sender, _auction.price, _auction.endAt, _auction.tokenId);
     delete tokenIdToAuction[_tokenId];
   }
   

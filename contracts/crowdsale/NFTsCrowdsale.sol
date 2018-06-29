@@ -1,11 +1,11 @@
 pragma solidity ^0.4.23;
 
 import "../../node_modules/zeppelin-solidity/contracts/lifecycle/Pausable.sol";
-import "./EthDefaryPausable.sol";
+import "./EthPayPausable.sol";
 import "./NFTsCrowdsaleBase.sol";
 
 
-contract NFTsCrowdsale is NFTsCrowdsaleBase, EthDefaryPausable, Pausable{
+contract NFTsCrowdsale is NFTsCrowdsaleBase, EthPayPausable, Pausable{
 
   constructor(address _erc721Address, address _erc20Address, uint _eth2erc20) public 
   NFTsCrowdsaleBase(_erc721Address, _erc20Address, _eth2erc20){}
@@ -21,19 +21,19 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, EthDefaryPausable, Pausable{
   }
 
   /**
-   * @dev defray a auction by eth
+   * @dev pay a auction by eth
    * @param _tokenId ldb tokenid
    */
-  function defrayByEth (uint256 _tokenId) whenNotEthPaused external payable {
-    _defrayByEth(_tokenId); 
+  function payByEth (uint256 _tokenId) whenNotEthPaused external payable {
+    _payByEth(_tokenId); 
   }
 
   /**
-   * @dev defray a auction by erc20 Token
+   * @dev pay a auction by erc20 Token
    * @param _tokenId ldb tokenid
    */
-  function defrayByErc20 (uint256 _tokenId) whenNotPaused external {
-    _defrayByErc20(_tokenId);
+  function payByErc20 (uint256 _tokenId) whenNotPaused external {
+    _payByErc20(_tokenId);
   }
 
   /**
@@ -43,9 +43,4 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, EthDefaryPausable, Pausable{
   function cancelAuction (uint256 _tokenId) external {
     _cancelAuction(_tokenId);
   }
-
-  /**
-   * @dev get a auction detail by _tokenId
-   * @param _tokenId ldb tokenid
-   */
 }

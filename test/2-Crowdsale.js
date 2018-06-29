@@ -51,14 +51,15 @@ contract('LdbNFTCrowdsale', function (accounts) {
   /**
    * Defray Function Test
    */
-  describe('defray by eth: success', function () {
+  describe('pay by eth: success', function () {
     beforeEach(async function () {
-      // defray success
+      // pay success
       this.preBalance = (await web3.eth.getBalance(this.seller)).toNumber();
-      await this.NFTsCrowdsale.defrayByEth(this._tokenId, {
+      const { logs } = await this.NFTsCrowdsale.payByEth(this._tokenId, {
         value: this.price,
         from: this.buyer,
       });
+      this.logs = logs;
     });
 
     it('shuould change token ownership', async function () {
@@ -72,39 +73,48 @@ contract('LdbNFTCrowdsale', function (accounts) {
       // error less than 1gwei
       (finalCount - computedCount).should.be.below(this.maError);
     });
+    it('events: PayByEthSuccess', async function () {
+      this.logs[0].event.should.be.equal('PayByEthSuccess');
+      this.logs[0].args.seller.should.be.equal(this.seller);
+      this.logs[0].args.buyer.should.be.equal(this.buyer);
+      this.logs[0].args.price.should.be.bignumber.equal(this.price);
+      this.logs[0].args.endAt.should.be.bignumber.equal(this.endAt);
+      this.logs[0].args.tokenId.should.be.bignumber.equal(this._tokenId);
+    });
   });
   
-  it('less ether defray: should revert', async function () {
+  it('less ether pay: should revert', async function () {
     const buyer = accounts[1];
-    await this.NFTsCrowdsale.defrayByEth(this._tokenId, {
+    await this.NFTsCrowdsale.payByEth(this._tokenId, {
       value: parseInt(this.ethPrice / 2),
       from: buyer,
     }).should.be.rejectedWith('revert');
   });
 
-  it('defray with defray excess be should return of ', async function () {
-    const defrayExcess = parseInt(1e18 / this.eth2erc20);
+  it('pay with pay excess be should return of ', async function () {
+    const payExcess = parseInt(1e18 / this.eth2erc20);
     const gasPrice = 100;
     const preBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
-    const receipt = await this.NFTsCrowdsale.defrayByEth(this._tokenId, {
+    const receipt = await this.NFTsCrowdsale.payByEth(this._tokenId, {
       gasPrice,
-      value: this.ethPrice + defrayExcess,
+      value: this.ethPrice + payExcess,
       from: this.buyer,
     });
     const afterDefrayBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
     const gasCost = receipt.receipt.gasUsed * gasPrice;
-    // defrayExcess should be return of
+    // payExcess should be return of
     (afterDefrayBalance - (preBalance - this.ethPrice - gasCost)).should.be.below(this.maError);
   });
 
-  describe('defray by erc20: success', function () {
+  describe('pay by erc20: success', function () {
     beforeEach(async function () {
-      // defray success
+      // pay success
       this.preBalance = (await web3.eth.getBalance(this.seller)).toNumber();
       await this.erc20Token.approve(this.NFTsCrowdsale.address, 1e27, { from: this.buyer });
-      await this.NFTsCrowdsale.defrayByErc20(this._tokenId, {
+      const { logs } = await this.NFTsCrowdsale.payByErc20(this._tokenId, {
         from: this.buyer,
       });
+      this.logs = logs;
     });
 
     it('shuould change token ownership', async function () {
@@ -117,6 +127,15 @@ contract('LdbNFTCrowdsale', function (accounts) {
       const computedCount = this.preBalance + this.price;
       // error less than 1gwei
       (finalCount - computedCount).should.be.below(this.maError);
+    });
+
+    it('events: PayByErc20Success', async function () {
+      this.logs[0].event.should.be.equal('PayByErc20Success');
+      this.logs[0].args.seller.should.be.equal(this.seller);
+      this.logs[0].args.buyer.should.be.equal(this.buyer);
+      this.logs[0].args.price.should.be.bignumber.equal(this.price);
+      this.logs[0].args.endAt.should.be.bignumber.equal(this.endAt);
+      this.logs[0].args.tokenId.should.be.bignumber.equal(this._tokenId);
     });
   });
   it('should withdrawBalance success', async function () {
@@ -148,23 +167,40 @@ contract('LdbNFTCrowdsale', function (accounts) {
   });
 
   it('isOnAuction should be false after cancelAuction ', async function () {
-    await this.NFTsCrowdsale.cancelAuction(this._tokenId);
+    const { logs } = await this.NFTsCrowdsale.cancelAuction(this._tokenId);
     (await this.NFTsCrowdsale.isOnAuction(this._tokenId)).should.be.equal(false);
+
+    // events
+    logs[0].event.should.be.equal('CancelAuction');
+    logs[0].args.seller.should.be.equal(this.seller);
+    logs[0].args.tokenId.should.be.bignumber.equal(this._tokenId);
   });
 
   it('ethPause & ethUnPause', async function () {
     // test ethPause
     await this.NFTsCrowdsale.ethPause();
-    await this.NFTsCrowdsale.defrayByEth(this._tokenId, {
+    await this.NFTsCrowdsale.payByEth(this._tokenId, {
       value: this.price,
       from: this.buyer,
     }).should.be.rejectedWith('revert');
 
     // test ethUnPause
     await this.NFTsCrowdsale.ethUnPause();
-    await this.NFTsCrowdsale.defrayByEth(this._tokenId, {
+    await this.NFTsCrowdsale.payByEth(this._tokenId, {
       value: this.price,
       from: this.buyer,
     }).should.to.not.rejectedWith('revert');
+  });
+
+  // events
+  it('event: NewAuction', async function () {
+    const _tokenId = 100;
+    await this.LDBNFTs.mint(this.seller, _tokenId);
+    const { logs } = await this.NFTsCrowdsale.newAuction(this.price, _tokenId, this.endAt, { from: this.seller });
+    logs[0].event.should.be.equal('NewAuction');
+    logs[0].args.seller.should.be.equal(this.seller);
+    logs[0].args.price.should.be.bignumber.equal(this.price);
+    logs[0].args.endAt.should.be.bignumber.equal(this.endAt);
+    logs[0].args.tokenId.should.be.bignumber.equal(_tokenId);
   });
 });

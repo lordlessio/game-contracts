@@ -13,7 +13,7 @@ contract('LDBNFTs', function (accounts) {
     this.LDBNFTs = await LDBNFTs.new(this.name, this.symbol, { from: accounts[0] });
   });
 
-  it('should deploye success', async function () {
+  it('should deploy success', async function () {
     const nane = await this.LDBNFTs.name.call();
     const symbol = await this.LDBNFTs.symbol.call();
 

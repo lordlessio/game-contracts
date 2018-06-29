@@ -8,7 +8,7 @@ import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
  * @title Pausable
  * @dev Base contract which allows children to implement an emergency stop mechanism.
  */
-contract EthDefaryPausable is Superuser {
+contract EthPayPausable is Superuser {
   event EthPause();
   event UnEthPause();
 
