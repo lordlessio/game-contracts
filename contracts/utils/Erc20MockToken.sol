@@ -1,4 +1,4 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.4.23;
 
 // File: zeppelin-solidity/contracts/math/SafeMath.sol
 
@@ -94,7 +94,7 @@ contract BasicToken is ERC20Basic {
     // SafeMath.sub will throw if there is not enough balance.
     balances[msg.sender] = balances[msg.sender].sub(_value);
     balances[_to] = balances[_to].add(_value);
-    Transfer(msg.sender, _to, _value);
+    emit Transfer(msg.sender, _to, _value);
     return true;
   }
 
@@ -109,10 +109,10 @@ contract BasicToken is ERC20Basic {
 
 }
 
-// File: zeppelin-solidity/contracts/token/ERC20/BurnableToken.sol
+// File: zeppelin-solidity/contracts/token/ERC20/emit BurnableToken.sol
 
 /**
- * @title Burnable Token
+ * @title emit Burnable Token
  * @dev Token that can be irreversibly burned (destroyed).
  */
 contract BurnableToken is BasicToken {
@@ -120,7 +120,7 @@ contract BurnableToken is BasicToken {
   event Burn(address indexed burner, uint256 value);
 
   /**
-   * @dev Burns a specific amount of tokens.
+   * @dev emit Burns a specific amount of tokens.
    * @param _value The amount of token to be burned.
    */
   function burn(uint256 _value) public {
@@ -131,8 +131,8 @@ contract BurnableToken is BasicToken {
     address burner = msg.sender;
     balances[burner] = balances[burner].sub(_value);
     totalSupply_ = totalSupply_.sub(_value);
-    Burn(burner, _value);
-    Transfer(burner, address(0), _value);
+    emit Burn(burner, _value);
+    emit Transfer(burner, address(0), _value);
   }
 }
 
@@ -147,14 +147,14 @@ contract Ownable {
   address public owner;
 
 
-  event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+  event Ownershipemit (address indexed previousOwner, address indexed newOwner);
 
 
   /**
    * @dev The Ownable constructor sets the original `owner` of the contract to the sender
    * account.
    */
-  function Ownable() public {
+  constructor() public {
     owner = msg.sender;
   }
 
@@ -172,7 +172,7 @@ contract Ownable {
    */
   function transferOwnership(address newOwner) public onlyOwner {
     require(newOwner != address(0));
-    OwnershipTransferred(owner, newOwner);
+    emit Ownershipemit (owner, newOwner);
     owner = newOwner;
   }
 
@@ -206,7 +206,7 @@ contract StandardToken is ERC20, BasicToken {
 
 
   /**
-   * @dev Transfer tokens from one address to another
+   * @dev emit Transfer tokens from one address to another
    * @param _from address The address which you want to send tokens from
    * @param _to address The address which you want to transfer to
    * @param _value uint256 the amount of tokens to be transferred
@@ -219,7 +219,7 @@ contract StandardToken is ERC20, BasicToken {
     balances[_from] = balances[_from].sub(_value);
     balances[_to] = balances[_to].add(_value);
     allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
-    Transfer(_from, _to, _value);
+    emit Transfer(_from, _to, _value);
     return true;
   }
 
@@ -235,7 +235,7 @@ contract StandardToken is ERC20, BasicToken {
    */
   function approve(address _spender, uint256 _value) public returns (bool) {
     allowed[msg.sender][_spender] = _value;
-    Approval(msg.sender, _spender, _value);
+    emit Approval(msg.sender, _spender, _value);
     return true;
   }
 
@@ -261,7 +261,7 @@ contract StandardToken is ERC20, BasicToken {
    */
   function increaseApproval(address _spender, uint _addedValue) public returns (bool) {
     allowed[msg.sender][_spender] = allowed[msg.sender][_spender].add(_addedValue);
-    Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
+    emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
     return true;
   }
 
@@ -282,7 +282,7 @@ contract StandardToken is ERC20, BasicToken {
     } else {
       allowed[msg.sender][_spender] = oldValue.sub(_subtractedValue);
     }
-    Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
+    emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
     return true;
   }
 
@@ -317,8 +317,8 @@ contract MintableToken is StandardToken, Ownable {
   function mint(address _to, uint256 _amount) onlyOwner canMint public returns (bool) {
     totalSupply_ = totalSupply_.add(_amount);
     balances[_to] = balances[_to].add(_amount);
-    Mint(_to, _amount);
-    Transfer(address(0), _to, _amount);
+    emit Mint(_to, _amount);
+    emit Transfer(address(0), _to, _amount);
     return true;
   }
 
@@ -328,7 +328,7 @@ contract MintableToken is StandardToken, Ownable {
    */
   function finishMinting() onlyOwner canMint public returns (bool) {
     mintingFinished = true;
-    MintFinished();
+    emit MintFinished();
     return true;
   }
 }

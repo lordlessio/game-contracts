@@ -4,3 +4,5 @@ node_js:
 cache:
   directories:
     - "node_modules"
+after_script:
+  - npm run cov && cat coverage/lcov.info | coveralls

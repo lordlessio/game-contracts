@@ -1,32 +1,46 @@
-var LdbNFT = artifacts.require('LdbNFT');
+const LDBNFTs = artifacts.require('LDBNFTs');
 const BigNumber = web3.BigNumber;
+
 require('chai')
   .use(require('chai-as-promised'))
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
-contract('LdbNFT', function (accounts) {
+contract('LDBNFTs', function (accounts) {
   beforeEach(async function () {
-    this.ldbNFT = await LdbNFT.new('LDB NFT', 'LDB', { from: accounts[0] });
+    this.name = 'LORDLESS Building NFT';
+    this.symbol = 'LDB';
+    this.LDBNFTs = await LDBNFTs.new(this.name, this.symbol, { from: accounts[0] });
   });
 
-  describe('LdbNFT basic test', function () {
-    it('should set title and name when deployed', async function () {
-      const nane = await this.ldbNFT.name.call();
-      const symbol = await this.ldbNFT.symbol.call();
-  
-      nane.should.be.equal('LDB NFT');
-      symbol.should.be.equal('LDB');
-    });
+  it('should deploy success', async function () {
+    const nane = await this.LDBNFTs.name.call();
+    const symbol = await this.LDBNFTs.symbol.call();
 
-    it('should throw revert when not mint by CLEVEL account', async function () {
-      await this.ldbNFT.mint(accounts[0], 1, { from: accounts[1] }).should.be.rejectedWith('revert');
-    });
-    
-    it('should mint token to accounts[1]', async function () {
-      await this.ldbNFT.mint(accounts[1], 2);
-      const count = await this.ldbNFT.balanceOf(accounts[1]);
-      count.should.be.bignumber.equal(1);
-    });
+    nane.should.be.equal(this.name);
+    symbol.should.be.equal(this.symbol);
+  });
+
+  it('should mint token to accounts[1]', async function () {
+    const _tokenId = 3;
+    await this.LDBNFTs.mint(accounts[1], _tokenId);
+    const count = await this.LDBNFTs.balanceOf(accounts[1]);
+    count.should.be.bignumber.equal(1);
+    (await this.LDBNFTs.ownerOf(_tokenId)).should.be.equal(accounts[1]);
+  });
+
+  it('should burn a token', async function () {
+    const _tokenId = 3;
+    await this.LDBNFTs.mint(accounts[1], _tokenId);
+    await this.LDBNFTs.burn(_tokenId);
+    await this.LDBNFTs.ownerOf(_tokenId).should.be.rejectedWith('revert');
+  });
+
+  it('should set token uri success', async function () {
+    const _tokenId = 3;
+    const uri = 'testUrl';
+    await this.LDBNFTs.mint(accounts[1], _tokenId);
+    await this.LDBNFTs.setTokenURI(_tokenId, uri);
+    (await this.LDBNFTs.tokenURI(_tokenId)).should.be.equal(uri);
   });
 });
