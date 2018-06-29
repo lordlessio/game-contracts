@@ -1,6 +1,6 @@
-const LdbNFT = artifacts.require('./LdbNFT.sol');
-const LdbNFTCrowdsale = artifacts.require('./LdbNFTCrowdsale.sol');
-const Erc20 = artifacts.require('./LORDLESS_TOKEN.sol');
+const LdbNFT = artifacts.require('LDBNFTs');
+const LdbNFTCrowdsale = artifacts.require('NFTsCrowdsale');
+const Erc20 = artifacts.require('LORDLESS_TOKEN');
 
 const fs = require('fs');
 const dbPath = require('path').join(require('os').homedir(), '.lordless/dev.conf');
