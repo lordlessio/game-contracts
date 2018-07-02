@@ -31,10 +31,11 @@ contract BuildingBase {
   /* Events */
 
   event Build (
+    uint256 time,
     uint256 indexed tokenId,
-    uint64 _latitude,
-    uint64 _longitude,
-    uint8 _reputation
+    uint64 latitude,
+    uint64 longitude,
+    uint8 reputation
   );
 
   event ActivityUpgrade (
@@ -80,7 +81,7 @@ contract BuildingBase {
       time, _latitude, _longitude, _reputation, uint256(0)
     );
     tokenLDBs[_tokenId] = ldb;
-    emit Build(time, _latitude, _longitude, _reputation);
+    emit Build(time, _tokenId, _latitude, _longitude, _reputation);
   }
   
   function _mutiBuild(uint256 _tokenId, uint256 _activity) internal {

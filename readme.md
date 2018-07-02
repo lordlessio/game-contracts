@@ -36,7 +36,6 @@ npm run console
 
 ### Community
 * [Website](http://lordless.io)
-* [Zhihu](https://zhuanlan.zhihu.com/lordless)
 * [Telegram](https://t.me/lordlessio)
 * [Twitter](https://twitter.com/lordlessio)
 

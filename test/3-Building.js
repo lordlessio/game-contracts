@@ -16,7 +16,7 @@ contract('Building', function ([_, owner]) {
     this.tokenId = 1;
     this.reputation = 4;
     this.latitude = 10000000000000;
-    this.longtitude = 10000000000000;
+    this.longitude = 10000000000000;
   });
 
   beforeEach(async function () {
@@ -25,8 +25,16 @@ contract('Building', function ([_, owner]) {
     await this.Building.setInfluenceContract(this.Influence.address);
     await this.Influence.setBuildingContract(this.Building.address);
 
-    await this.Building.build(this.tokenId, this.latitude, this.longtitude, this.reputation);
+    const { logs } = await this.Building.build(this.tokenId, this.latitude, this.longitude, this.reputation);
+    this.logs = logs;
     this.ldb = await this.Building.building(this.tokenId);
+  });
+ 
+  it('event Build', async function () {
+    this.logs[0].args.tokenId.should.be.bignumber.equal(this.tokenId);
+    this.logs[0].args.latitude.should.be.bignumber.equal(this.latitude);
+    this.logs[0].args.longitude.should.be.bignumber.equal(this.longitude);
+    this.logs[0].args.reputation.should.be.bignumber.equal(this.reputation);
   });
 
   it('set buildingContract & influenceContract success', async function () {
@@ -36,16 +44,21 @@ contract('Building', function ([_, owner]) {
 
   it('get a ldb info', async function () {
     this.ldb[1].should.be.bignumber.equal(this.latitude);
-    this.ldb[2].should.be.bignumber.equal(this.longtitude);
+    this.ldb[2].should.be.bignumber.equal(this.longitude);
     this.ldb[3].should.be.bignumber.equal(this.reputation);
     this.ldb[4].should.be.bignumber.equal(0);
   });
 
   it('activityUpgrade', async function () {
     const activity = 10;
-    await this.Building.activityUpgrade(this.tokenId, activity);
+    const oldb = await this.Building.building(this.tokenId);
+    const { logs } = await this.Building.activityUpgrade(this.tokenId, activity);
     const ldb = await this.Building.building(this.tokenId);
     ldb[4].should.be.bignumber.equal(this.ldb[4].toNumber() + activity);
+
+    logs[0].args.tokenId.should.be.bignumber.equal(this.tokenId);
+    logs[0].args.oActivity.should.be.bignumber.equal(oldb[4]);
+    logs[0].args.newActivity.should.be.bignumber.equal(oldb[4] + activity);
   });
   it('get ldb reputation', async function () {
     const activity = 20;
@@ -63,8 +76,13 @@ contract('Building', function ([_, owner]) {
 
   it('reputationSetting', async function () {
     const reputation = 1;
-    await this.Building.reputationSetting(this.tokenId, reputation);
+    const oldb = await this.Building.building(this.tokenId);
+    const { logs } = await this.Building.reputationSetting(this.tokenId, reputation);
     const ldb = await this.Building.building(this.tokenId);
     ldb[3].should.be.bignumber.equal(reputation);
+
+    logs[0].args.tokenId.should.be.bignumber.equal(this.tokenId);
+    logs[0].args.oReputation.should.be.bignumber.equal(oldb[3]);
+    logs[0].args.newReputation.should.be.bignumber.equal(ldb[3]);
   });
 });
