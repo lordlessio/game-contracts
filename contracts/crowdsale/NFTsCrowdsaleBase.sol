@@ -87,6 +87,10 @@ contract NFTsCrowdsaleBase is Superuser {
     erc721Contract.transferFrom(_owner, this, _tokenId);
   }
 
+  function _cancelEscrow(address _owner, uint256 _tokenId) internal {
+    erc721Contract.transferFrom(this, _owner, _tokenId);
+  }
+
   function _transfer(address _receiver, uint256 _tokenId) internal {
     erc721Contract.safeTransferFrom(this, _receiver, _tokenId);
   }
@@ -114,6 +118,7 @@ contract NFTsCrowdsaleBase is Superuser {
     require(tokenOwner == msg.sender || msg.sender == owner);
     Auction storage _auction = tokenIdToAuction[_tokenId];
     emit CancelAuction(_auction.seller, _tokenId);
+    _cancelEscrow(_auction.seller, _tokenId);
     delete tokenIdToAuction[_tokenId];
   }
 

@@ -174,6 +174,8 @@ contract('LdbNFTCrowdsale', function (accounts) {
     logs[0].event.should.be.equal('CancelAuction');
     logs[0].args.seller.should.be.equal(this.seller);
     logs[0].args.tokenId.should.be.bignumber.equal(this._tokenId);
+
+    await this.NFTsCrowdsale.newAuction(this.price, this._tokenId, this.endAt, { from: this.seller });
   });
 
   it('ethPause & ethUnPause', async function () {
