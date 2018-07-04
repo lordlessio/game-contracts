@@ -1,10 +1,11 @@
 pragma solidity ^0.4.23;
 
 import "./BuildingBase.sol";
+import "./IBuilding.sol";
 import "./IInfluence.sol";
 import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
 
-contract Building is BuildingBase, Superuser {
+contract Building is IBuilding, BuildingBase, Superuser {
   
   IInfluence public influence;
 
