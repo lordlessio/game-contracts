@@ -92,7 +92,7 @@ contract('LdbNFTCrowdsale', function (accounts) {
   });
 
   it('pay with pay excess be should return of ', async function () {
-    const payExcess = parseInt(1e18 / this.eth2erc20);
+    const payExcess = 1e18;
     const gasPrice = 100;
     const preBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
     const receipt = await this.NFTsCrowdsale.payByEth(this._tokenId, {
