@@ -17,20 +17,14 @@
   LDB (LORDLESS Building), is the core digital asset in LORDLESS. Most of the interactions in the virtual world are dependent on LDB. The core information of the LDB will be stored on the blockchain to ensure the immutability of the digital assets.
 </p>
 
- 
-### Development
+![](https://olxvlcccu.qnssl.com/blog/p0k4l.jpg?imageslim)
 
+### Development
 
 ```sh
 
 #test
 npm run test
-
-# flattener
-npm run flattener
-
-# console
-npm run console
 
 ```
 
