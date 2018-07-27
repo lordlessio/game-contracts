@@ -1,5 +1,22 @@
 pragma solidity ^0.4.23;
 
+/**
+ * @title -NFTs crowdsale
+ *
+ *  ██████╗ ██████╗   ██████╗  ██╗    ██╗ ██████╗  ███████╗  █████╗  ██╗      ███████╗ ██╗
+ * ██╔════╝ ██╔══██╗ ██╔═══██╗ ██║    ██║ ██╔══██╗ ██╔════╝ ██╔══██╗ ██║      ██╔════╝ ██║
+ * ██║      ██████╔╝ ██║   ██║ ██║ █╗ ██║ ██║  ██║ ███████╗ ███████║ ██║      █████╗   ██║
+ * ██║      ██╔══██╗ ██║   ██║ ██║███╗██║ ██║  ██║ ╚════██║ ██╔══██║ ██║      ██╔══╝   ╚═╝
+ * ╚██████╗ ██║  ██║ ╚██████╔╝ ╚███╔███╔╝ ██████╔╝ ███████║ ██║  ██║ ███████╗ ███████╗ ██╗
+  * ╚═════╝ ╚═╝  ╚═╝  ╚═════╝   ╚══╝╚══╝  ╚═════╝  ╚══════╝ ╚═╝  ╚═╝ ╚══════╝ ╚══════╝ ╚═╝
+ *
+ * ---
+ * POWERED BY
+ * ╦   ╔═╗ ╦═╗ ╔╦╗ ╦   ╔═╗ ╔═╗ ╔═╗      ╔╦╗ ╔═╗ ╔═╗ ╔╦╗
+ * ║   ║ ║ ╠╦╝  ║║ ║   ║╣  ╚═╗ ╚═╗       ║  ║╣  ╠═╣ ║║║
+ * ╩═╝ ╚═╝ ╩╚═ ═╩╝ ╩═╝ ╚═╝ ╚═╝ ╚═╝       ╩  ╚═╝ ╩ ╩ ╩ ╩
+ */
+
 import "../../node_modules/zeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "./EthPayPausable.sol";
 import "./NFTsCrowdsaleBase.sol";
@@ -7,40 +24,40 @@ import "./NFTsCrowdsaleBase.sol";
 
 contract NFTsCrowdsale is NFTsCrowdsaleBase, EthPayPausable, Pausable{
 
-  constructor(address _erc721Address, address _erc20Address, uint _eth2erc20) public 
-  NFTsCrowdsaleBase(_erc721Address, _erc20Address, _eth2erc20){}
+  constructor(address erc721Address, address erc20Address, uint eth2erc20) public 
+  NFTsCrowdsaleBase(erc721Address, erc20Address, eth2erc20){}
 
-  function () external payable {}
-
-  function withdrawBalance() onlyOwnerOrSuperuser external {
-    owner.transfer(address(this).balance);
-  }
-
-  function newAuction(uint128 _price, uint256 _tokenId, uint256 _endAt) whenNotPaused external {
-    _newAuction(_price, _tokenId, _endAt);
+  /**
+   * @dev new a Auction
+   * @param price price in wei
+   * @param tokenId LDB's tokenid
+   * @param endAt auction end time
+   */
+  function newAuction(uint128 price, uint256 tokenId, uint256 endAt) whenNotPaused external {
+    _newAuction(price, tokenId, endAt);
   }
 
   /**
    * @dev pay a auction by eth
-   * @param _tokenId ldb tokenid
+   * @param tokenId ldb tokenid
    */
-  function payByEth (uint256 _tokenId) whenNotEthPaused external payable {
-    _payByEth(_tokenId); 
+  function payByEth (uint256 tokenId) whenNotEthPaused external payable {
+    _payByEth(tokenId); 
   }
 
   /**
    * @dev pay a auction by erc20 Token
-   * @param _tokenId ldb tokenid
+   * @param tokenId LDB's tokenid
    */
-  function payByErc20 (uint256 _tokenId) whenNotPaused external {
-    _payByErc20(_tokenId);
+  function payByErc20 (uint256 tokenId) whenNotPaused external {
+    _payByErc20(tokenId);
   }
 
   /**
    * @dev cancel a auction
-   * @param _tokenId ldb tokenid
+   * @param tokenId LDB's tokenid
    */
-  function cancelAuction (uint256 _tokenId) external {
-    _cancelAuction(_tokenId);
+  function cancelAuction (uint256 tokenId) external {
+    _cancelAuction(tokenId);
   }
 }

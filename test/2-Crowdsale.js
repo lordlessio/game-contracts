@@ -138,30 +138,7 @@ contract('LdbNFTCrowdsale', function (accounts) {
       this.logs[0].args.tokenId.should.be.bignumber.equal(this._tokenId);
     });
   });
-  it('should withdrawBalance success', async function () {
-    const preBalance = (await balanceOf(accounts[0])).toNumber();
-    const depositCount = ether2wei(1); // ether
-    const gasPrice = 100;
-
-    // send ether
-    await this.NFTsCrowdsale.sendTransaction({ value: depositCount, from: accounts[1] });
-    
-    // withdrawBalance
-    const receipt = await this.NFTsCrowdsale.withdrawBalance({ gasPrice });
-    const finalCount = (await balanceOf(accounts[0])).toNumber();
-    const gasCost = receipt.receipt.gasUsed * gasPrice;
-
-    // check balance
-    const computedCount = depositCount.toNumber() - gasCost;
-    const infactCount = finalCount - preBalance;
-
-    (computedCount - infactCount).should.be.below(this.maError);
-  });
-
-  it('revert: withdrawBalance with another address', async function () {
-    await this.NFTsCrowdsale.withdrawBalance({ from: accounts[1] }).should.be.rejectedWith('revert');
-  });
-
+  
   it('isOnAuction should be true', async function () {
     (await this.NFTsCrowdsale.isOnAuction(this._tokenId)).should.be.equal(true);
   });

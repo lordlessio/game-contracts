@@ -4,8 +4,9 @@ import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
 import "../../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol";
 import "../../node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "../../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721.sol";
+import "./INFTsCrowdsale.sol";
 
-contract NFTsCrowdsaleBase is Superuser {
+contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
 
   using SafeMath for uint256;
 
@@ -27,36 +28,6 @@ contract NFTsCrowdsaleBase is Superuser {
 
   mapping (uint256 => Auction) tokenIdToAuction;
   
-   /* Events */
-
-  event NewAuction (
-    address indexed seller,
-    uint256 price,
-    uint256 endAt,
-    uint256 indexed tokenId
-  );
-
-  event PayByEthSuccess (
-    address indexed seller,
-    address indexed buyer,
-    uint256 price,
-    uint256 endAt,
-    uint256 indexed tokenId
-  );
-
-  event PayByErc20Success (
-    address indexed seller,
-    address indexed buyer, 
-    uint256 price,
-    uint256 endAt,
-    uint256 indexed tokenId
-  );
-
-  event CancelAuction (
-    address indexed seller,
-    uint256 indexed tokenId
-  );
-
   constructor(address _erc721Address,address _erc20Address, uint _eth2erc20) public {
     erc721Contract = ERC721(_erc721Address);
     erc20Contract = ERC20(_erc20Address);
@@ -74,15 +45,19 @@ contract NFTsCrowdsaleBase is Superuser {
     return (auction.seller, auction.price, auction.endAt, auction.tokenId);
   }
 
-  function isOnAuction(uint256 _tokenId) public view returns (bool) {
+  function isOnAuction(uint256 _tokenId) external view returns (bool) {
     Auction storage _auction = tokenIdToAuction[_tokenId];
-    return (_auction.endAt > now);
+    return (_auction.endAt > block.timestamp);
   }
 
   function _isTokenOwner(address _seller, uint256 _tokenId) internal view returns (bool){
     return (erc721Contract.ownerOf(_tokenId) == _seller);
   }
 
+  function _isOnAuction(uint256 _tokenId) internal view returns (bool) {
+    Auction storage _auction = tokenIdToAuction[_tokenId];
+    return (_auction.endAt > block.timestamp);
+  }
   function _escrow(address _owner, uint256 _tokenId) internal {
     erc721Contract.transferFrom(_owner, this, _tokenId);
   }
@@ -126,7 +101,7 @@ contract NFTsCrowdsaleBase is Superuser {
     uint256 _ethAmount = msg.value;
     Auction storage _auction = tokenIdToAuction[_tokenId];
     uint256 price = _auction.price;
-    require(isOnAuction(_auction.tokenId));
+    require(_isOnAuction(_auction.tokenId));
     require(_ethAmount >= price);
 
     uint256 payExcess = _ethAmount.sub(price);
@@ -148,7 +123,7 @@ contract NFTsCrowdsaleBase is Superuser {
     uint256 computedErc20Price = price.mul(eth2erc20);
     uint256 balance = erc20Contract.balanceOf(msg.sender);
     require(balance >= computedErc20Price);
-    require(isOnAuction(_auction.tokenId));
+    require(_isOnAuction(_auction.tokenId));
 
     if (price > 0) {
       erc20Contract.transferFrom(msg.sender, _auction.seller, computedErc20Price);
