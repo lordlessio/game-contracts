@@ -30,7 +30,7 @@ contract EthPayPausable is Superuser {
   }
 
   /**
-   * @dev called by the owner to pause, triggers stopped state
+   * @dev called by the owner or superuser to pause, triggers stopped state
    */
   function ethPause() onlyOwnerOrSuperuser whenNotEthPaused public {
     ethPaused = true;
@@ -38,7 +38,7 @@ contract EthPayPausable is Superuser {
   }
 
   /**
-   * @dev called by the owner to unpause, returns to normal state
+   * @dev called by the owner or superuser to unpause, returns to normal state
    */
   function ethUnPause() onlyOwnerOrSuperuser whenEthPaused public {
     ethPaused = false;

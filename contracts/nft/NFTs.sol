@@ -3,7 +3,17 @@ pragma solidity ^0.4.23;
 import "../../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
 import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
 /**
- * @title LDBNFTs
+ * @title LDBNFTs - LORDLESS BUILDING NFTs Contract
+ * @dev This contract only records the relationship of TOKEN ID ownership.
+ * 
+ * ██╗      ██████╗  ██████╗  ███╗   ██╗ ███████╗ ████████╗ ███████╗ ██╗
+ * ██║      ██╔══██╗ ██╔══██╗ ████╗  ██║ ██╔════╝ ╚══██╔══╝ ██╔════╝ ██║
+ * ██║      ██║  ██║ ██████╔╝ ██╔██╗ ██║ █████╗      ██║    ███████╗ ██║
+ * ██║      ██║  ██║ ██╔══██╗ ██║╚██╗██║ ██╔══╝      ██║    ╚════██║ ╚═╝
+ * ███████╗ ██████╔╝ ██████╔╝ ██║ ╚████║ ██║         ██║    ███████║ ██╗
+ * ╚══════╝ ╚═════╝  ╚═════╝  ╚═╝  ╚═══╝ ╚═╝         ╚═╝    ╚══════╝ ╚═╝
+ *
+ * Visit the https://github.com/lordlessio/ldb-nft for more details
  * 
  */
 contract LDBNFTs is ERC721Token, Superuser {
