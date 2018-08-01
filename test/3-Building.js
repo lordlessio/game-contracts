@@ -85,13 +85,30 @@ contract('Building', function ([_, owner]) {
     logs[0].args.oActiveness.should.be.bignumber.equal(oActiveness);
     logs[0].args.newActiveness.should.be.bignumber.equal(oActiveness + deltaActiveness);
   });
-  it('get ldb popularity', async function () {
+  it('get ldb influence', async function () {
     const activeness = 20;
     await this.Building.activenessUpgrade(this.tokenId, activeness);
     const ldb = await this.Building.building(this.tokenId);
     const influence = await this.Building.influenceByToken(this.tokenId);
     influence.should.be.bignumber.equal(getInfluence(ldb[3], ldb[4]));
     // console.log(influence);
+  });
+
+  it('get ldb level', async function () {
+    const deltaActiveness = 100;
+    await this.Building.activenessUpgrade(this.tokenId, deltaActiveness);
+    const ldb = await this.Building.building(this.tokenId);
+    const activeness = ldb[4];
+    const levelShouldBe = parseInt(Math.sqrt(activeness / 10 * 108 * 108) / 108 + 1);
+    (await this.Building.levelByToken(this.tokenId)).should.bignumber.equal(levelShouldBe);
+  });
+
+  it('get weightsApportion', async function () {
+    const userLevel = 10;
+    const lordLevel = 20;
+    const userWeightsApportionShouleBe = 2000 + 6000 * userLevel / (userLevel + lordLevel);
+    (await this.Building.weightsApportion(userLevel, lordLevel))
+      .should.be.bignumber.equal(userWeightsApportionShouleBe);
   });
   
   it('ldb isBuilt', async function () {
