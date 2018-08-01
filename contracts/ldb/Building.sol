@@ -2,7 +2,8 @@ pragma solidity ^0.4.23;
 
 /**
  * @title -LORDLESS BUILDING - LDB
- *
+ * Building contract records the core attributes of LDB
+ * 
  * ██████╗  ██╗   ██╗ ██╗ ██╗      ██████╗  ██╗ ███╗   ██╗  ██████╗  ██╗
  * ██╔══██╗ ██║   ██║ ██║ ██║      ██╔══██╗ ██║ ████╗  ██║ ██╔════╝  ██║
  * ██████╔╝ ██║   ██║ ██║ ██║      ██║  ██║ ██║ ██╔██╗ ██║ ██║  ███╗ ██║
@@ -15,7 +16,8 @@ pragma solidity ^0.4.23;
  * ╦   ╔═╗ ╦═╗ ╔╦╗ ╦   ╔═╗ ╔═╗ ╔═╗      ╔╦╗ ╔═╗ ╔═╗ ╔╦╗
  * ║   ║ ║ ╠╦╝  ║║ ║   ║╣  ╚═╗ ╚═╗       ║  ║╣  ╠═╣ ║║║
  * ╩═╝ ╚═╝ ╩╚═ ═╩╝ ╩═╝ ╚═╝ ╚═╝ ╚═╝       ╩  ╚═╝ ╩ ╩ ╩ ╩
- * 
+ * game at https://lordless.io
+ * code at https://github.com/lordlessio
  */
 
 import "./BuildingBase.sol";
@@ -48,6 +50,8 @@ contract Building is IBuilding, BuildingBase, Superuser {
    * @dev get LDB's influence by tokenId
    * @param tokenId tokenId
    * @return uint256 LDB's influence 
+   *
+   * The influence of LDB determines its ability to distribute candy daily.
    */
   function influenceByToken(uint256 tokenId) external view returns(uint256) {
     return powerContract.influenceByToken(tokenId);
@@ -58,7 +62,9 @@ contract Building is IBuilding, BuildingBase, Superuser {
    * @dev get LDB's weightsApportion 
    * @param userLevel userLevel
    * @param lordLevel lordLevel
-   * @return uint256 LDB's level
+   * @return uint256 LDB's weightsApportion
+   * The candy that the user rewards when completing the candy mission will be assigned to the user and the lord. 
+   * The distribution ratio is determined by weightsApportion
    */
   function weightsApportion(uint256 userLevel, uint256 lordLevel) external view returns(uint256){
     return powerContract.weightsApportion(userLevel, lordLevel);

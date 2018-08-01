@@ -4,7 +4,7 @@ import "../../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721Token.
 import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
 /**
  * @title LDBNFTs - LORDLESS BUILDING NFTs Contract
- * @dev This contract records the relationship of TOKEN ID ownership.
+ * LDBNFTs records the relationship of LDB ownership.
  * 
  * ██╗      ██████╗  ██████╗  ███╗   ██╗ ███████╗ ████████╗ ███████╗ ██╗
  * ██║      ██╔══██╗ ██╔══██╗ ████╗  ██║ ██╔════╝ ╚══██╔══╝ ██╔════╝ ██║
@@ -13,8 +13,13 @@ import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
  * ███████╗ ██████╔╝ ██████╔╝ ██║ ╚████║ ██║         ██║    ███████║ ██╗
  * ╚══════╝ ╚═════╝  ╚═════╝  ╚═╝  ╚═══╝ ╚═╝         ╚═╝    ╚══════╝ ╚═╝
  *
- * Visit the https://github.com/lordlessio/ldb-nft for more details
- * 
+ * ---
+ * POWERED BY
+ * ╦   ╔═╗ ╦═╗ ╔╦╗ ╦   ╔═╗ ╔═╗ ╔═╗      ╔╦╗ ╔═╗ ╔═╗ ╔╦╗
+ * ║   ║ ║ ╠╦╝  ║║ ║   ║╣  ╚═╗ ╚═╗       ║  ║╣  ╠═╣ ║║║
+ * ╩═╝ ╚═╝ ╩╚═ ═╩╝ ╩═╝ ╚═╝ ╚═╝ ╚═╝       ╩  ╚═╝ ╩ ╩ ╩ ╩
+ * game at https://lordless.io
+ * code at https://github.com/lordlessio
  */
 
 interface IBuilding {

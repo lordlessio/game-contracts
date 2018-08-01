@@ -2,6 +2,7 @@ pragma solidity ^0.4.23;
 
 /**
  * @title -NFTs crowdsale
+ * NFTsCrowdsale provides a marketplace for NFTs
  *
  *  ██████╗ ██████╗   ██████╗  ██╗    ██╗ ██████╗  ███████╗  █████╗  ██╗      ███████╗ ██╗
  * ██╔════╝ ██╔══██╗ ██╔═══██╗ ██║    ██║ ██╔══██╗ ██╔════╝ ██╔══██╗ ██║      ██╔════╝ ██║
@@ -15,6 +16,8 @@ pragma solidity ^0.4.23;
  * ╦   ╔═╗ ╦═╗ ╔╦╗ ╦   ╔═╗ ╔═╗ ╔═╗      ╔╦╗ ╔═╗ ╔═╗ ╔╦╗
  * ║   ║ ║ ╠╦╝  ║║ ║   ║╣  ╚═╗ ╚═╗       ║  ║╣  ╠═╣ ║║║
  * ╩═╝ ╚═╝ ╩╚═ ═╩╝ ╩═╝ ╚═╝ ╚═╝ ╚═╝       ╩  ╚═╝ ╩ ╩ ╩ ╩
+ * game at https://lordless.io
+ * code at https://github.com/lordlessio
  */
 
 import "../../node_modules/zeppelin-solidity/contracts/lifecycle/Pausable.sol";
