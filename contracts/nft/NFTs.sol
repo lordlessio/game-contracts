@@ -60,8 +60,8 @@ contract LDBNFTs is ERC721Token, IBuilding, Superuser {
    * @return uint256 LDB's construction time
    * @return int LDB's longitude value 
    * @return int LDB's latitude value
-   * @return uint8 LDB's reputation
-   * @return uint256 LDB's activity
+   * @return uint8 LDB's popularity
+   * @return uint256 LDB's activeness
    */
   function building(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256){
     return buildingContract.building(tokenId);

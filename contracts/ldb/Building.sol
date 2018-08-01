@@ -79,8 +79,8 @@ contract Building is IBuilding, BuildingBase, Superuser {
    * @return uint256 LDB's construction time
    * @return int LDB's longitude value 
    * @return int LDB's latitude value
-   * @return uint8 LDB's reputation
-   * @return uint256 LDB's activity
+   * @return uint8 LDB's popularity
+   * @return uint256 LDB's activeness
    */
   function building(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256){
     return super._building(tokenId);
@@ -100,15 +100,15 @@ contract Building is IBuilding, BuildingBase, Superuser {
    * @param tokenId tokenId
    * @param longitude longitude value 
    * @param latitude latitude value
-   * @param reputation reputation
+   * @param popularity popularity
    */
   function build(
     uint256 tokenId,
     int longitude,
     int latitude,
-    uint8 reputation
+    uint8 popularity
   ) external onlySuperuser {
-    super._build(tokenId, longitude, latitude, reputation);
+    super._build(tokenId, longitude, latitude, popularity);
   }
 
   /**
@@ -116,56 +116,56 @@ contract Building is IBuilding, BuildingBase, Superuser {
    * @param tokenIds Array of tokenId
    * @param longitudes Array of longitude value 
    * @param latitudes Array of latitude value
-   * @param reputations Array of reputation
+   * @param popularitys Array of popularity
    */
   function multiBuild(
     uint256[] tokenIds,
     int[] longitudes,
     int[] latitudes,
-    uint8[] reputations
+    uint8[] popularitys
     ) external onlySuperuser{
 
     super._multiBuild(
       tokenIds,
       longitudes,
       latitudes,
-      reputations
+      popularitys
     );
   }
 
   /**
-   * @dev upgrade LDB's activity 
+   * @dev upgrade LDB's activeness 
    * @param tokenId tokenId
-   * @param deltaActivity delta activity
+   * @param deltaActiveness delta activeness
    */
-  function activityUpgrade(uint256 tokenId, uint256 deltaActivity) onlyOwnerOrSuperuser external {
-    super._activityUpgrade(tokenId, deltaActivity);
+  function activenessUpgrade(uint256 tokenId, uint256 deltaActiveness) onlyOwnerOrSuperuser external {
+    super._activenessUpgrade(tokenId, deltaActiveness);
   }
 
   /**
-   * @dev upgrade multi LDBs's activity 
+   * @dev upgrade multi LDBs's activeness 
    * @param tokenIds Array of tokenId
-   * @param deltaActivities  array of delta activity
+   * @param deltaActiveness  array of delta activeness
    */
-  function multiActivityUpgrade(uint256[] tokenIds, uint256[] deltaActivities) onlyOwnerOrSuperuser external {
-    super._multiActivityUpgrade(tokenIds, deltaActivities);
+  function multiActivenessUpgrade(uint256[] tokenIds, uint256[] deltaActiveness) onlyOwnerOrSuperuser external {
+    super._multiActivenessUpgrade(tokenIds, deltaActiveness);
   }
 
   /**
-   * @dev set LDBs's reputation 
+   * @dev set LDBs's popularity 
    * @param tokenId LDB's tokenId
-   * @param reputation LDB's reputation
+   * @param popularity LDB's popularity
    */
-  function reputationSetting(uint256 tokenId, uint8 reputation) onlySuperuser external {
-    super._reputationSetting(tokenId, reputation);
+  function popularitySetting(uint256 tokenId, uint8 popularity) onlySuperuser external {
+    super._popularitySetting(tokenId, popularity);
   }
 
   /**
-   * @dev set multi LDBs's reputation 
+   * @dev set multi LDBs's popularity 
    * @param tokenIds Array of tokenId
-   * @param reputations Array of reputation
+   * @param popularitys Array of popularity
    */
-  function multiReputationSetting(uint256[] tokenIds, uint8[] reputations) onlySuperuser external {
-    super._multiReputationSetting(tokenIds, reputations);
+  function multiPopularitySetting(uint256[] tokenIds, uint8[] popularitys) onlySuperuser external {
+    super._multiPopularitySetting(tokenIds, popularitys);
   }
 }

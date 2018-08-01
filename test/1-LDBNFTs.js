@@ -59,13 +59,13 @@ contract('LDBNFTs', function (accounts) {
     await this.LDBNFTs.mint(accounts[1], _tokenId);
     this.longitude = 10000;
     this.latitude = 10000;
-    this.reputation = 1;
-    await this.Building.build(_tokenId, this.longitude, this.latitude, this.reputation);
+    this.popularity = 1;
+    await this.Building.build(_tokenId, this.longitude, this.latitude, this.popularity);
 
     this.ldb = await this.LDBNFTs.building(_tokenId);
     this.ldb[1].should.be.bignumber.equal(this.longitude);
     this.ldb[2].should.be.bignumber.equal(this.latitude);
-    this.ldb[3].should.be.bignumber.equal(this.reputation);
+    this.ldb[3].should.be.bignumber.equal(this.popularity);
     this.ldb[4].should.be.bignumber.equal(0);
   });
 });

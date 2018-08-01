@@ -7,14 +7,14 @@ require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
-function getInfluence (_reputation, _activity) {
-  return _reputation * _activity + parseInt(_reputation);
+function getInfluence (_popularity, _activeness) {
+  return _popularity * _activeness + parseInt(_popularity);
 }
 
 contract('Building', function ([_, owner]) {
   before(async function () {
     this.tokenId = 1;
-    this.reputation = 4;
+    this.popularity = 4;
     this.longitude = -10000000000000;
     this.latitude = 10000000000000;
   });
@@ -29,7 +29,7 @@ contract('Building', function ([_, owner]) {
       this.tokenId,
       this.longitude,
       this.latitude,
-      this.reputation
+      this.popularity
     );
     this.logs = logs;
     this.ldb = await this.Building.building(this.tokenId);
@@ -43,14 +43,14 @@ contract('Building', function ([_, owner]) {
       100,
       errorLongitude,
       this.latitude,
-      this.reputation
+      this.popularity
     ).should.be.rejectedWith('revert');
 
     await this.Building.build(
       200,
       this.longitude,
       errorLatitude,
-      this.reputation
+      this.popularity
     ).should.be.rejectedWith('revert');
   });
 
@@ -58,12 +58,10 @@ contract('Building', function ([_, owner]) {
     this.logs[0].args.tokenId.should.be.bignumber.equal(this.tokenId);
     this.logs[0].args.longitude.should.be.bignumber.equal(this.longitude);
     this.logs[0].args.latitude.should.be.bignumber.equal(this.latitude);
-    this.logs[0].args.reputation.should.be.bignumber.equal(this.reputation);
+    this.logs[0].args.popularity.should.be.bignumber.equal(this.popularity);
   });
 
   it('set buildingContract & powerContract success', async function () {
-    console.log(await this.Building.powerContract());
-    console.log(await this.Power.buildingContract());
     (await this.Building.powerContract()).should.be.equal(this.Power.address);
     (await this.Power.buildingContract()).should.be.equal(this.Building.address);
   });
@@ -71,46 +69,46 @@ contract('Building', function ([_, owner]) {
   it('get a ldb info', async function () {
     this.ldb[1].should.be.bignumber.equal(this.longitude);
     this.ldb[2].should.be.bignumber.equal(this.latitude);
-    this.ldb[3].should.be.bignumber.equal(this.reputation);
+    this.ldb[3].should.be.bignumber.equal(this.popularity);
     this.ldb[4].should.be.bignumber.equal(0);
   });
 
-  it('activityUpgrade', async function () {
-    const deltaActivity = 10;
+  it('activenessUpgrade', async function () {
+    const deltaActiveness = 10;
     const oldb = await this.Building.building(this.tokenId);
-    const oActivity = oldb[4].toNumber();
-    const { logs } = await this.Building.activityUpgrade(this.tokenId, deltaActivity);
+    const oActiveness = oldb[4].toNumber();
+    const { logs } = await this.Building.activenessUpgrade(this.tokenId, deltaActiveness);
     const ldb = await this.Building.building(this.tokenId);
-    ldb[4].should.be.bignumber.equal(oActivity + deltaActivity);
+    ldb[4].should.be.bignumber.equal(oActiveness + deltaActiveness);
 
     logs[0].args.tokenId.should.be.bignumber.equal(this.tokenId);
-    logs[0].args.oActivity.should.be.bignumber.equal(oActivity);
-    logs[0].args.newActivity.should.be.bignumber.equal(oActivity + deltaActivity);
+    logs[0].args.oActiveness.should.be.bignumber.equal(oActiveness);
+    logs[0].args.newActiveness.should.be.bignumber.equal(oActiveness + deltaActiveness);
   });
-  it('get ldb reputation', async function () {
-    const activity = 20;
-    await this.Building.activityUpgrade(this.tokenId, activity);
+  it('get ldb popularity', async function () {
+    const activeness = 20;
+    await this.Building.activenessUpgrade(this.tokenId, activeness);
     const ldb = await this.Building.building(this.tokenId);
     const influence = await this.Building.influenceByToken(this.tokenId);
     influence.should.be.bignumber.equal(getInfluence(ldb[3], ldb[4]));
     // console.log(influence);
   });
-
+  
   it('ldb isBuilt', async function () {
     (await this.Building.isBuilt(this.tokenId)).should.be.equal(true);
     (await this.Building.isBuilt(2333)).should.be.equal(false);
   });
 
-  it('reputationSetting', async function () {
-    const reputation = 1;
+  it('popularitySetting', async function () {
+    const popularity = 1;
     const oldb = await this.Building.building(this.tokenId);
-    const { logs } = await this.Building.reputationSetting(this.tokenId, reputation);
+    const { logs } = await this.Building.popularitySetting(this.tokenId, popularity);
     const ldb = await this.Building.building(this.tokenId);
-    ldb[3].should.be.bignumber.equal(reputation);
+    ldb[3].should.be.bignumber.equal(popularity);
 
     logs[0].args.tokenId.should.be.bignumber.equal(this.tokenId);
-    logs[0].args.oReputation.should.be.bignumber.equal(oldb[3]);
-    logs[0].args.newReputation.should.be.bignumber.equal(ldb[3]);
+    logs[0].args.oPopularity.should.be.bignumber.equal(oldb[3]);
+    logs[0].args.newPopularity.should.be.bignumber.equal(ldb[3]);
   });
 
   describe('multi*', async function () {
@@ -118,34 +116,34 @@ contract('Building', function ([_, owner]) {
       this.tokenIds = [6, 7, 8, 9];
       const longitudes = [-1012345678901236, 1012345678901237, 1012345678901238, 1012345678901239];
       const latitudes = [1312345678901236, -1312345678901237, 1312345678901238, 1312345678901239];
-      const reputations = [1, 2, 3, 4];
+      const popularitys = [1, 2, 3, 4];
       await this.Building.multiBuild(
-        this.tokenIds, longitudes, latitudes, reputations
+        this.tokenIds, longitudes, latitudes, popularitys
       );
-      this.oActivities = await Promise.all(this.tokenIds.map(k =>
+      this.oActiveness = await Promise.all(this.tokenIds.map(k =>
         this.Building.building(k).then(b => b[4].toNumber())
       ));
     });
 
-    it('multiActivityUpgrade', async function () {
-      const deltaActivities = [600, 700, 800, 900];
-      await this.Building.multiActivityUpgrade(this.tokenIds, deltaActivities);
-      const activities = await Promise.all(this.tokenIds.map(k =>
+    it('multiActivenessUpgrade', async function () {
+      const deltaActiveness = [600, 700, 800, 900];
+      await this.Building.multiActivenessUpgrade(this.tokenIds, deltaActiveness);
+      const activeness = await Promise.all(this.tokenIds.map(k =>
         this.Building.building(k).then(b => b[4].toNumber())
       ));
-      this.oActivities.forEach((item, i) => {
-        activities[i].should.be.equal(this.oActivities[i] + deltaActivities[i]);
+      this.oActiveness.forEach((item, i) => {
+        activeness[i].should.be.equal(this.oActiveness[i] + deltaActiveness[i]);
       });
     });
   
-    it('multiReputationSetting', async function () {
-      const newReputations = [4, 3, 2, 1];
-      await this.Building.multiReputationSetting(this.tokenIds, newReputations);
-      const reputations = await Promise.all(this.tokenIds.map(k =>
+    it('multiPopularitySetting', async function () {
+      const newPopularitys = [4, 3, 2, 1];
+      await this.Building.multiPopularitySetting(this.tokenIds, newPopularitys);
+      const popularitys = await Promise.all(this.tokenIds.map(k =>
         this.Building.building(k).then(b => b[3].toNumber())
       ));
-      reputations.forEach((item, i) => {
-        reputations[i].should.be.equal(newReputations[i]);
+      popularitys.forEach((item, i) => {
+        popularitys[i].should.be.equal(newPopularitys[i]);
       });
     });
   });

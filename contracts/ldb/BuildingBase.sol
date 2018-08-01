@@ -11,8 +11,8 @@ contract BuildingBase is IBuilding {
     uint256 initAt; // The time of ldb init
     int longitude; // The longitude of ldb
     int latitude; // The latitude of ldb
-    uint8 reputation; // The reputation of ldb
-    uint256 activity; // The activity of ldb
+    uint8 popularity; // The popularity of ldb
+    uint256 activeness; // The activeness of ldb
   }
   
   uint8 public constant decimals = 14; // longitude latitude decimals
@@ -25,8 +25,8 @@ contract BuildingBase is IBuilding {
       ldb.initAt, 
       ldb.longitude, 
       ldb.latitude, 
-      ldb.reputation, 
-      ldb.activity
+      ldb.popularity, 
+      ldb.activeness
     );
   }
   // function getInfluence(uint256 _tokenId) external view returns (uint256){return ''}
@@ -40,7 +40,7 @@ contract BuildingBase is IBuilding {
     uint256 _tokenId,
     int _longitude,
     int _latitude,
-    uint8 _reputation
+    uint8 _popularity
     ) internal {
 
     // Check whether tokenid has been initialized
@@ -50,17 +50,17 @@ contract BuildingBase is IBuilding {
     
     uint256 time = block.timestamp;
     LDB memory ldb = LDB(
-      time, _longitude, _latitude, _reputation, uint256(0)
+      time, _longitude, _latitude, _popularity, uint256(0)
     );
     tokenLDBs[_tokenId] = ldb;
-    emit Build(time, _tokenId, _longitude, _latitude, _reputation);
+    emit Build(time, _tokenId, _longitude, _latitude, _popularity);
   }
   
   function _multiBuild(
     uint256[] _tokenIds,
     int[] _longitudes,
     int[] _latitudes,
-    uint8[] _reputations
+    uint8[] _popularitys
     ) internal {
     uint256 i = 0;
     while (i < _tokenIds.length) {
@@ -68,7 +68,7 @@ contract BuildingBase is IBuilding {
         _tokenIds[i],
         _longitudes[i],
         _latitudes[i],
-        _reputations[i]
+        _popularitys[i]
       );
       i += 1;
     }
@@ -76,34 +76,34 @@ contract BuildingBase is IBuilding {
     
   }
 
-  function _activityUpgrade(uint256 _tokenId, uint256 _deltaActivity) internal {
+  function _activenessUpgrade(uint256 _tokenId, uint256 _deltaActiveness) internal {
     require(_isBuilt(_tokenId));
     LDB storage ldb = tokenLDBs[_tokenId];
-    uint256 oActivity = ldb.activity;
-    uint256 newActivity = ldb.activity.add(_deltaActivity);
-    ldb.activity = newActivity;
+    uint256 oActiveness = ldb.activeness;
+    uint256 newActiveness = ldb.activeness.add(_deltaActiveness);
+    ldb.activeness = newActiveness;
     tokenLDBs[_tokenId] = ldb;
-    emit ActivityUpgrade(_tokenId, oActivity, newActivity);
+    emit ActivenessUpgrade(_tokenId, oActiveness, newActiveness);
   }
-  function _multiActivityUpgrade(uint256[] _tokenIds, uint256[] __deltaActivities) internal {
+  function _multiActivenessUpgrade(uint256[] _tokenIds, uint256[] __deltaActiveness) internal {
     uint256 i = 0;
     while (i < _tokenIds.length) {
-      _activityUpgrade(_tokenIds[i], __deltaActivities[i]);
+      _activenessUpgrade(_tokenIds[i], __deltaActiveness[i]);
       i += 1;
     }
   }
 
-  function _reputationSetting(uint256 _tokenId, uint8 _reputation) internal {
+  function _popularitySetting(uint256 _tokenId, uint8 _popularity) internal {
     require(_isBuilt(_tokenId));
-    uint8 oReputation = tokenLDBs[_tokenId].reputation;
-    tokenLDBs[_tokenId].reputation = _reputation;
-    emit ReputationSetting(_tokenId, oReputation, _reputation);
+    uint8 oPopularity = tokenLDBs[_tokenId].popularity;
+    tokenLDBs[_tokenId].popularity = _popularity;
+    emit PopularitySetting(_tokenId, oPopularity, _popularity);
   }
 
-  function _multiReputationSetting(uint256[] _tokenIds, uint8[] _reputations) internal {
+  function _multiPopularitySetting(uint256[] _tokenIds, uint8[] _popularitys) internal {
     uint256 i = 0;
     while (i < _tokenIds.length) {
-      _reputationSetting(_tokenIds[i], _reputations[i]);
+      _popularitySetting(_tokenIds[i], _popularitys[i]);
       i += 1;
     }
   }

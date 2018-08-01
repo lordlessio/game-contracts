@@ -11,7 +11,7 @@ interface IBuilding {
   function influenceByToken(uint256 tokenId) external view returns(uint256);
   function levelByToken(uint256 tokenId) external view returns(uint256);
   function weightsApportion(uint256 ulevel1, uint256 ulevel2) external view returns(uint256);
-  
+
   function building(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256);
   function isBuilt(uint256 tokenId) external view returns (bool);
 
@@ -19,21 +19,21 @@ interface IBuilding {
     uint256 tokenId,
     int longitude,
     int latitude,
-    uint8 reputation
+    uint8 popularity
     ) external;
 
   function multiBuild(
     uint256[] tokenIds,
     int[] longitudes,
     int[] latitudes,
-    uint8[] reputations
+    uint8[] popularitys
     ) external;
 
-  function activityUpgrade(uint256 tokenId, uint256 deltaActivity) external;
-  function multiActivityUpgrade(uint256[] tokenIds, uint256[] deltaActivities) external;
+  function activenessUpgrade(uint256 tokenId, uint256 deltaActiveness) external;
+  function multiActivenessUpgrade(uint256[] tokenIds, uint256[] deltaActiveness) external;
 
-  function reputationSetting(uint256 tokenId, uint8 reputation) external;
-  function multiReputationSetting(uint256[] tokenIds, uint8[] reputations) external;
+  function popularitySetting(uint256 tokenId, uint8 popularity) external;
+  function multiPopularitySetting(uint256[] tokenIds, uint8[] popularitys) external;
   
   /* Events */
 
@@ -42,18 +42,18 @@ interface IBuilding {
     uint256 indexed tokenId,
     int longitude,
     int latitude,
-    uint8 reputation
+    uint8 popularity
   );
 
-  event ActivityUpgrade (
+  event ActivenessUpgrade (
     uint256 indexed tokenId,
-    uint256 oActivity,
-    uint256 newActivity
+    uint256 oActiveness,
+    uint256 newActiveness
   );
 
-  event ReputationSetting (
+  event PopularitySetting (
     uint256 indexed tokenId,
-    uint256 oReputation,
-    uint256 newReputation
+    uint256 oPopularity,
+    uint256 newPopularity
   );
 }

@@ -44,26 +44,26 @@ contract Power is Superuser, IPower{
   function influenceByToken(uint256 tokenId) external view returns(uint256){
 
 
-    uint8 reputation;
-    uint256 activity;
-    ( , , , reputation, activity) = buildingContract.building(tokenId);
-    return _influenceAlgorithm(reputation, activity);
+    uint8 popularity;
+    uint256 activeness;
+    ( , , , popularity, activeness) = buildingContract.building(tokenId);
+    return _influenceAlgorithm(popularity, activeness);
   }
 
   function levelByToken(uint256 tokenId) external view returns(uint256){
 
-    uint256 activity;
-    ( , , , , activity) = buildingContract.building(tokenId);
-    return _activity2level(activity);
+    uint256 activeness;
+    ( , , , , activeness) = buildingContract.building(tokenId);
+    return _activeness2level(activeness);
   }
 
-  function _influenceAlgorithm(uint8 _reputation, uint256 _activity) internal pure returns (uint256) {
-    uint256 reputation = uint256(_reputation);
-    return reputation.mul(_activity).add(reputation);
+  function _influenceAlgorithm(uint8 _popularity, uint256 _activeness) internal pure returns (uint256) {
+    uint256 popularity = uint256(_popularity);
+    return popularity.mul(_activeness).add(popularity);
   }
 
-  function _activity2level(uint256 _activity) internal pure returns (uint256) {
-    return (_activity.mul(uint(108).sq())/10).sqrt()/108 + 1;
+  function _activeness2level(uint256 _activeness) internal pure returns (uint256) {
+    return (_activeness.mul(uint(108).sq())/10).sqrt()/108 + 1;
   }
 
   uint public constant weightsApportionDecimals = 4;
