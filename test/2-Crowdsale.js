@@ -1,7 +1,6 @@
 const LDBNFTs = artifacts.require('LDBNFTs');
 const NFTCsrowdsale = artifacts.require('NFTsCrowdsale');
 const Erc20TokenMock = artifacts.require('LORDLESS_TOKEN');
-const { balanceOf, ether2wei } = require('./helpers/etherUtils');
 const { duration } = require('./helpers/increaseTime');
 const BigNumber = web3.BigNumber;
 require('chai')

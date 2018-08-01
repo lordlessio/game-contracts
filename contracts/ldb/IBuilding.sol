@@ -7,28 +7,25 @@ pragma solidity ^0.4.23;
 interface IBuilding {
 
   function isBuildingContract() external pure returns (bool);
-  function setInfluenceContract(address influenceContract) external;
-  function getInfluenceContract() external view returns(address);
+  function setPowerContract(address _powerContract) external;
   function influenceByToken(uint256 tokenId) external view returns(uint256);
-
-  function building(uint256 tokenId) external view returns (uint256, uint64, bool, uint64, bool, uint8, uint256);
+  function levelByToken(uint256 tokenId) external view returns(uint256);
+  function weightsApportion(uint256 ulevel1, uint256 ulevel2) external view returns(uint256);
+  
+  function building(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256);
   function isBuilt(uint256 tokenId) external view returns (bool);
 
   function build(
     uint256 tokenId,
-    uint64 longitude,
-    bool longitudeNegative,
-    uint64 latitude,
-    bool latitudeNegative,
+    int longitude,
+    int latitude,
     uint8 reputation
     ) external;
 
   function multiBuild(
     uint256[] tokenIds,
-    uint64[] longitudes,
-    bool[] longitudesNegative,
-    uint64[] latitudes,
-    bool[] latitudesNegative,
+    int[] longitudes,
+    int[] latitudes,
     uint8[] reputations
     ) external;
 
@@ -43,10 +40,8 @@ interface IBuilding {
   event Build (
     uint256 time,
     uint256 indexed tokenId,
-    uint64 longitude,
-    bool longitudeNegative,
-    uint64 latitude,
-    bool latitudeNegative,
+    int longitude,
+    int latitude,
     uint8 reputation
   );
 

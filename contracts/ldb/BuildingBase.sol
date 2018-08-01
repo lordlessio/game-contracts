@@ -9,10 +9,8 @@ contract BuildingBase is IBuilding {
 
   struct LDB {
     uint256 initAt; // The time of ldb init
-    uint64 longitude; // The longitude of ldb
-    bool longitudeNegative; // if longitude value is negative
-    uint64 latitude; // The latitude of ldb
-    bool latitudeNegative; // if latitude value is negative
+    int longitude; // The longitude of ldb
+    int latitude; // The latitude of ldb
     uint8 reputation; // The reputation of ldb
     uint256 activity; // The activity of ldb
   }
@@ -21,14 +19,12 @@ contract BuildingBase is IBuilding {
 
   mapping(uint256 => LDB) internal tokenLDBs;
   
-  function _building(uint256 _tokenId) internal view returns (uint256, uint64, bool, uint64, bool, uint8, uint256) {
+  function _building(uint256 _tokenId) internal view returns (uint256, int, int, uint8, uint256) {
     LDB storage ldb = tokenLDBs[_tokenId];
     return (
       ldb.initAt, 
       ldb.longitude, 
-      ldb.longitudeNegative, 
       ldb.latitude, 
-      ldb.latitudeNegative, 
       ldb.reputation, 
       ldb.activity
     );
@@ -42,33 +38,28 @@ contract BuildingBase is IBuilding {
 
   function _build(
     uint256 _tokenId,
-    uint64 _longitude,
-    bool _longitudeNegative,
-    uint64 _latitude,
-    bool _latitudeNegative,
+    int _longitude,
+    int _latitude,
     uint8 _reputation
     ) internal {
 
     // Check whether tokenid has been initialized
     require(!_isBuilt(_tokenId));
-    require(tokenLDBs[_tokenId].initAt == uint256(0));
     require(_isLongitude(_longitude));
     require(_isLatitude(_latitude));
     
     uint256 time = block.timestamp;
     LDB memory ldb = LDB(
-      time, _longitude, _longitudeNegative, _latitude, _latitudeNegative, _reputation, uint256(0)
+      time, _longitude, _latitude, _reputation, uint256(0)
     );
     tokenLDBs[_tokenId] = ldb;
-    emit Build(time, _tokenId, _longitude,_longitudeNegative, _latitude, _latitudeNegative, _reputation);
+    emit Build(time, _tokenId, _longitude, _latitude, _reputation);
   }
   
   function _multiBuild(
     uint256[] _tokenIds,
-    uint64[] _longitudes,
-    bool[] _longitudesNegative,
-    uint64[] _latitudes,
-    bool[] _latitudesNegative,
+    int[] _longitudes,
+    int[] _latitudes,
     uint8[] _reputations
     ) internal {
     uint256 i = 0;
@@ -76,9 +67,7 @@ contract BuildingBase is IBuilding {
       _build(
         _tokenIds[i],
         _longitudes[i],
-        _longitudesNegative[i],
         _latitudes[i],
-        _latitudesNegative[i],
         _reputations[i]
       );
       i += 1;
@@ -120,14 +109,14 @@ contract BuildingBase is IBuilding {
   }
 
   function _isLongitude (
-    uint64 _param
+    int _param
   ) internal pure returns (bool){
-    return( uint256(_param) <= 180 * (10 ** uint256(decimals)));
+    return( _param <= 180 * int(10 ** uint256(decimals)));
   } 
 
   function _isLatitude (
-    uint64 _param
+    int _param
   ) internal pure returns (bool){
-    return( uint256(_param) <= 90 * (10 ** uint256(decimals)));
+    return( _param <= 90 * int(10 ** uint256(decimals)));
   } 
 }

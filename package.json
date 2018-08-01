@@ -30,7 +30,7 @@
   "license": "MPL",
   "dependencies": {
     "solium": "^1.1.7",
-    "truffle-hdwallet-provider": "^0.0.3",
+    
     "zeppelin-solidity": "^1.10.0"
   },
   "homepage": "https://github.com/lordlessio/LDB-NFT",
@@ -46,6 +46,8 @@
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
+    "truffle-flattener": "^1.2.5",
+    "truffle-hdwallet-provider": "^0.0.3",
     "ethereumjs-abi": "^0.6.4",
     "ethereumjs-util": "^5.1.2",
     "ganache-cli": "^6.1.3",

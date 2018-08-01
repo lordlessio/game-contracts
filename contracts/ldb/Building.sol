@@ -20,12 +20,12 @@ pragma solidity ^0.4.23;
 
 import "./BuildingBase.sol";
 import "./IBuilding.sol";
-import "./IInfluence.sol";
+import "./IPower.sol";
 import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
 
 contract Building is IBuilding, BuildingBase, Superuser {
   
-  IInfluence public influence;
+  IPower public powerContract;
 
   /**
    * @dev check if contract is BuildingContract
@@ -36,20 +36,13 @@ contract Building is IBuilding, BuildingBase, Superuser {
   }
 
   /**
-   * @dev set influence algorithm contract address
-   * @param influenceContract contract address
+   * @dev set power contract address
+   * @param _powerContract contract address
    */
-  function setInfluenceContract(address influenceContract) onlySuperuser external{
-    influence = IInfluence(influenceContract);
+  function setPowerContract(address _powerContract) onlySuperuser external{
+    powerContract = IPower(_powerContract);
   }
 
-  /**
-   * @dev set influence algorithm contract address
-   * @return address contract address
-   */
-  function getInfluenceContract() external view returns(address) {
-    return address(influence);
-  }
   
   /**
    * @dev get LDB's influence by tokenId
@@ -57,21 +50,39 @@ contract Building is IBuilding, BuildingBase, Superuser {
    * @return uint256 LDB's influence 
    */
   function influenceByToken(uint256 tokenId) external view returns(uint256) {
-    return influence.influenceByToken(tokenId);
+    return powerContract.influenceByToken(tokenId);
+  }
+
+
+  /**
+   * @dev get LDB's weightsApportion 
+   * @param userLevel userLevel
+   * @param lordLevel lordLevel
+   * @return uint256 LDB's level
+   */
+  function weightsApportion(uint256 userLevel, uint256 lordLevel) external view returns(uint256){
+    return powerContract.weightsApportion(userLevel, lordLevel);
+  }
+
+  /**
+   * @dev get LDB's level by tokenId
+   * @param tokenId tokenId
+   * @return uint256 LDB's level
+   */
+  function levelByToken(uint256 tokenId) external view returns(uint256) {
+    return powerContract.levelByToken(tokenId);
   }
 
   /**
    * @dev get a Building's infomation 
    * @param tokenId tokenId
    * @return uint256 LDB's construction time
-   * @return uint256 LDB's longitude value 
-   * @return bool if LDB's longitudeNegative
-   * @return uint256 LDB's latitude value
-   * @return bool LDB's latitudeNegative 
+   * @return int LDB's longitude value 
+   * @return int LDB's latitude value
    * @return uint8 LDB's reputation
    * @return uint256 LDB's activity
    */
-  function building(uint256 tokenId) external view returns (uint256, uint64, bool, uint64, bool, uint8, uint256){
+  function building(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256){
     return super._building(tokenId);
   }
 
@@ -88,46 +99,36 @@ contract Building is IBuilding, BuildingBase, Superuser {
    * @dev build a building
    * @param tokenId tokenId
    * @param longitude longitude value 
-   * @param longitudeNegative longitudeNegative
    * @param latitude latitude value
-   * @param latitudeNegative latitudeNegative 
    * @param reputation reputation
    */
   function build(
     uint256 tokenId,
-    uint64 longitude,
-    bool longitudeNegative,
-    uint64 latitude,
-    bool latitudeNegative,
+    int longitude,
+    int latitude,
     uint8 reputation
   ) external onlySuperuser {
-    super._build(tokenId, longitude, longitudeNegative, latitude, latitudeNegative, reputation);
+    super._build(tokenId, longitude, latitude, reputation);
   }
 
   /**
    * @dev build multi building in one transaction
    * @param tokenIds Array of tokenId
    * @param longitudes Array of longitude value 
-   * @param longitudesNegative Array of longitudeNegative
    * @param latitudes Array of latitude value
-   * @param latitudesNegative Array of latitudeNegative 
    * @param reputations Array of reputation
    */
   function multiBuild(
     uint256[] tokenIds,
-    uint64[] longitudes,
-    bool[] longitudesNegative,
-    uint64[] latitudes,
-    bool[] latitudesNegative,
+    int[] longitudes,
+    int[] latitudes,
     uint8[] reputations
     ) external onlySuperuser{
 
     super._multiBuild(
       tokenIds,
       longitudes,
-      longitudesNegative,
       latitudes,
-      latitudesNegative,
       reputations
     );
   }
