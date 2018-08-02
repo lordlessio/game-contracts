@@ -32,6 +32,7 @@ contract('Building', function ([_, owner]) {
       this.popularity
     );
     this.logs = logs;
+    this.ldb = await this.Building.building(this.tokenId);
     console.log('this.ldb', this.ldb)
   });
   
@@ -67,7 +68,6 @@ contract('Building', function ([_, owner]) {
   });
 
   it('get a ldb info', async function () {
-    constldb = await this.Building.building(this.tokenId);
     this.ldb[1].should.be.bignumber.equal(this.longitude);
     this.ldb[2].should.be.bignumber.equal(this.latitude);
     this.ldb[3].should.be.bignumber.equal(this.popularity);
