@@ -1,11 +1,11 @@
 pragma solidity ^0.4.23;
 
 
-import "../../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol";
+import "../lib/SafeMath.sol";
 import "./IBuilding.sol";
 
 contract BuildingBase is IBuilding {
-  using SafeMath for uint256;
+  using SafeMath for *;
 
   struct LDB {
     uint256 initAt; // The time of ldb init
@@ -29,7 +29,6 @@ contract BuildingBase is IBuilding {
       ldb.activeness
     );
   }
-  // function getInfluence(uint256 _tokenId) external view returns (uint256){return ''}
   
   function _isBuilt(uint256 _tokenId) internal view returns (bool){
     LDB storage ldb = tokenLDBs[_tokenId];
@@ -56,7 +55,7 @@ contract BuildingBase is IBuilding {
     emit Build(time, _tokenId, _longitude, _latitude, _popularity);
   }
   
-  function _multiBuild(
+  function _batchBuild(
     uint256[] _tokenIds,
     int[] _longitudes,
     int[] _latitudes,
@@ -85,7 +84,7 @@ contract BuildingBase is IBuilding {
     tokenLDBs[_tokenId] = ldb;
     emit ActivenessUpgrade(_tokenId, oActiveness, newActiveness);
   }
-  function _multiActivenessUpgrade(uint256[] _tokenIds, uint256[] __deltaActiveness) internal {
+  function _batchActivenessUpgrade(uint256[] _tokenIds, uint256[] __deltaActiveness) internal {
     uint256 i = 0;
     while (i < _tokenIds.length) {
       _activenessUpgrade(_tokenIds[i], __deltaActiveness[i]);
@@ -100,7 +99,7 @@ contract BuildingBase is IBuilding {
     emit PopularitySetting(_tokenId, oPopularity, _popularity);
   }
 
-  function _multiPopularitySetting(uint256[] _tokenIds, uint8[] _popularitys) internal {
+  function _batchPopularitySetting(uint256[] _tokenIds, uint8[] _popularitys) internal {
     uint256 i = 0;
     while (i < _tokenIds.length) {
       _popularitySetting(_tokenIds[i], _popularitys[i]);

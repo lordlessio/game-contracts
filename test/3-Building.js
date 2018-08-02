@@ -32,7 +32,7 @@ contract('Building', function ([_, owner]) {
       this.popularity
     );
     this.logs = logs;
-    this.ldb = await this.Building.building(this.tokenId);
+    console.log('this.ldb', this.ldb)
   });
   
   it('error longitude & latitude should be revert ', async function () {
@@ -67,6 +67,7 @@ contract('Building', function ([_, owner]) {
   });
 
   it('get a ldb info', async function () {
+    constldb = await this.Building.building(this.tokenId);
     this.ldb[1].should.be.bignumber.equal(this.longitude);
     this.ldb[2].should.be.bignumber.equal(this.latitude);
     this.ldb[3].should.be.bignumber.equal(this.popularity);
@@ -128,13 +129,13 @@ contract('Building', function ([_, owner]) {
     logs[0].args.newPopularity.should.be.bignumber.equal(ldb[3]);
   });
 
-  describe('multi*', async function () {
+  describe('batch*', async function () {
     beforeEach(async function () {
       this.tokenIds = [6, 7, 8, 9];
       const longitudes = [-1012345678901236, 1012345678901237, 1012345678901238, 1012345678901239];
       const latitudes = [1312345678901236, -1312345678901237, 1312345678901238, 1312345678901239];
       const popularitys = [1, 2, 3, 4];
-      await this.Building.multiBuild(
+      await this.Building.batchBuild(
         this.tokenIds, longitudes, latitudes, popularitys
       );
       this.oActiveness = await Promise.all(this.tokenIds.map(k =>
@@ -142,9 +143,9 @@ contract('Building', function ([_, owner]) {
       ));
     });
 
-    it('multiActivenessUpgrade', async function () {
+    it('batchActivenessUpgrade', async function () {
       const deltaActiveness = [600, 700, 800, 900];
-      await this.Building.multiActivenessUpgrade(this.tokenIds, deltaActiveness);
+      await this.Building.batchActivenessUpgrade(this.tokenIds, deltaActiveness);
       const activeness = await Promise.all(this.tokenIds.map(k =>
         this.Building.building(k).then(b => b[4].toNumber())
       ));
@@ -153,9 +154,9 @@ contract('Building', function ([_, owner]) {
       });
     });
   
-    it('multiPopularitySetting', async function () {
+    it('batchPopularitySetting', async function () {
       const newPopularitys = [4, 3, 2, 1];
-      await this.Building.multiPopularitySetting(this.tokenIds, newPopularitys);
+      await this.Building.batchPopularitySetting(this.tokenIds, newPopularitys);
       const popularitys = await Promise.all(this.tokenIds.map(k =>
         this.Building.building(k).then(b => b[3].toNumber())
       ));

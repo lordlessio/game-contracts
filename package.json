@@ -29,8 +29,8 @@
   "author": "Eury Chen <https://github.com/netpi>",
   "license": "MPL",
   "dependencies": {
+    "fs-extra": "^7.0.0",
     "solium": "^1.1.7",
-    
     "zeppelin-solidity": "^1.10.0"
   },
   "homepage": "https://github.com/lordlessio/LDB-NFT",

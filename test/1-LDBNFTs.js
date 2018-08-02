@@ -30,6 +30,15 @@ contract('LDBNFTs', function (accounts) {
     (await this.LDBNFTs.ownerOf(_tokenId)).should.be.equal(accounts[1]);
   });
 
+  it('batch mint', async function () {
+    const tos = [accounts[1], accounts[2], accounts[3], accounts[4]];
+    const tokenIds = [6, 7, 8, 9];
+    await this.LDBNFTs.batchMint(tos, tokenIds);
+    tokenIds.forEach(async (tokenId, i) => {
+      (await this.LDBNFTs.ownerOf(tokenId)).should.be.equal(tos[i])
+    })
+  });
+
   it('should burn a token', async function () {
     const _tokenId = 3;
     await this.LDBNFTs.mint(accounts[1], _tokenId);

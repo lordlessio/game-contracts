@@ -37,7 +37,7 @@
     "comma-spacing": [2, {"before": false, "after": true}],
     "camelcase": [2, {"properties": "always"}],
     "no-mixed-spaces-and-tabs": [2, "smart-tabs"],
-    "comma-dangle": [1, "always-multiline"],
+    "comma-dangle": [1, "always-batchline"],
     "no-dupe-args": 2,
     "no-dupe-keys": 2,
     "no-debugger": 0,

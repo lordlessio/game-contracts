@@ -118,20 +118,20 @@ contract Building is IBuilding, BuildingBase, Superuser {
   }
 
   /**
-   * @dev build multi building in one transaction
+   * @dev build batch building in one transaction
    * @param tokenIds Array of tokenId
    * @param longitudes Array of longitude value 
    * @param latitudes Array of latitude value
    * @param popularitys Array of popularity
    */
-  function multiBuild(
+  function batchBuild(
     uint256[] tokenIds,
     int[] longitudes,
     int[] latitudes,
     uint8[] popularitys
     ) external onlySuperuser{
 
-    super._multiBuild(
+    super._batchBuild(
       tokenIds,
       longitudes,
       latitudes,
@@ -149,12 +149,12 @@ contract Building is IBuilding, BuildingBase, Superuser {
   }
 
   /**
-   * @dev upgrade multi LDBs's activeness 
+   * @dev upgrade batch LDBs's activeness 
    * @param tokenIds Array of tokenId
    * @param deltaActiveness  array of delta activeness
    */
-  function multiActivenessUpgrade(uint256[] tokenIds, uint256[] deltaActiveness) onlyOwnerOrSuperuser external {
-    super._multiActivenessUpgrade(tokenIds, deltaActiveness);
+  function batchActivenessUpgrade(uint256[] tokenIds, uint256[] deltaActiveness) onlyOwnerOrSuperuser external {
+    super._batchActivenessUpgrade(tokenIds, deltaActiveness);
   }
 
   /**
@@ -167,11 +167,11 @@ contract Building is IBuilding, BuildingBase, Superuser {
   }
 
   /**
-   * @dev set multi LDBs's popularity 
+   * @dev set batch LDBs's popularity 
    * @param tokenIds Array of tokenId
    * @param popularitys Array of popularity
    */
-  function multiPopularitySetting(uint256[] tokenIds, uint8[] popularitys) onlySuperuser external {
-    super._multiPopularitySetting(tokenIds, popularitys);
+  function batchPopularitySetting(uint256[] tokenIds, uint8[] popularitys) onlySuperuser external {
+    super._batchPopularitySetting(tokenIds, popularitys);
   }
 }

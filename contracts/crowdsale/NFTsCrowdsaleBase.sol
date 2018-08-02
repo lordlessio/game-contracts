@@ -1,7 +1,7 @@
 pragma solidity ^0.4.23;
 
 import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
-import "../../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol";
+import "../lib/SafeMath.sol";
 import "../../node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "../../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "./INFTsCrowdsale.sol";

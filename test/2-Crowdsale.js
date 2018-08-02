@@ -1,7 +1,7 @@
 const LDBNFTs = artifacts.require('LDBNFTs');
 const NFTCsrowdsale = artifacts.require('NFTsCrowdsale');
 const Erc20TokenMock = artifacts.require('LORDLESS_TOKEN');
-const { duration } = require('./helpers/increaseTime');
+const { duration, increaseTime } = require('./helpers/increaseTime');
 const BigNumber = web3.BigNumber;
 require('chai')
   .use(require('chai-as-promised'))
@@ -104,7 +104,7 @@ contract('LdbNFTCrowdsale', function (accounts) {
     // payExcess should be return of
     (afterDefrayBalance - (preBalance - this.ethPrice - gasCost)).should.be.below(this.maError);
   });
-
+  
   describe('pay by erc20: success', function () {
     beforeEach(async function () {
       // pay success
@@ -135,6 +135,21 @@ contract('LdbNFTCrowdsale', function (accounts) {
       this.logs[0].args.price.should.be.bignumber.equal(this.price);
       this.logs[0].args.endAt.should.be.bignumber.equal(this.endAt);
       this.logs[0].args.tokenId.should.be.bignumber.equal(this._tokenId);
+    });
+  });
+  describe('Time expired', async function () {
+    it('payByEth time expired should be revert', async function () {
+      await increaseTime(600);
+      await this.NFTsCrowdsale.payByEth(this._tokenId, {
+        value: this.price,
+        from: this.buyer,
+      }).should.be.rejectedWith('revert');
+    });
+
+    it('time expired cancelAuction should be success', async function () {
+      await increaseTime(600);
+      await this.NFTsCrowdsale.cancelAuction(this._tokenId);
+      (await this.NFTsCrowdsale.isOnAuction(this._tokenId)).should.be.equal(false);
     });
   });
   

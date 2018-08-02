@@ -22,7 +22,7 @@ interface IBuilding {
     uint8 popularity
     ) external;
 
-  function multiBuild(
+  function batchBuild(
     uint256[] tokenIds,
     int[] longitudes,
     int[] latitudes,
@@ -30,10 +30,10 @@ interface IBuilding {
     ) external;
 
   function activenessUpgrade(uint256 tokenId, uint256 deltaActiveness) external;
-  function multiActivenessUpgrade(uint256[] tokenIds, uint256[] deltaActiveness) external;
+  function batchActivenessUpgrade(uint256[] tokenIds, uint256[] deltaActiveness) external;
 
   function popularitySetting(uint256 tokenId, uint8 popularity) external;
-  function multiPopularitySetting(uint256[] tokenIds, uint8[] popularitys) external;
+  function batchPopularitySetting(uint256[] tokenIds, uint8[] popularitys) external;
   
   /* Events */
 

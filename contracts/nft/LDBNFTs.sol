@@ -2,6 +2,7 @@ pragma solidity ^0.4.23;
 
 import "../../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
 import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
+import "./ILDBNFTs.sol";
 /**
  * @title LDBNFTs - LORDLESS BUILDING NFTs Contract
  * LDBNFTs records the relationship of LDB ownership.
@@ -22,26 +23,37 @@ import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
  * code at https://github.com/lordlessio
  */
 
-interface IBuilding {
+interface BuildingInterface {
   function building(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256);
   function isBuildingContract() external view returns (bool);
 }
 
-contract LDBNFTs is ERC721Token, IBuilding, Superuser {
+contract LDBNFTs is ERC721Token, Superuser, ILDBNFTs {
   constructor(string name, string symbol) public
     ERC721Token(name, symbol)
   { }
 
-  IBuilding public buildingContract;
+  BuildingInterface public buildingContract;
 
-  function mint(address _to, uint256 _tokenId) onlySuperuser public {
-    super._mint(_to, _tokenId);
+  function mint(address to, uint256 tokenId) onlySuperuser public {
+    super._mint(to, tokenId);
   }
 
-  function burn(uint256 _tokenId) onlySuperuser public {
-    super._burn(ownerOf(_tokenId), _tokenId);
+  function batchMint(address[] tos, uint256[] tokenIds) onlySuperuser public {
+    uint256 i = 0;
+    while (i < tokenIds.length) {
+      super._mint(tos[i], tokenIds[i]);
+      i += 1;
+    }
   }
 
+  function burn(uint256 tokenId) onlySuperuser public {
+    super._burn(ownerOf(tokenId), tokenId);
+  }
+  
+  /**
+   * @dev Future use on ipfs or other decentralized storage platforms
+   */
   function setTokenURI(uint256 _tokenId, string _uri) onlyOwnerOrSuperuser public {
     super._setTokenURI(_tokenId, _uri);
   }
@@ -51,12 +63,8 @@ contract LDBNFTs is ERC721Token, IBuilding, Superuser {
    * @return building LDB contract address
    */
   function setBuildingContract(address building) onlySuperuser external {
-    require(IBuilding(building).isBuildingContract());
-    buildingContract = IBuilding(building);
-  }
-
-  function isBuildingContract() external view returns (bool) {
-    return buildingContract.isBuildingContract();
+    require(BuildingInterface(building).isBuildingContract());
+    buildingContract = BuildingInterface(building);
   }
 
   /**

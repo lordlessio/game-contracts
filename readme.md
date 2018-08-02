@@ -22,15 +22,15 @@
 * Each LDB is a mapping of real buildings in the world
 * LDB has the ability to airdrop candy and host candy missions
 * LDB can trade in the markets we develop
-* The value of LDB is determined by multiple attributes such as activeness and popularity influence.
+* The value of LDB is determined by batchple attributes such as activeness and popularity influence.
 
 ### About Candy Drop :candy:
 
-http://lordless.io/airdrop/
-
+![](https://olxvlcccu.qnssl.com/blog/klydl.jpg?imageView2/2/w/500)
 LORDLESS splits the candy distribution capacities of the platform creatively and injects the capacity into specific ERC-721 (LDB) assets. We define this process as 'Platform Service Digitalizing', that is, PSD. LORDLESS expects to link the candy's distribution function with LDB in the form of a smart contract so that LDB has a capability of platform-independent candy distribution. When the user purchases LDB, he becomes LORD. LORD will receive benefits in the process of candy claimed in LDB. Even if the LORDLESS project team does not devote energy into maintaining the product, the LDB's capacity to receive candy and distribute candy will still keep the entire ecological operation, to ensure the benefits of LORD. More importantly, even LORDLESS officials cannot plunder your ownership of LDB, or stop the LDB running.
 
-![](https://olxvlcccu.qnssl.com/blog/klydl.jpg?imageView2/2/w/500)
+http://lordless.io/airdrop/
+
 
 ### About LORD :bust_in_silhouette:
 LORDs are users who own an LDB. The LORD has full access to LDB, including but not limited to LDB's buying and selling, decoration, advertising decisions, candy distribution, and custom feature development based on official API. All the earnings in LDB will fall into the LORD’s pocket.
