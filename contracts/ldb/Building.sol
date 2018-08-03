@@ -30,14 +30,6 @@ contract Building is IBuilding, BuildingBase, Superuser {
   IPower public powerContract;
 
   /**
-   * @dev check if contract is BuildingContract
-   * @return bool isBuildingContract
-   */
-  function isBuildingContract() external pure returns (bool){
-    return true;
-  }
-
-  /**
    * @dev set power contract address
    * @param _powerContract contract address
    */

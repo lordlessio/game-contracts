@@ -6,7 +6,6 @@ pragma solidity ^0.4.23;
 
 interface IBuilding {
 
-  function isBuildingContract() external pure returns (bool);
   function setPowerContract(address _powerContract) external;
   function influenceByToken(uint256 tokenId) external view returns(uint256);
   function levelByToken(uint256 tokenId) external view returns(uint256);

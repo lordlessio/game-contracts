@@ -25,7 +25,6 @@ import "./ILDBNFTs.sol";
 
 interface BuildingInterface {
   function building(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256);
-  function isBuildingContract() external view returns (bool);
 }
 
 contract LDBNFTs is ERC721Token, Superuser, ILDBNFTs {
@@ -35,11 +34,19 @@ contract LDBNFTs is ERC721Token, Superuser, ILDBNFTs {
 
   BuildingInterface public buildingContract;
 
+  /**
+   * @dev set the LDB contract address
+   * @return building LDB contract address
+   */
+  function setBuildingContract(address building) onlySuperuser external {
+    buildingContract = BuildingInterface(building);
+  }
+
   function mint(address to, uint256 tokenId) onlySuperuser public {
     super._mint(to, tokenId);
   }
 
-  function batchMint(address[] tos, uint256[] tokenIds) onlySuperuser public {
+  function batchMint(address[] tos, uint256[] tokenIds) onlySuperuser external {
     uint256 i = 0;
     while (i < tokenIds.length) {
       super._mint(tos[i], tokenIds[i]);
@@ -56,15 +63,6 @@ contract LDBNFTs is ERC721Token, Superuser, ILDBNFTs {
    */
   function setTokenURI(uint256 _tokenId, string _uri) onlyOwnerOrSuperuser public {
     super._setTokenURI(_tokenId, _uri);
-  }
-
-  /**
-   * @dev set the LDB contract address
-   * @return building LDB contract address
-   */
-  function setBuildingContract(address building) onlySuperuser external {
-    require(BuildingInterface(building).isBuildingContract());
-    buildingContract = BuildingInterface(building);
   }
 
   /**

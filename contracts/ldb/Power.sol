@@ -34,8 +34,6 @@ contract Power is Superuser, IPower{
    * @return building LDB contract address
    */
   function setBuildingContract(address building) onlySuperuser external {
-
-    require(IBuilding(building).isBuildingContract());
     buildingContract = IBuilding(building);
   }
 
