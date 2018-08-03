@@ -33,7 +33,6 @@ contract('Building', function ([_, owner]) {
     );
     this.logs = logs;
     this.ldb = await this.Building.building(this.tokenId);
-    console.log('this.ldb', this.ldb)
   });
   
   it('error longitude & latitude should be revert ', async function () {
