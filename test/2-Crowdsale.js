@@ -8,7 +8,7 @@ require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
-contract('LdbNFTCrowdsale', function (accounts) {
+contract('NFTsCrowdsale', function (accounts) {
   before(async function () {
     // Maximum allowable error
     this.maError = parseInt(web3.toWei(1, 'gwei'));
