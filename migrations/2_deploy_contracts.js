@@ -28,9 +28,14 @@ async function liveDeploy (deployer, network, [ account0 ]) {
     this.Power.setBuildingContract(this.Building.address),
   ]);
 
+  console.log('******** set LDBNFTs BuildingContract address ********');
+  await this.LDBNFTs.setBuildingContract(this.Building.address)
+
   console.log('******** deploy & seting NFTsCrowdsale contract ********');
   this.NFTsCrowdsale = await NFTsCrowdsale.new(this.LDBNFTs.address, this.config.erc20Address, this.config.eth2erc20);
 
+
+  // save to file
   const result = {
     LDBNFTs: {
       address: this.LDBNFTs.address,
