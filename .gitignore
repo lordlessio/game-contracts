@@ -16,3 +16,6 @@ ldbNFT.flattener.sol
 coverage
 coverage.json
 coverageEnv
+
+# .lordless
+.lordless/development.json
