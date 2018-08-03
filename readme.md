@@ -27,6 +27,7 @@
 ### About Candy Drop :candy:
 
 ![](https://olxvlcccu.qnssl.com/blog/klydl.jpg?imageView2/2/w/500)
+
 LORDLESS splits the candy distribution capacities of the platform creatively and injects the capacity into specific ERC-721 (LDB) assets. We define this process as 'Platform Service Digitalizing', that is, PSD. LORDLESS expects to link the candy's distribution function with LDB in the form of a smart contract so that LDB has a capability of platform-independent candy distribution. When the user purchases LDB, he becomes LORD. LORD will receive benefits in the process of candy claimed in LDB. Even if the LORDLESS project team does not devote energy into maintaining the product, the LDB's capacity to receive candy and distribute candy will still keep the entire ecological operation, to ensure the benefits of LORD. More importantly, even LORDLESS officials cannot plunder your ownership of LDB, or stop the LDB running.
 
 http://lordless.io/airdrop/
