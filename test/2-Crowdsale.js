@@ -50,6 +50,30 @@ contract('NFTsCrowdsale', function (accounts) {
   /**
    * Defray Function Test
    */
+  
+  
+  it('less ether pay: should revert', async function () {
+    const buyer = accounts[1];
+    await this.NFTsCrowdsale.payByEth(this._tokenId, {
+      value: parseInt(this.ethPrice / 2),
+      from: buyer,
+    }).should.be.rejectedWith('revert');
+  });
+
+  it('pay with pay excess be should return of ', async function () {
+    const payExcess = 1e18;
+    const gasPrice = 100;
+    const preBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
+    const receipt = await this.NFTsCrowdsale.payByEth(this._tokenId, {
+      gasPrice,
+      value: this.ethPrice + payExcess,
+      from: this.buyer,
+    });
+    const afterDefrayBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
+    const gasCost = receipt.receipt.gasUsed * gasPrice;
+    // payExcess should be return of
+    (afterDefrayBalance - (preBalance - this.ethPrice - gasCost)).should.be.below(this.maError);
+  });
   describe('pay by eth: success', function () {
     beforeEach(async function () {
       // pay success
@@ -81,30 +105,6 @@ contract('NFTsCrowdsale', function (accounts) {
       this.logs[0].args.tokenId.should.be.bignumber.equal(this._tokenId);
     });
   });
-  
-  it('less ether pay: should revert', async function () {
-    const buyer = accounts[1];
-    await this.NFTsCrowdsale.payByEth(this._tokenId, {
-      value: parseInt(this.ethPrice / 2),
-      from: buyer,
-    }).should.be.rejectedWith('revert');
-  });
-
-  it('pay with pay excess be should return of ', async function () {
-    const payExcess = 1e18;
-    const gasPrice = 100;
-    const preBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
-    const receipt = await this.NFTsCrowdsale.payByEth(this._tokenId, {
-      gasPrice,
-      value: this.ethPrice + payExcess,
-      from: this.buyer,
-    });
-    const afterDefrayBalance = (await web3.eth.getBalance(this.buyer)).toNumber();
-    const gasCost = receipt.receipt.gasUsed * gasPrice;
-    // payExcess should be return of
-    (afterDefrayBalance - (preBalance - this.ethPrice - gasCost)).should.be.below(this.maError);
-  });
-  
   describe('pay by erc20: success', function () {
     beforeEach(async function () {
       // pay success
@@ -195,5 +195,45 @@ contract('NFTsCrowdsale', function (accounts) {
     logs[0].args.price.should.be.bignumber.equal(this.price);
     logs[0].args.endAt.should.be.bignumber.equal(this.endAt);
     logs[0].args.tokenId.should.be.bignumber.equal(_tokenId);
+  });
+  // batch
+  it('batchNewAuctions && batchCancelAuction', async function () {
+
+    const mockData = {
+      10 : { tokenId: 10,price: 1e18, endAt: 1564990276 },
+      11 : { tokenId: 11,price: 2e18, endAt: 1564990276 },
+      12 : { tokenId: 12,price: 3e18, endAt: 1564990276 },
+      13 : { tokenId: 13,price: 4e18, endAt: 1564990276 },
+      14 : { tokenId: 14,price: 5e18, endAt: 1564990276 },
+    }
+    const prices = Object.keys(mockData).map(i => mockData[i].price);
+    const tokenIds = Object.keys(mockData).map(i => mockData[i].tokenId);
+    const endAts = Object.keys(mockData).map(i => mockData[i].endAt);
+    // console.log(prices, tokenIds, endAts)
+    const tos = new Array(tokenIds.length).fill(accounts[0]);
+    // console.log('tos', tos);
+    await this.LDBNFTs.batchMint(tos, tokenIds);
+    await this.NFTsCrowdsale.batchNewAuctions(prices, tokenIds, endAts);
+    
+    const checkNewAuctions = tokenIds.map(async tokenId => {
+      return this.NFTsCrowdsale.getAuction(tokenId).then(
+        auction => {
+          let mock = mockData[tokenId]
+          auction[1].should.be.bignumber.equal(mock.price);
+          auction[2].should.be.bignumber.equal(mock.endAt);
+          auction[3].should.be.bignumber.equal(mock.tokenId);
+        }
+      )
+    })
+    await Promise.all(checkNewAuctions);
+
+    // batch new auctions
+    await this.NFTsCrowdsale.batchCancelAuctions(tokenIds);
+    const checkCancelAuctions = tokenIds.map(async tokenId => {
+      return this.NFTsCrowdsale.isOnAuction(tokenId).then(isOnAuction => {
+        isOnAuction.should.be.equal(false);
+      })
+    })
+    await Promise.all(checkCancelAuctions);
   });
 });

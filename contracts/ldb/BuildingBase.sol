@@ -46,7 +46,7 @@ contract BuildingBase is IBuilding {
     require(!_isBuilt(_tokenId));
     require(_isLongitude(_longitude));
     require(_isLatitude(_latitude));
-    
+    require(_popularity != 0);
     uint256 time = block.timestamp;
     LDB memory ldb = LDB(
       time, _longitude, _latitude, _popularity, uint256(0)

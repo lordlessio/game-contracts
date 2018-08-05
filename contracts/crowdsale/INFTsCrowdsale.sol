@@ -18,12 +18,15 @@ interface INFTsCrowdsale {
 
   function newAuction(uint128 _price, uint256 _tokenId, uint256 _endAt) external;
 
+  function batchNewAuctions(uint128[] prices, uint256[] tokenIds, uint256[] endAts) external;
+
   function payByEth (uint256 _tokenId) external payable; 
 
   function payByErc20 (uint256 _tokenId) external;
 
   function cancelAuction (uint256 _tokenId) external;
 
+  function batchCancelAuctions (uint256[] tokenIds) external;
   
   /* Events */
 

@@ -41,6 +41,20 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, EthPayPausable, Pausable{
   }
 
   /**
+   * @dev batch New Auctions 
+   * @param prices Array price in wei
+   * @param tokenIds Array LDB's tokenid
+   * @param endAts  Array auction end time
+   */
+  function batchNewAuctions(uint128[] prices, uint256[] tokenIds, uint256[] endAts) whenNotPaused external {
+    uint256 i = 0;
+    while (i < tokenIds.length) {
+      _newAuction(prices[i], tokenIds[i], endAts[i]);
+      i += 1;
+    }
+  }
+
+  /**
    * @dev pay a auction by eth
    * @param tokenId ldb tokenid
    */
@@ -62,5 +76,17 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, EthPayPausable, Pausable{
    */
   function cancelAuction (uint256 tokenId) external {
     _cancelAuction(tokenId);
+  }
+
+  /**
+   * @dev batch cancel auctions
+   * @param tokenIds Array LDB's tokenid
+   */
+  function batchCancelAuctions (uint256[] tokenIds) external {
+    uint256 i = 0;
+    while (i < tokenIds.length) {
+      _cancelAuction(tokenIds[i]);
+      i += 1;
+    }
   }
 }
