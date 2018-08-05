@@ -4,7 +4,7 @@ module.exports = {
     longitude: 121.4997553,
     latitude: 31.2396889,
     popularity: 1,
-    price: 1e18,
+    price: null,
     endAt: 1564990276
   },
   1: {

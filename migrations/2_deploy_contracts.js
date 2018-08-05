@@ -37,6 +37,7 @@ async function liveDeploy (deployer, network, [ account0 ]) {
   }
   this.NFTsCrowdsale = await NFTsCrowdsale.new(this.LDBNFTs.address, this.config.erc20Address, this.config.eth2erc20);
 
+  await this.LDBNFTs.setApprovalForAll(this.NFTsCrowdsale.address, true);
 
   // save to file
   const result = {

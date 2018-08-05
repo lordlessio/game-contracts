@@ -35,6 +35,9 @@ async function liveDeploy (deployer, network, [ account0 ]) {
   await Building.batchBuild(tokenIds, longitudes, latitudes, popularitys);
   
   // batch auction
-
   
+  const _auctionTokenIds = tokenIds.filter(tokenId => data[tokenId].price!==null);
+  const _auctionPrices = _auctionTokenIds.map(tokenId => data[tokenId].price);
+  const _auctionEndAts = _auctionTokenIds.map(tokenId => data[tokenId].endAt);
+  await NFTsCrowdsale.batchNewAuctions(_auctionPrices, _auctionTokenIds, _auctionEndAts);
 }
