@@ -5,7 +5,6 @@ const Power = artifacts.require('Power');
 const fs = require('fs-extra');
 
 module.exports = function (deployer, network, accounts) {
-  if (network === 'development' || network === 'coverage') return;
   this.path = require('path').join(__dirname, `../.lordless/${network}.json`);
   this.config = require('../config')(network);
   deployer.then(async function () {
@@ -32,6 +31,10 @@ async function liveDeploy (deployer, network, [ account0 ]) {
   await this.LDBNFTs.setBuildingContract(this.Building.address)
 
   console.log('******** deploy & seting NFTsCrowdsale contract ********');
+  if (network === 'development' || network === 'coverage') {
+    const erc20 = await artifacts.require('LORDLESS_TOKEN').new()
+    this.config.erc20Address = erc20.address
+  }
   this.NFTsCrowdsale = await NFTsCrowdsale.new(this.LDBNFTs.address, this.config.erc20Address, this.config.eth2erc20);
 
 
