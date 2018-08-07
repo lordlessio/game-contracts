@@ -8,6 +8,7 @@ interface INFTsCrowdsale {
 
   function getAuction(uint256 _tokenId) external view
   returns (
+    bytes32,
     address,
     uint256,
     uint256,
@@ -31,6 +32,7 @@ interface INFTsCrowdsale {
   /* Events */
 
   event NewAuction (
+    bytes32 id,
     address indexed seller,
     uint256 price,
     uint256 endAt,
@@ -38,6 +40,7 @@ interface INFTsCrowdsale {
   );
 
   event PayByEthSuccess (
+    bytes32 id,
     address indexed seller,
     address indexed buyer,
     uint256 price,
@@ -46,6 +49,7 @@ interface INFTsCrowdsale {
   );
 
   event PayByErc20Success (
+    bytes32 id,
     address indexed seller,
     address indexed buyer, 
     uint256 price,
@@ -54,6 +58,7 @@ interface INFTsCrowdsale {
   );
 
   event CancelAuction (
+    bytes32 id,
     address indexed seller,
     uint256 indexed tokenId
   );

@@ -16,6 +16,8 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
   uint public eth2erc20;
   // Represents a auction on LDB Crowdsale
   struct Auction {
+    // Auction id
+    bytes32 id;
     // Seller of LDB 
     address seller;
     // erc20 price(wei) of LDB
@@ -36,13 +38,14 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
 
   function getAuction(uint256 _tokenId) external view
   returns (
+    bytes32,
     address,
     uint256,
     uint256,
     uint256
   ){
     Auction storage auction = tokenIdToAuction[_tokenId];
-    return (auction.seller, auction.price, auction.endAt, auction.tokenId);
+    return (auction.id, auction.seller, auction.price, auction.endAt, auction.tokenId);
   }
 
   function isOnAuction(uint256 _tokenId) external view returns (bool) {
@@ -77,7 +80,12 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
     require(_isTokenOwner(_seller, _tokenId));
     _escrow(_seller, _tokenId);
 
+    bytes32 auctionId = keccak256(
+      abi.encodePacked(block.timestamp, _seller, _tokenId, _price)
+    );
+    
     Auction memory _order = Auction(
+      auctionId,
       _seller,
       uint128(_price),
       _endAt,
@@ -85,14 +93,14 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
     );
 
     tokenIdToAuction[_tokenId] = _order;
-    emit NewAuction(_seller, _price, _endAt, _tokenId);
+    emit NewAuction(auctionId, _seller, _price, _endAt, _tokenId);
   }
 
   function _cancelAuction(uint256 _tokenId) internal {
     address tokenOwner = erc721Contract.ownerOf(_tokenId);
     require(tokenOwner == msg.sender || msg.sender == owner);
     Auction storage _auction = tokenIdToAuction[_tokenId];
-    emit CancelAuction(_auction.seller, _tokenId);
+    emit CancelAuction(_auction.id, _auction.seller, _tokenId);
     _cancelEscrow(_auction.seller, _tokenId);
     delete tokenIdToAuction[_tokenId];
   }
@@ -112,7 +120,7 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
     address buyer = msg.sender;
     buyer.transfer(payExcess);
     _transfer(buyer, _tokenId);
-    emit PayByEthSuccess(_auction.seller, msg.sender, _auction.price, _auction.endAt, _auction.tokenId);
+    emit PayByEthSuccess(_auction.id, _auction.seller, msg.sender, _auction.price, _auction.endAt, _auction.tokenId);
     delete tokenIdToAuction[_tokenId];
   }
 
@@ -129,7 +137,7 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
       erc20Contract.transferFrom(msg.sender, _auction.seller, computedErc20Price);
     }
     _transfer(msg.sender, _tokenId);
-    emit PayByErc20Success(_auction.seller, msg.sender, _auction.price, _auction.endAt, _auction.tokenId);
+    emit PayByErc20Success(_auction.id, _auction.seller, msg.sender, _auction.price, _auction.endAt, _auction.tokenId);
     delete tokenIdToAuction[_tokenId];
   }
   
