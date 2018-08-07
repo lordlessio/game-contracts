@@ -18,4 +18,4 @@ coverage.json
 coverageEnv
 
 # .lordless
-.lordless/development.json
+.deployed/development.json
