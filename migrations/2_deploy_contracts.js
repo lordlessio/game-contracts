@@ -16,10 +16,10 @@ async function liveDeploy (deployer, network, [ account0 ]) {
   console.log('******** deploy LDBNFTs contract ********');
   const name = 'LDB NFT';
   const symbol = 'LDB';
-  this.LDBNFTs = await LDBNFTs.new(name, symbol, { from: account0 });
+  this.LDBNFTs = await LDBNFTs.new(name, symbol, { from: account0, gas: 3712388 });
 
   console.log('******** deploy & seting Building/Power contract ********');
-  const r = await Promise.all([ Building.new(), Power.new() ]);
+  const r = await Promise.all([ Building.new({}, { gas: 3712388 }), Power.new({}, { gas: 3712388 }) ]);
   this.Building = r[0];
   this.Power = r[1];
   await Promise.all([
@@ -32,10 +32,10 @@ async function liveDeploy (deployer, network, [ account0 ]) {
 
   console.log('******** deploy & seting NFTsCrowdsale contract ********');
   if (network === 'development' || network === 'coverage') {
-    const erc20 = await artifacts.require('LORDLESS_TOKEN').new()
+    const erc20 = await artifacts.require('LORDLESS_TOKEN').new({},{ gas: 3712388 })
     this.config.erc20Address = erc20.address
   }
-  this.NFTsCrowdsale = await NFTsCrowdsale.new(this.LDBNFTs.address, this.config.erc20Address, this.config.eth2erc20);
+  this.NFTsCrowdsale = await NFTsCrowdsale.new(this.LDBNFTs.address, this.config.erc20Address, this.config.eth2erc20, { gas: 3712388 });
 
   await this.LDBNFTs.setApprovalForAll(this.NFTsCrowdsale.address, true);
 

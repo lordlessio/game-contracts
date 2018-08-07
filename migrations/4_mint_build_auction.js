@@ -20,7 +20,7 @@ async function liveDeploy(deployer, network, [account0]) {
 
   /* mint and build ldb from tokenId 0 - 20 */
 
-  const data = require('../storage/3-data');
+  const data = require('../storage/4-data');
 
   const tokenIds = Object.keys(data);
   const values = Object.values(data)

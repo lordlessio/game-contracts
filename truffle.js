@@ -20,13 +20,20 @@ module.exports = {
     },
     ropsten: {
       // provider: new HDWalletProvider(mnemonic, 'http://127.0.0.1:8545/'),
-      provider: new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/'),
-      network_id: '3',
+      provider: new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/v3/18674a656b434d548d03332a203693c0'),
+      network_id: '*',
+      gas: 2000000,
       gasPrice: 10000000000,
     },
     mainnet: {
       provider: new HDWalletProvider(mnemonicProd, 'https://mainnet.infura.io/'),
       network_id: '*',
     },
+    solc: {
+      optimizer: {
+        enabled: true,
+        runs: 200
+      }
+    }
   },
 };
