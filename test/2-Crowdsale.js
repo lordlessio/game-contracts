@@ -38,13 +38,13 @@ contract('NFTsCrowdsale', function (accounts) {
   it('should get auction success', async function () {
     const auction = await this.NFTsCrowdsale.getAuction(this._tokenId);
     // should be seller
-    auction[0].should.be.equal(accounts[0]);
+    auction[1].should.be.equal(accounts[0]);
     // should be price
-    auction[1].should.be.bignumber.equal(this.price);
+    auction[2].should.be.bignumber.equal(this.price);
     //  should be endAt
-    auction[2].should.be.bignumber.equal(this.endAt);
+    auction[3].should.be.bignumber.equal(this.endAt);
     // should be token_id
-    auction[3].should.be.bignumber.equal(this._tokenId);
+    auction[4].should.be.bignumber.equal(this._tokenId);
   });
 
   /**
@@ -219,9 +219,9 @@ contract('NFTsCrowdsale', function (accounts) {
       return this.NFTsCrowdsale.getAuction(tokenId).then(
         auction => {
           let mock = mockData[tokenId]
-          auction[1].should.be.bignumber.equal(mock.price);
-          auction[2].should.be.bignumber.equal(mock.endAt);
-          auction[3].should.be.bignumber.equal(mock.tokenId);
+          auction[2].should.be.bignumber.equal(mock.price);
+          auction[3].should.be.bignumber.equal(mock.endAt);
+          auction[4].should.be.bignumber.equal(mock.tokenId);
         }
       )
     })
