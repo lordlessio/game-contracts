@@ -3,9 +3,9 @@ const NFTsCrowdsale = artifacts.require('NFTsCrowdsale');
 const fs = require('fs-extra');
 
 module.exports = function (deployer, network, accounts) {
-  this.path = require('path').join(__dirname, `../.lordless/${network}.json`);
+  this.path = require('path').join(__dirname, `../.deployed/${network}.json`);
   this.config = require('../config')(network);
-  this.contracts = require(`../.lordless/${network}.json`);
+  this.contracts = require(`../.deployed/${network}.json`);
   deployer.then(async function () {
     await liveDeploy(deployer, network, accounts);
   }).catch(console.log);

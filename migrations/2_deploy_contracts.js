@@ -5,7 +5,7 @@ const Power = artifacts.require('Power');
 const fs = require('fs-extra');
 
 module.exports = function (deployer, network, accounts) {
-  this.path = require('path').join(__dirname, `../.lordless/${network}.json`);
+  this.path = require('path').join(__dirname, `../.deployed/${network}.json`);
   this.config = require('../config')(network);
   deployer.then(async function () {
     await liveDeploy(deployer, network, accounts);
@@ -59,6 +59,5 @@ async function liveDeploy (deployer, network, [ account0 ]) {
     },
     createdAt: new Date(),
   };
-  
   await fs.outputJson(this.path, result);
 }
