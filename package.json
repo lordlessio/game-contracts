@@ -48,6 +48,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "truffle-flattener": "^1.2.5",
     "truffle-hdwallet-provider": "^0.0.3",
+    "ethereumjs-wallet": "0.6.0",
     "ethereumjs-abi": "^0.6.4",
     "ethereumjs-util": "^5.1.2",
     "ganache-cli": "^6.1.3",
