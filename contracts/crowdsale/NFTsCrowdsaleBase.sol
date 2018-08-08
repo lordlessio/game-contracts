@@ -97,9 +97,8 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
   }
 
   function _cancelAuction(uint256 _tokenId) internal {
-    address tokenOwner = erc721Contract.ownerOf(_tokenId);
-    require(tokenOwner == msg.sender || msg.sender == owner);
     Auction storage _auction = tokenIdToAuction[_tokenId];
+    require(_auction.seller == msg.sender || msg.sender == owner);
     emit CancelAuction(_auction.id, _auction.seller, _tokenId);
     _cancelEscrow(_auction.seller, _tokenId);
     delete tokenIdToAuction[_tokenId];
