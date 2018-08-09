@@ -29,7 +29,6 @@ async function liveDeploy (deployer, network, [ account0 ]) {
 
   console.log('******** set LDBNFTs BuildingContract address ********');
   await this.LDBNFTs.setBuildingContract(this.Building.address)
-
   console.log('******** deploy & seting NFTsCrowdsale contract ********');
   if (network === 'development' || network === 'coverage') {
     const erc20 = await artifacts.require('LORDLESS_TOKEN').new({},{ gas: 3712388 })
@@ -43,18 +42,22 @@ async function liveDeploy (deployer, network, [ account0 ]) {
   const result = {
     LDBNFTs: {
       address: this.LDBNFTs.address,
+      tx: this.LDBNFTs.transactionHash,
       abi: artifacts.require('ILDBNFTs').abi,
     },
     Building: {
       address: this.Building.address,
+      tx: this.Building.transactionHash,
       abi: artifacts.require('IBuilding').abi,
     },
     Power: {
       address: this.Power.address,
+      tx: this.Power.transactionHash,
       abi: artifacts.require('IPower').abi,
     },
     NFTsCrowdsale: {
       address: this.NFTsCrowdsale.address,
+      tx: this.NFTsCrowdsale.transactionHash,
       abi: artifacts.require('INFTsCrowdsale').abi,
     },
     createdAt: new Date(),

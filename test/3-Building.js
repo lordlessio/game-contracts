@@ -36,8 +36,8 @@ contract('Building', function ([_, owner]) {
   });
   
   it('error longitude & latitude should be revert ', async function () {
-    const errorLongitude = 123456789123456789;
-    const errorLatitude = 123456789123456789;
+    const errorLongitude = -12345678901234567890;
+    const errorLatitude = 12345678910234567890;
     
     await this.Building.build(
       100,

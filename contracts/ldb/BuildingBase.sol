@@ -15,7 +15,7 @@ contract BuildingBase is IBuilding {
     uint256 activeness; // The activeness of ldb
   }
   
-  uint8 public constant decimals = 14; // longitude latitude decimals
+  uint8 public constant decimals = 16; // longitude latitude decimals
 
   mapping(uint256 => LDB) internal tokenLDBs;
   
@@ -110,12 +110,19 @@ contract BuildingBase is IBuilding {
   function _isLongitude (
     int _param
   ) internal pure returns (bool){
-    return( _param <= 180 * int(10 ** uint256(decimals)));
+    
+    return( 
+      _param <= 180 * int(10 ** uint256(decimals))&&
+      _param >= -180 * int(10 ** uint256(decimals))
+      );
   } 
 
   function _isLatitude (
     int _param
   ) internal pure returns (bool){
-    return( _param <= 90 * int(10 ** uint256(decimals)));
+    return( 
+      _param <= 90 * int(10 ** uint256(decimals))&&
+      _param >= -90 * int(10 ** uint256(decimals))
+      );
   } 
 }

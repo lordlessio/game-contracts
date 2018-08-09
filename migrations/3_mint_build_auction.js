@@ -26,24 +26,24 @@ async function liveDeploy(deployer, network, [account0]) {
   const values = Object.values(data)
   // batch mint NFTs
   const tos = (new Array(values.length)).fill(account0);
-  console.log('1-------------')
+  console.log('**** batch mint NFTs ****')
   await LDBNFTs.batchMint(tos, tokenIds, {
     gas: 3712388
   })
   // batch build LDBs 
-  console.log('2-------------')
+  console.log('**** batch build LDBs  ****')
   const longitudes = values.map(item => item.longitude);
   const latitudes = values.map(item => item.latitude);
-  const popularitys = values.map(item => item.popularity);
+  const popularitys = values.map(item => parseInt(item.popularity));
   await Building.batchBuild(tokenIds, longitudes, latitudes, popularitys, {
-    gas: 2712388
+    gas: 3212388
   });
 
   // batch auction
   const _auctionTokenIds = tokenIds.filter(tokenId => data[tokenId].price !== null);
   const _auctionPrices = _auctionTokenIds.map(tokenId => data[tokenId].price);
   const _auctionEndAts = _auctionTokenIds.map(tokenId => data[tokenId].endAt);
-  console.log('3-------------')
+  console.log('**** batch new auction  ****')
   await NFTsCrowdsale.batchNewAuctions(_auctionPrices, _auctionTokenIds, _auctionEndAts, {
     gas: 5012388
   });
