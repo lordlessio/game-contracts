@@ -30,6 +30,11 @@ contract('LDBNFTs', function (accounts) {
     (await this.LDBNFTs.ownerOf(_tokenId)).should.be.equal(accounts[1]);
   });
 
+  it('tokenId >= 5000 should be revert', async function () {
+    const _tokenId = 5000;
+    await this.LDBNFTs.mint(accounts[1], _tokenId).should.be.rejectedWith('revert');
+  });
+
   it('batch mint', async function () {
     const tos = [accounts[1], accounts[2], accounts[3], accounts[4]];
     const tokenIds = [6, 7, 8, 9];
