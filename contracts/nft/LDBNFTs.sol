@@ -33,6 +33,7 @@ contract LDBNFTs is ERC721Token, Superuser, ILDBNFTs {
   { }
 
   BuildingInterface public buildingContract;
+  uint16 public constant MAX_SUPPLY = 4000;  // LDB MAX SUPPLY
 
   /**
    * @dev set the LDB contract address
@@ -41,8 +42,9 @@ contract LDBNFTs is ERC721Token, Superuser, ILDBNFTs {
   function setBuildingContract(address building) onlySuperuser external {
     buildingContract = BuildingInterface(building);
   }
-
+  
   function mint(address to, uint256 tokenId) onlySuperuser public {
+    require(tokenId < MAX_SUPPLY);
     super._mint(to, tokenId);
   }
 
