@@ -43,5 +43,3 @@ truffle deploy --network <network> --reset
 * [Telegram](https://t.me/lordlessio)
 * [Twitter](https://twitter.com/lordlessio)
 
-### Business
-:email: [eury@lordless.io](mailto:eury@lordless.io)
