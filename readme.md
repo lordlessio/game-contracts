@@ -14,7 +14,11 @@
   <h1>LORDLESS Building Contract :european_castle:</h1>  
 </div>
 
-### About LDB :house:
+<div align="center">
+  <h3>About LDB :house: </h3> 
+</div>
+
+
 
 > LDB, LORDLESS Building, is a rare and specific digital asset in LORDLESS and it is an ERC-721 token. In the first world of LORDLESS, it is allocable, but not replaceable. Most of the interactions in the virtual world are dependent on LDB. The core information of the LDB will be stored on the blockchain to ensure the immutability of this digital assets. - lordless.io
 
@@ -24,7 +28,9 @@
 * LDB can trade in the markets we develop
 * The value of LDB is determined by batchple attributes such as activeness and popularity influence.
 
-### About Candy Drop :candy:
+<div align="center">
+  <h3>About Candy Drop :candy:</h3> 
+</div>
 
 ![](https://olxvlcccu.qnssl.com/blog/klydl.jpg?imageView2/2/w/500)
 
@@ -32,8 +38,10 @@ LORDLESS splits the candy distribution capacities of the platform creatively and
 
 http://lordless.io/airdrop/
 
+<div align="center">
+  <h3>About LORD :bust_in_silhouette:</h3> 
+</div>
 
-### About LORD :bust_in_silhouette:
 LORDs are users who own an LDB. The LORD has full access to LDB, including but not limited to LDB's buying and selling, decoration, advertising decisions, candy distribution, and custom feature development based on official API. All the earnings in LDB will fall into the LORD’s pocket.
  
 ### Development
