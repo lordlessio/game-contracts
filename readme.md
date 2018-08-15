@@ -17,9 +17,9 @@ Including erc721, market trading, LDB upgrade, candy airdrop relationship and ot
 
 </div>
 <div align="center">
-   ## Development 
-</div>
-
+  
+## Development 
+   
 ```sh
 
 npm install 
@@ -35,6 +35,10 @@ npm run test
 truffle deploy --network <network> --reset 
 
 ```
+   
+</div>
+
+
 
  
 
