@@ -1,6 +1,7 @@
 const HDWalletProvider = require('truffle-hdwallet-provider');
 const mnemonic = process.env.LORDLESS_TEST_MNEMONIC;
 const mnemonicProd = process.env.LORDLESS_PROD_MNEMONIC;
+const infura_key = process.env.INFURA_KEY;
 
 module.exports = {
   networks: {
@@ -20,20 +21,20 @@ module.exports = {
     },
     ropsten: {
       // provider: new HDWalletProvider(mnemonic, 'http://127.0.0.1:8545/'),
-      provider: new HDWalletProvider(mnemonic, 'https://ropsten.infura.io'),
+      provider: new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/${infura_key}`),
       network_id: '*',
       gas: 2000000,
       gasPrice: 10000000000,
     },
     mainnet: {
-      provider: new HDWalletProvider(mnemonicProd, 'https://mainnet.infura.io/'),
+      provider: new HDWalletProvider(mnemonicProd, `https://mainnet.infura.io/v3/${infura_key}`),
       network_id: '*',
     },
-    solc: {
-      optimizer: {
-        enabled: true,
-        runs: 200
-      }
-    }
   },
+  solc: {
+    optimizer: {
+      enabled: true,
+      runs: 200
+    }
+  }
 };
