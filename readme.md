@@ -16,10 +16,10 @@
 Including erc721, market trading, LDB upgrade, candy airdrop relationship and other functions
 
 </div>
-<div align="center">
-   ## Development 
-</div>
 
+  
+## Development 
+   
 ```sh
 
 npm install 
@@ -35,8 +35,9 @@ npm run test
 truffle deploy --network <network> --reset 
 
 ```
+   
 
- 
+
 
 ### Community
 * [Website](https://lordless.io)
