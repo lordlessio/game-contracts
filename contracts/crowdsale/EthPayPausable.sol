@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 
 import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
@@ -19,8 +19,8 @@ contract EthPayPausable is Superuser {
   modifier whenNotEthPaused() {
     require(!ethPaused);
     _;
-  }
 
+  }
   /**
    * @dev Modifier to make a function callable only when the contract is paused.
    */

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 import "../../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 
 contract ILDBNFTs is ERC721 {
