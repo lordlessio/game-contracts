@@ -19,3 +19,4 @@ coverageEnv
 
 # .lordless
 .deployed/development.json
+out

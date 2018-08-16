@@ -3,6 +3,7 @@ const NFTsCrowdsale = artifacts.require('NFTsCrowdsale');
 const fs = require('fs-extra');
 
 module.exports = function (deployer, network, accounts) {
+  if(network === 'test') return;
   this.path = require('path').join(__dirname, `../.deployed/${network}.json`);
   this.config = require('../config')(network);
   this.contracts = require(`../.deployed/${network}.json`);
@@ -17,15 +18,14 @@ async function liveDeploy(deployer, network, [account0]) {
   const Building = await artifacts.require('Building').at(contracts['Building'].address);
   const NFTsCrowdsale = await artifacts.require('NFTsCrowdsale').at(contracts['NFTsCrowdsale'].address);
 
-
-  /* mint and build ldb from tokenId 0 - 20 */
+  /* mint and build ldb from tokenId 0 - 39 */
 
   const data1 = require('../storage/3-1-data');
   const data2 = require('../storage/3-2-data');
   const data3 = require('../storage/3-3-data');
   const data4 = require('../storage/3-4-data');
   let i = 1;
-  for(data of [data4]){
+  for(data of [data1, data2, data3, data4]){
     const tokenIds = Object.keys(data);
     const values = Object.values(data)
     // batch mint NFTs
