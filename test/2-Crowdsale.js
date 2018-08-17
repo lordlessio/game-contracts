@@ -36,7 +36,8 @@ contract('NFTsCrowdsale', function (accounts) {
   });
 
   it('should get auction success', async function () {
-    const auction = await this.NFTsCrowdsale.getAuction(this._tokenId);
+    const auction = await this.NFTsCrowdsale.getAuction.call(this._tokenId);
+    // console.log(auction)
     // should be seller
     auction[1].should.be.equal(accounts[0]);
     // should be price
@@ -149,17 +150,17 @@ contract('NFTsCrowdsale', function (accounts) {
     it('time expired cancelAuction should be success', async function () {
       await increaseTime(600);
       await this.NFTsCrowdsale.cancelAuction(this._tokenId);
-      (await this.NFTsCrowdsale.isOnAuction(this._tokenId)).should.be.equal(false);
+      (await this.NFTsCrowdsale.isOnAuction.call(this._tokenId)).should.be.equal(false);
     });
   });
   
   it('isOnAuction should be true', async function () {
-    (await this.NFTsCrowdsale.isOnAuction(this._tokenId)).should.be.equal(true);
+    (await this.NFTsCrowdsale.isOnAuction.call(this._tokenId)).should.be.equal(true);
   });
 
   it('isOnAuction should be false after cancelAuction ', async function () {
     const { logs } = await this.NFTsCrowdsale.cancelAuction(this._tokenId);
-    (await this.NFTsCrowdsale.isOnAuction(this._tokenId)).should.be.equal(false);
+    (await this.NFTsCrowdsale.isOnAuction.call(this._tokenId)).should.be.equal(false);
 
     // events
     logs[0].event.should.be.equal('CancelAuction');
@@ -216,7 +217,7 @@ contract('NFTsCrowdsale', function (accounts) {
     await this.NFTsCrowdsale.batchNewAuctions(prices, tokenIds, endAts);
     
     const checkNewAuctions = tokenIds.map(async tokenId => {
-      return this.NFTsCrowdsale.getAuction(tokenId).then(
+      return this.NFTsCrowdsale.getAuction.call(tokenId).then(
         auction => {
           let mock = mockData[tokenId]
           auction[2].should.be.bignumber.equal(mock.price);
@@ -230,7 +231,7 @@ contract('NFTsCrowdsale', function (accounts) {
     // batch new auctions
     await this.NFTsCrowdsale.batchCancelAuctions(tokenIds);
     const checkCancelAuctions = tokenIds.map(async tokenId => {
-      return this.NFTsCrowdsale.isOnAuction(tokenId).then(isOnAuction => {
+      return this.NFTsCrowdsale.isOnAuction.call(tokenId).then(isOnAuction => {
         isOnAuction.should.be.equal(false);
       })
     })

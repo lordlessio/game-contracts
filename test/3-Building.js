@@ -32,7 +32,7 @@ contract('Building', function ([_, owner]) {
       this.popularity
     );
     this.logs = logs;
-    this.ldb = await this.Building.building(this.tokenId);
+    this.ldb = await this.Building.building.call(this.tokenId);
   });
   
   it('error longitude & latitude should be revert ', async function () {
@@ -75,10 +75,10 @@ contract('Building', function ([_, owner]) {
 
   it('activenessUpgrade', async function () {
     const deltaActiveness = 10;
-    const oldb = await this.Building.building(this.tokenId);
+    const oldb = await this.Building.building.call(this.tokenId);
     const oActiveness = oldb[4].toNumber();
     const { logs } = await this.Building.activenessUpgrade(this.tokenId, deltaActiveness);
-    const ldb = await this.Building.building(this.tokenId);
+    const ldb = await this.Building.building.call(this.tokenId);
     ldb[4].should.be.bignumber.equal(oActiveness + deltaActiveness);
 
     logs[0].args.tokenId.should.be.bignumber.equal(this.tokenId);
@@ -88,8 +88,8 @@ contract('Building', function ([_, owner]) {
   it('get ldb influence', async function () {
     const activeness = 20;
     await this.Building.activenessUpgrade(this.tokenId, activeness);
-    const ldb = await this.Building.building(this.tokenId);
-    const influence = await this.Building.influenceByToken(this.tokenId);
+    const ldb = await this.Building.building.call(this.tokenId);
+    const influence = await this.Building.influenceByToken.call(this.tokenId);
     influence.should.be.bignumber.equal(getInfluence(ldb[3], ldb[4]));
     // console.log(influence);
   });
@@ -97,30 +97,30 @@ contract('Building', function ([_, owner]) {
   it('get ldb level', async function () {
     const deltaActiveness = 100;
     await this.Building.activenessUpgrade(this.tokenId, deltaActiveness);
-    const ldb = await this.Building.building(this.tokenId);
+    const ldb = await this.Building.building.call(this.tokenId);
     const activeness = ldb[4];
     const levelShouldBe = parseInt(Math.sqrt(activeness / 10 * 108 * 108) / 108 + 1);
-    (await this.Building.levelByToken(this.tokenId)).should.bignumber.equal(levelShouldBe);
+    (await this.Building.levelByToken.call(this.tokenId)).should.bignumber.equal(levelShouldBe);
   });
 
   it('get weightsApportion', async function () {
     const userLevel = 10;
     const lordLevel = 20;
     const userWeightsApportionShouleBe = 2000 + 6000 * userLevel / (userLevel + lordLevel);
-    (await this.Building.weightsApportion(userLevel, lordLevel))
+    (await this.Building.weightsApportion.call(userLevel, lordLevel))
       .should.be.bignumber.equal(userWeightsApportionShouleBe);
   });
   
   it('ldb isBuilt', async function () {
-    (await this.Building.isBuilt(this.tokenId)).should.be.equal(true);
-    (await this.Building.isBuilt(2333)).should.be.equal(false);
+    (await this.Building.isBuilt.call(this.tokenId)).should.be.equal(true);
+    (await this.Building.isBuilt.call(2333)).should.be.equal(false);
   });
 
   it('popularitySetting', async function () {
     const popularity = 1;
-    const oldb = await this.Building.building(this.tokenId);
+    const oldb = await this.Building.building.call(this.tokenId);
     const { logs } = await this.Building.popularitySetting(this.tokenId, popularity);
-    const ldb = await this.Building.building(this.tokenId);
+    const ldb = await this.Building.building.call(this.tokenId);
     ldb[3].should.be.bignumber.equal(popularity);
 
     logs[0].args.tokenId.should.be.bignumber.equal(this.tokenId);
@@ -138,7 +138,7 @@ contract('Building', function ([_, owner]) {
         this.tokenIds, longitudes, latitudes, popularitys
       );
       this.oActiveness = await Promise.all(this.tokenIds.map(k =>
-        this.Building.building(k).then(b => b[4].toNumber())
+        this.Building.building.call(k).then(b => b[4].toNumber())
       ));
     });
 
@@ -146,7 +146,7 @@ contract('Building', function ([_, owner]) {
       const deltaActiveness = [600, 700, 800, 900];
       await this.Building.batchActivenessUpgrade(this.tokenIds, deltaActiveness);
       const activeness = await Promise.all(this.tokenIds.map(k =>
-        this.Building.building(k).then(b => b[4].toNumber())
+        this.Building.building.call(k).then(b => b[4].toNumber())
       ));
       this.oActiveness.forEach((item, i) => {
         activeness[i].should.be.equal(this.oActiveness[i] + deltaActiveness[i]);
@@ -157,7 +157,7 @@ contract('Building', function ([_, owner]) {
       const newPopularitys = [4, 3, 2, 1];
       await this.Building.batchPopularitySetting(this.tokenIds, newPopularitys);
       const popularitys = await Promise.all(this.tokenIds.map(k =>
-        this.Building.building(k).then(b => b[3].toNumber())
+        this.Building.building.call(k).then(b => b[3].toNumber())
       ));
       popularitys.forEach((item, i) => {
         popularitys[i].should.be.equal(newPopularitys[i]);

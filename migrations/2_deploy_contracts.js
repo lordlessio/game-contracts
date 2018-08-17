@@ -5,7 +5,7 @@ const Power = artifacts.require('Power');
 const fs = require('fs-extra');
 
 module.exports = function (deployer, network, accounts) {
-  if(network === 'test') return;
+  if(['test', 'coverage'].includes(network)) return;
   this.path = require('path').join(__dirname, `../.deployed/${network}.json`);
   this.config = require('../config')(network);
   deployer.then(async function () {
