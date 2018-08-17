@@ -4,5 +4,6 @@ module.exports = {
   copyPackages: ['zeppelin-solidity'],
   skipFiles: [
     'utils',
+    'lib',
   ],
 };
