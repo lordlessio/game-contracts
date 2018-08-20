@@ -22,10 +22,8 @@ async function liveDeploy(deployer, network, [account0]) {
 
   const data1 = require('../storage/3-1-data');
   const data2 = require('../storage/3-2-data');
-  const data3 = require('../storage/3-3-data');
-  const data4 = require('../storage/3-4-data');
   let i = 1;
-  for(data of [data1, data2, data3, data4]){
+  for(data of [data1, data2]){
     const tokenIds = Object.keys(data);
     const values = Object.values(data)
     // batch mint NFTs
