@@ -161,8 +161,15 @@ contract('NFTsCrowdsale', function (accounts) {
     });
   });
   
-  it('isOnAuction should be true', async function () {
+  it('isOnAuction should be true && when preSale isOnAuction should be false', async function () {
     (await this.NFTsCrowdsale.isOnAuction.call(this._tokenId)).should.be.equal(true);
+
+    await this.NFTsCrowdsale.newAuction(this.price, this._tokenId2, this.startAt_1min, this.endAt);
+    // pre sale should be true
+    (await this.NFTsCrowdsale.isOnPreAuction.call(this._tokenId2)).should.be.equal(true);
+    // when pre sale isOnAuction should be false
+    (await this.NFTsCrowdsale.isOnAuction.call(this._tokenId2)).should.be.equal(false);
+    
   });
 
   it('isOnAuction should be false after cancelAuction ', async function () {
