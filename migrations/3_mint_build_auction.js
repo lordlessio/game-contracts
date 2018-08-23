@@ -45,8 +45,9 @@ async function liveDeploy(deployer, network, [account0]) {
     console.log(`**** ${i} batch new auctions  ****`)
     const _auctionTokenIds = tokenIds.filter(tokenId => data[tokenId].price !== null);
     const _auctionPrices = _auctionTokenIds.map(tokenId => data[tokenId].price.toString());
+    const _auctionStartAts = _auctionTokenIds.map(tokenId => data[tokenId].startAt.toString());
     const _auctionEndAts = _auctionTokenIds.map(tokenId => data[tokenId].endAt.toString());
-    await NFTsCrowdsale.batchNewAuctions(_auctionPrices, _auctionTokenIds, _auctionEndAts, {
+    await NFTsCrowdsale.batchNewAuctions(_auctionPrices, _auctionTokenIds, _auctionStartAts, _auctionEndAts, {
       gas: 3612388
     });
     i++;
