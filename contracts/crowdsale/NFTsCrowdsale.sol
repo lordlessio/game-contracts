@@ -20,12 +20,11 @@ pragma solidity ^0.4.24;
  * code at https://github.com/lordlessio
  */
 
-import "../../node_modules/zeppelin-solidity/contracts/lifecycle/Pausable.sol";
-import "./EthPayPausable.sol";
+import "./Pausable.sol";
 import "./NFTsCrowdsaleBase.sol";
 
 
-contract NFTsCrowdsale is NFTsCrowdsaleBase, EthPayPausable, Pausable{
+contract NFTsCrowdsale is NFTsCrowdsaleBase, Pausable {
 
   constructor(address erc721Address, address erc20Address, uint eth2erc20) public 
   NFTsCrowdsaleBase(erc721Address, erc20Address, eth2erc20){}
@@ -36,8 +35,12 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, EthPayPausable, Pausable{
    * @param tokenId LDB's tokenid
    * @param endAt auction end time
    */
-  function newAuction(uint128 price, uint256 tokenId, uint256 endAt) whenNotPaused external {
-    _newAuction(price, tokenId, endAt);
+  function newAuction(uint128 price, uint256 tokenId, uint256 startAt, uint256 endAt) whenNotPaused external {
+    uint256 _startAt = startAt;
+    if (msg.sender != owner) {
+      _startAt = block.timestamp;
+    }
+    _newAuction(price, tokenId, _startAt, endAt);
   }
 
   /**
@@ -46,10 +49,10 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, EthPayPausable, Pausable{
    * @param tokenIds Array LDB's tokenid
    * @param endAts  Array auction end time
    */
-  function batchNewAuctions(uint128[] prices, uint256[] tokenIds, uint256[] endAts) whenNotPaused external {
+  function batchNewAuctions(uint128[] prices, uint256[] tokenIds, uint256[] startAts, uint256[] endAts) whenNotPaused external {
     uint256 i = 0;
     while (i < tokenIds.length) {
-      _newAuction(prices[i], tokenIds[i], endAts[i]);
+      _newAuction(prices[i], tokenIds[i], startAts[i], endAts[i]);
       i += 1;
     }
   }
@@ -58,7 +61,7 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, EthPayPausable, Pausable{
    * @dev pay a auction by eth
    * @param tokenId ldb tokenid
    */
-  function payByEth (uint256 tokenId) whenNotEthPaused external payable {
+  function payByEth (uint256 tokenId) whenNotPaused external payable {
     _payByEth(tokenId); 
   }
 
@@ -66,7 +69,7 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, EthPayPausable, Pausable{
    * @dev pay a auction by erc20 Token
    * @param tokenId LDB's tokenid
    */
-  function payByErc20 (uint256 tokenId) whenNotPaused external {
+  function payByErc20 (uint256 tokenId) whenNotPaused2 external {
     _payByErc20(tokenId);
   }
 

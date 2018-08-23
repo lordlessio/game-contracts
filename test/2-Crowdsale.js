@@ -16,8 +16,11 @@ contract('NFTsCrowdsale', function (accounts) {
     this.price = 0.5e18;
     this.ethPrice = parseInt(this.price / this.eth2erc20);
     this._tokenId = 1;
+    this._tokenId2 = 2;
     this.seller = accounts[0];
     this.buyer = accounts[1];
+    this.startAt = web3.eth.getBlock('latest').timestamp;
+    this.startAt_1min = web3.eth.getBlock('latest').timestamp + duration.minutes(1);
     this.endAt = web3.eth.getBlock('latest').timestamp + duration.minutes(5);
   });
   beforeEach(async function () {
@@ -29,23 +32,28 @@ contract('NFTsCrowdsale', function (accounts) {
     await this.erc20Token.mint(accounts[1], 5e27);
     // mint erc721 token
     await this.LDBNFTs.mint(accounts[0], this._tokenId);
+    await this.LDBNFTs.mint(accounts[0], this._tokenId2);
     // Set Approval For Crowdsale Contract
     await this.LDBNFTs.setApprovalForAll(this.NFTsCrowdsale.address, true, { from: accounts[0] });
 
-    await this.NFTsCrowdsale.newAuction(this.price, this._tokenId, this.endAt, { from: this.seller });
+    await this.NFTsCrowdsale.newAuction(this.price, this._tokenId, this.startAt, this.endAt, { from: this.seller });
+
+    await this.erc20Token.approve(this.NFTsCrowdsale.address, 1e27, { from: this.buyer });
   });
 
   it('should get auction success', async function () {
-    const auction = await this.NFTsCrowdsale.getAuction.call(this._tokenId);
-    // console.log(auction)
+    await this.NFTsCrowdsale.newAuction(this.price, this._tokenId2, this.startAt, this.endAt);
+    const auction = await this.NFTsCrowdsale.getAuction.call(this._tokenId2);
     // should be seller
     auction[1].should.be.equal(accounts[0]);
     // should be price
     auction[2].should.be.bignumber.equal(this.price);
+    //  should be startAt
+    auction[3].should.be.bignumber.equal(this.startAt);
     //  should be endAt
-    auction[3].should.be.bignumber.equal(this.endAt);
+    auction[4].should.be.bignumber.equal(this.endAt);
     // should be token_id
-    auction[4].should.be.bignumber.equal(this._tokenId);
+    auction[5].should.be.bignumber.equal(this._tokenId2);
   });
 
   /**
@@ -110,7 +118,6 @@ contract('NFTsCrowdsale', function (accounts) {
     beforeEach(async function () {
       // pay success
       this.preBalance = (await web3.eth.getBalance(this.seller)).toNumber();
-      await this.erc20Token.approve(this.NFTsCrowdsale.address, 1e27, { from: this.buyer });
       const { logs } = await this.NFTsCrowdsale.payByErc20(this._tokenId, {
         from: this.buyer,
       });
@@ -167,21 +174,37 @@ contract('NFTsCrowdsale', function (accounts) {
     logs[0].args.seller.should.be.equal(this.seller);
     logs[0].args.tokenId.should.be.bignumber.equal(this._tokenId);
 
-    await this.NFTsCrowdsale.newAuction(this.price, this._tokenId, this.endAt, { from: this.seller });
+    await this.NFTsCrowdsale.newAuction(this.price, this._tokenId, this.startAt, this.endAt, { from: this.seller });
   });
 
-  it('ethPause & ethUnPause', async function () {
-    // test ethPause
-    await this.NFTsCrowdsale.ethPause();
+  it('Pause & UnPause', async function () {
+    // Pause payByEth
+    await this.NFTsCrowdsale.pause();
     await this.NFTsCrowdsale.payByEth(this._tokenId, {
       value: this.price,
       from: this.buyer,
     }).should.be.rejectedWith('revert');
 
-    // test ethUnPause
-    await this.NFTsCrowdsale.ethUnPause();
+    // unpause payByEth
+    await this.NFTsCrowdsale.unpause();
     await this.NFTsCrowdsale.payByEth(this._tokenId, {
       value: this.price,
+      from: this.buyer,
+    }).should.to.not.rejectedWith('revert');
+    
+  });
+
+  it('Pause2 & UnPause2', async function () {
+    
+    // Pause payByErc20
+    await this.NFTsCrowdsale.pause2();
+    await this.NFTsCrowdsale.payByErc20(this._tokenId, {
+      from: this.buyer,
+    }).should.to.be.rejectedWith('revert');
+
+    // unpause payByErc20
+    await this.NFTsCrowdsale.unpause2();
+    await this.NFTsCrowdsale.payByErc20(this._tokenId, {
       from: this.buyer,
     }).should.to.not.rejectedWith('revert');
   });
@@ -190,7 +213,7 @@ contract('NFTsCrowdsale', function (accounts) {
   it('event: NewAuction', async function () {
     const _tokenId = 100;
     await this.LDBNFTs.mint(this.seller, _tokenId);
-    const { logs } = await this.NFTsCrowdsale.newAuction(this.price, _tokenId, this.endAt, { from: this.seller });
+    const { logs } = await this.NFTsCrowdsale.newAuction(this.price, _tokenId, this.startAt, this.endAt, { from: this.seller });
     logs[0].event.should.be.equal('NewAuction');
     logs[0].args.seller.should.be.equal(this.seller);
     logs[0].args.price.should.be.bignumber.equal(this.price);
@@ -201,28 +224,30 @@ contract('NFTsCrowdsale', function (accounts) {
   it('batchNewAuctions && batchCancelAuction', async function () {
 
     const mockData = {
-      10 : { tokenId: 10,price: 1e18, endAt: 1564990276 },
-      11 : { tokenId: 11,price: 2e18, endAt: 1564990276 },
-      12 : { tokenId: 12,price: 3e18, endAt: 1564990276 },
-      13 : { tokenId: 13,price: 4e18, endAt: 1564990276 },
-      14 : { tokenId: 14,price: 5e18, endAt: 1564990276 },
+      10 : { tokenId: 10,price: 1e18, startAt: 1535012056, endAt: 1564990276 },
+      11 : { tokenId: 11,price: 2e18, startAt: 1535012056, endAt: 1564990276 },
+      12 : { tokenId: 12,price: 3e18, startAt: 1535012056, endAt: 1564990276 },
+      13 : { tokenId: 13,price: 4e18, startAt: 1535012056, endAt: 1564990276 },
+      14 : { tokenId: 14,price: 5e18, startAt: 1535012056, endAt: 1564990276 },
     }
     const prices = Object.keys(mockData).map(i => mockData[i].price);
     const tokenIds = Object.keys(mockData).map(i => mockData[i].tokenId);
+    const startAts = Object.keys(mockData).map(i => mockData[i].startAt);
     const endAts = Object.keys(mockData).map(i => mockData[i].endAt);
     // console.log(prices, tokenIds, endAts)
     const tos = new Array(tokenIds.length).fill(accounts[0]);
     // console.log('tos', tos);
     await this.LDBNFTs.batchMint(tos, tokenIds);
-    await this.NFTsCrowdsale.batchNewAuctions(prices, tokenIds, endAts);
+    await this.NFTsCrowdsale.batchNewAuctions(prices, tokenIds, startAts, endAts);
     
     const checkNewAuctions = tokenIds.map(async tokenId => {
       return this.NFTsCrowdsale.getAuction.call(tokenId).then(
         auction => {
           let mock = mockData[tokenId]
           auction[2].should.be.bignumber.equal(mock.price);
-          auction[3].should.be.bignumber.equal(mock.endAt);
-          auction[4].should.be.bignumber.equal(mock.tokenId);
+          auction[3].should.be.bignumber.equal(mock.startAt);
+          auction[4].should.be.bignumber.equal(mock.endAt);
+          auction[5].should.be.bignumber.equal(mock.tokenId);
         }
       )
     })

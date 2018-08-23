@@ -16,16 +16,12 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
   uint public eth2erc20;
   // Represents a auction on LDB Crowdsale
   struct Auction {
-    // Auction id
-    bytes32 id;
-    // Seller of LDB 
-    address seller;
-    // erc20 price(wei) of LDB
-    uint256 price;
-    //  Auction endAt
-    uint256 endAt;
-    //  tokenId at ERC721 contract (erc721Contract)
-    uint256 tokenId;
+    bytes32 id; // Auction id
+    address seller; // Seller
+    uint256 price; // eth price in wei
+    uint256 startAt; //  Auction startAt
+    uint256 endAt; //  Auction endAt
+    uint256 tokenId; // ERC721 tokenId 
   }
 
   mapping (uint256 => Auction) tokenIdToAuction;
@@ -42,15 +38,22 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
     address,
     uint256,
     uint256,
+    uint256,
     uint256
   ){
     Auction storage auction = tokenIdToAuction[_tokenId];
-    return (auction.id, auction.seller, auction.price, auction.endAt, auction.tokenId);
+    return (auction.id, auction.seller, auction.price, auction.startAt, auction.endAt, auction.tokenId);
   }
 
   function isOnAuction(uint256 _tokenId) external view returns (bool) {
     Auction storage _auction = tokenIdToAuction[_tokenId];
-    return (_auction.endAt > block.timestamp);
+    uint256 time = block.timestamp;
+    return (time < _auction.endAt && time > _auction.startAt);
+  }
+
+  function isOnPreAuction(uint256 _tokenId) external view returns (bool) {
+    Auction storage _auction = tokenIdToAuction[_tokenId];
+    return (block.timestamp < _auction.startAt);
   }
 
   function _isTokenOwner(address _seller, uint256 _tokenId) internal view returns (bool){
@@ -59,7 +62,8 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
 
   function _isOnAuction(uint256 _tokenId) internal view returns (bool) {
     Auction storage _auction = tokenIdToAuction[_tokenId];
-    return (_auction.endAt > block.timestamp);
+    uint256 time = block.timestamp;
+    return (time < _auction.endAt && time > _auction.startAt);
   }
   function _escrow(address _owner, uint256 _tokenId) internal {
     erc721Contract.transferFrom(_owner, this, _tokenId);
@@ -73,7 +77,7 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
     erc721Contract.safeTransferFrom(this, _receiver, _tokenId);
   }
 
-  function _newAuction(uint256 _price, uint256 _tokenId, uint256 _endAt) internal {
+  function _newAuction(uint256 _price, uint256 _tokenId, uint256 _startAt, uint256 _endAt) internal {
     require(_price == uint256(_price));
     address _seller = msg.sender;
 
@@ -88,12 +92,13 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
       auctionId,
       _seller,
       uint128(_price),
+      _startAt,
       _endAt,
       _tokenId
     );
 
     tokenIdToAuction[_tokenId] = _order;
-    emit NewAuction(auctionId, _seller, _price, _endAt, _tokenId);
+    emit NewAuction(auctionId, _seller, _price, _startAt, _endAt, _tokenId);
   }
 
   function _cancelAuction(uint256 _tokenId) internal {

@@ -6,26 +6,29 @@ pragma solidity ^0.4.24;
 
 interface INFTsCrowdsale {
 
-  function getAuction(uint256 _tokenId) external view
+  function getAuction(uint256 tokenId) external view
   returns (
     bytes32,
     address,
     uint256,
     uint256,
+    uint256,
     uint256
   );
 
-  function isOnAuction(uint256 _tokenId) external view returns (bool);
+  function isOnAuction(uint256 tokenId) external view returns (bool);
 
-  function newAuction(uint128 _price, uint256 _tokenId, uint256 _endAt) external;
+  function isOnPreAuction(uint256 tokenId) external view returns (bool);
 
-  function batchNewAuctions(uint128[] prices, uint256[] tokenIds, uint256[] endAts) external;
+  function newAuction(uint128 price, uint256 tokenId, uint256 startAt, uint256 endAt) external;
 
-  function payByEth (uint256 _tokenId) external payable; 
+  function batchNewAuctions(uint128[] prices, uint256[] tokenIds, uint256[] startAts, uint256[] endAts) external;
 
-  function payByErc20 (uint256 _tokenId) external;
+  function payByEth (uint256 tokenId) external payable; 
 
-  function cancelAuction (uint256 _tokenId) external;
+  function payByErc20 (uint256 tokenId) external;
+
+  function cancelAuction (uint256 tokenId) external;
 
   function batchCancelAuctions (uint256[] tokenIds) external;
   
@@ -35,6 +38,7 @@ interface INFTsCrowdsale {
     bytes32 id,
     address indexed seller,
     uint256 price,
+    uint256 startAt,
     uint256 endAt,
     uint256 indexed tokenId
   );
