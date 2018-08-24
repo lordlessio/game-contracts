@@ -124,7 +124,7 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
     address buyer = msg.sender;
     buyer.transfer(payExcess);
     _transfer(buyer, _tokenId);
-    emit PayByEthSuccess(_auction.id, _auction.seller, msg.sender, _auction.price, _auction.endAt, _auction.tokenId);
+    emit PayByEth(_auction.id, _auction.seller, msg.sender, _auction.price, _auction.endAt, _auction.tokenId);
     delete tokenIdToAuction[_tokenId];
   }
 
@@ -141,7 +141,7 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
       erc20Contract.transferFrom(msg.sender, _auction.seller, computedErc20Price);
     }
     _transfer(msg.sender, _tokenId);
-    emit PayByErc20Success(_auction.id, _auction.seller, msg.sender, _auction.price, _auction.endAt, _auction.tokenId);
+    emit PayByErc20(_auction.id, _auction.seller, msg.sender, _auction.price, _auction.endAt, _auction.tokenId);
     delete tokenIdToAuction[_tokenId];
   }
   

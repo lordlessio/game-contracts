@@ -105,8 +105,8 @@ contract('NFTsCrowdsale', function (accounts) {
       // error less than 1gwei
       (finalCount - computedCount).should.be.below(this.maError);
     });
-    it('events: PayByEthSuccess', async function () {
-      this.logs[0].event.should.be.equal('PayByEthSuccess');
+    it('events: PayByEth', async function () {
+      this.logs[0].event.should.be.equal('PayByEth');
       this.logs[0].args.seller.should.be.equal(this.seller);
       this.logs[0].args.buyer.should.be.equal(this.buyer);
       this.logs[0].args.price.should.be.bignumber.equal(this.price);
@@ -136,8 +136,8 @@ contract('NFTsCrowdsale', function (accounts) {
       (finalCount - computedCount).should.be.below(this.maError);
     });
 
-    it('events: PayByErc20Success', async function () {
-      this.logs[0].event.should.be.equal('PayByErc20Success');
+    it('events: PayByErc20', async function () {
+      this.logs[0].event.should.be.equal('PayByErc20');
       this.logs[0].args.seller.should.be.equal(this.seller);
       this.logs[0].args.buyer.should.be.equal(this.buyer);
       this.logs[0].args.price.should.be.bignumber.equal(this.price);

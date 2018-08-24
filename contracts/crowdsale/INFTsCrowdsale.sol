@@ -43,7 +43,7 @@ interface INFTsCrowdsale {
     uint256 indexed tokenId
   );
 
-  event PayByEthSuccess (
+  event PayByEth (
     bytes32 id,
     address indexed seller,
     address indexed buyer,
@@ -52,7 +52,7 @@ interface INFTsCrowdsale {
     uint256 indexed tokenId
   );
 
-  event PayByErc20Success (
+  event PayByErc20 (
     bytes32 id,
     address indexed seller,
     address indexed buyer, 
