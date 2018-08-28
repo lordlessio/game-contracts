@@ -11,7 +11,7 @@
   <a href='https://coveralls.io/github/lordlessio/game-contracts?branch=master'>
     <img src='https://coveralls.io/repos/github/lordlessio/game-contracts/badge.svg?branch=master' alt='Coverage Status' />
   </a>
-  <a href='https://github.com/lordlessio/LDB-NFT/blob/master/LICENSE'>
+  <a href='LICENSE'>
     <img src='https://img.shields.io/github/license/lordlessio/LDB-NFT.svg' alt='License' />
   </a>
 
@@ -22,10 +22,10 @@ This repo is the smart contract source code for the LORDLESS game.
 
 ## Related contracts
 
-* [ERC-721](blob/master/contracts/nft/LDBNFTs.sol)
-* [Market](blob/master/contracts/crowdsale/NFTsCrowdsale.sol)
-* [LDB (LORDLESS Building)](blob/master/contracts/ldb/BuildingBase.sol)
-* [Power](blob/master/contracts/ldb/Power.sol)
+* [ERC-721](contracts/nft/LDBNFTs.sol)
+* [Market](contracts/crowdsale/NFTsCrowdsale.sol)
+* [LDB (LORDLESS Building)](contracts/ldb/BuildingBase.sol)
+* [Power](contracts/ldb/Power.sol)
 
 
 ## Development 
