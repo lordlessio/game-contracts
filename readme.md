@@ -1,6 +1,8 @@
-<p align="center"><img src="https://olxvlcccu.qnssl.com/blog/l4ck6.png?imageslim" width="64" /></p>
+[![](https://olxvlcccu.qnssl.com/blog/quxh5.png?imageslim)](https://lordless.io)
 
-<div align="center">
+<p align="left"><img src="https://olxvlcccu.qnssl.com/blog/l4ck6.png?imageslim" width="64" /></p>
+
+<div align="left">
   <a href="https://travis-ci.org/lordlessio/game-contracts">
     <img src="https://img.shields.io/travis/lordlessio/game-contracts.svg?branch=master" />
   </a>
@@ -10,14 +12,20 @@
   <a href='https://github.com/lordlessio/LDB-NFT/blob/master/LICENSE'>
     <img src='https://img.shields.io/github/license/lordlessio/LDB-NFT.svg' alt='License' />
   </a>
-  
-  <h1>LORDLESS Building Contract :european_castle:</h1>
-  The repo is the smart contract source code for the LORDLESS game
-Including erc721, market trading, LDB upgrade, candy airdrop relationship and other functions
 
+
+### LORDLESS Smart Contracts
+This repo is the smart contract source code for the LORDLESS game.
 </div>
 
-  
+## Related contracts
+
+* [ERC-721](blob/master/contracts/nft/LDBNFTs.sol)
+* [Market](blob/master/contracts/crowdsale/NFTsCrowdsale.sol)
+* [LDB (LORDLESS Building)](blob/master/contracts/ldb/BuildingBase.sol)
+* [Power](blob/master/contracts/ldb/Power.sol)
+
+
 ## Development 
    
 ```sh
@@ -36,7 +44,7 @@ truffle deploy --network <network> --reset
 
 ```
    
-
+[host]: Web Service API
 
 
 ### Community
