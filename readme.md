@@ -1,9 +1,11 @@
 [![](https://olxvlcccu.qnssl.com/blog/quxh5.png?imageslim)](https://lordless.io)
 
-<p align="left"><img src="https://olxvlcccu.qnssl.com/blog/l4ck6.png?imageslim" width="64" /></p>
 
-<div align="left">
-  <a href="https://travis-ci.org/lordlessio/game-contracts">
+<div style="display: flex;align-items: center;" align="left">
+  <a href="https://lordless.io" target="__blank">
+    <img src="https://olxvlcccu.qnssl.com/blog/l4ck6.png?imageView2/1/w/40/h/40" />
+  </a>
+  <a style="margin-left: 5px;" href="https://travis-ci.org/lordlessio/game-contracts">
     <img src="https://img.shields.io/travis/lordlessio/game-contracts.svg?branch=master" />
   </a>
   <a href='https://coveralls.io/github/lordlessio/game-contracts?branch=master'>
@@ -13,10 +15,10 @@
     <img src='https://img.shields.io/github/license/lordlessio/LDB-NFT.svg' alt='License' />
   </a>
 
+</div>
 
 ### LORDLESS Smart Contracts
 This repo is the smart contract source code for the LORDLESS game.
-</div>
 
 ## Related contracts
 
