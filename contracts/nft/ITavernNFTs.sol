@@ -8,4 +8,11 @@ contract ITavernNFTs is ERC721 {
   function burn(uint256 tokenId) public;
   function setTokenURI(uint256 tokenId, string uri) public;
   function tavern(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256);
+
+  /* Events */
+
+  event SetTavernContract (
+    address tavern
+  );
+
 }

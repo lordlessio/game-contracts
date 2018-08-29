@@ -35,6 +35,7 @@ contract Power is Superuser, IPower{
    */
   function setTavernContract(address tavern) onlySuperuser external {
     tavernContract = ITavern(tavern);
+    emit SetTavernContract(tavern);
   }
 
   /**
