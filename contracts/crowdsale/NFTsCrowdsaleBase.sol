@@ -14,11 +14,11 @@ contract NFTsCrowdsaleBase is Superuser, INFTsCrowdsale {
   ERC721 public erc721Contract;
   // eth(price)/erc20(price)
   uint public eth2erc20;
-  // Represents a auction on Tavern Crowdsale
+  // Represents a auction
   struct Auction {
     bytes32 id; // Auction id
     address seller; // Seller
-    uint256 price; // eth price in wei
+    uint256 price; // eth in wei
     uint256 startAt; //  Auction startAt
     uint256 endAt; //  Auction endAt
     uint256 tokenId; // ERC721 tokenId 
