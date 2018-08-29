@@ -14,11 +14,11 @@ module.exports = function (deployer, network, accounts) {
 
 async function liveDeploy(deployer, network, [account0]) {
   // get deployed contract 
-  const LDBNFTs = await artifacts.require('LDBNFTs').at(contracts['LDBNFTs'].address);
-  const Building = await artifacts.require('Building').at(contracts['Building'].address);
+  const TavernNFTs = await artifacts.require('TavernNFTs').at(contracts['TavernNFTs'].address);
+  const Tavern = await artifacts.require('Tavern').at(contracts['Tavern'].address);
   const NFTsCrowdsale = await artifacts.require('NFTsCrowdsale').at(contracts['NFTsCrowdsale'].address);
 
-  /* mint and build ldb from tokenId 0 - 39 */
+  /* mint and build tavern from tokenId 0 - 39 */
 
   const data1 = require('../storage/3-1-data');
   const data2 = require('../storage/3-2-data');
@@ -29,15 +29,15 @@ async function liveDeploy(deployer, network, [account0]) {
     // batch mint NFTs
     const tos = (new Array(values.length)).fill(account0);
     console.log(`**** ${i} batch mint NFTs ****`)
-    await LDBNFTs.batchMint(tos, tokenIds, {
+    await TavernNFTs.batchMint(tos, tokenIds, {
       gas: 3712388
     })
-    // batch build LDBs 
-    console.log(`**** ${i} batch build LDBs  ****`)
+    // batch build Taverns 
+    console.log(`**** ${i} batch build Taverns  ****`)
     const longitudes = values.map(item => item.longitude);
     const latitudes = values.map(item => item.latitude);
     const popularitys = values.map(item => parseInt(item.popularity));
-    await Building.batchBuild(tokenIds, longitudes, latitudes, popularitys, {
+    await Tavern.batchBuild(tokenIds, longitudes, latitudes, popularitys, {
       gas: 3212388
     });
 

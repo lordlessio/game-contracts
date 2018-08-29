@@ -22,10 +22,10 @@ This repo is the smart contract source code for the LORDLESS game.
 
 ## Related contracts
 
-* [ERC-721](contracts/nft/LDBNFTs.sol)
+* [ERC-721](contracts/nft/TavernNFTs.sol)
 * [Market](contracts/crowdsale/NFTsCrowdsale.sol)
-* [LDB (LORDLESS Building)](contracts/ldb/BuildingBase.sol)
-* [Power](contracts/ldb/Power.sol)
+* [Tavern](contracts/tavern/TavernBase.sol)
+* [Power](contracts/tavern/Power.sol)
 
 
 ## Development 

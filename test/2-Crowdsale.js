@@ -1,4 +1,4 @@
-const LDBNFTs = artifacts.require('LDBNFTs');
+const TavernNFTs = artifacts.require('TavernNFTs');
 const NFTCsrowdsale = artifacts.require('NFTsCrowdsale');
 const Erc20TokenMock = artifacts.require('LORDLESS_TOKEN');
 const { duration, increaseTime } = require('./helpers/increaseTime');
@@ -24,17 +24,17 @@ contract('NFTsCrowdsale', function (accounts) {
     this.endAt = web3.eth.getBlock('latest').timestamp + duration.minutes(5);
   });
   beforeEach(async function () {
-    this.LDBNFTs = await LDBNFTs.new('LDB NFT', 'LDB', { from: accounts[0] });
+    this.TavernNFTs = await TavernNFTs.new('Tavern NFT', 'Tavern', { from: accounts[0] });
     this.erc20Token = await Erc20TokenMock.new();
-    this.NFTsCrowdsale = await NFTCsrowdsale.new(this.LDBNFTs.address, this.erc20Token.address, this.eth2erc20);
+    this.NFTsCrowdsale = await NFTCsrowdsale.new(this.TavernNFTs.address, this.erc20Token.address, this.eth2erc20);
     // mint erc20 token
     await this.erc20Token.mint(accounts[0], 5e27);
     await this.erc20Token.mint(accounts[1], 5e27);
     // mint erc721 token
-    await this.LDBNFTs.mint(accounts[0], this._tokenId);
-    await this.LDBNFTs.mint(accounts[0], this._tokenId2);
+    await this.TavernNFTs.mint(accounts[0], this._tokenId);
+    await this.TavernNFTs.mint(accounts[0], this._tokenId2);
     // Set Approval For Crowdsale Contract
-    await this.LDBNFTs.setApprovalForAll(this.NFTsCrowdsale.address, true, { from: accounts[0] });
+    await this.TavernNFTs.setApprovalForAll(this.NFTsCrowdsale.address, true, { from: accounts[0] });
 
     await this.NFTsCrowdsale.newAuction(this.price, this._tokenId, this.startAt, this.endAt, { from: this.seller });
 
@@ -96,7 +96,7 @@ contract('NFTsCrowdsale', function (accounts) {
 
     it('shuould change token ownership', async function () {
       // check ownership of _tokenId should be change to buyer
-      (await this.LDBNFTs.ownerOf(this._tokenId)).should.be.equal(this.buyer);
+      (await this.TavernNFTs.ownerOf(this._tokenId)).should.be.equal(this.buyer);
     });
 
     it('shuould add price_count ether to seller', async function () {
@@ -126,7 +126,7 @@ contract('NFTsCrowdsale', function (accounts) {
 
     it('shuould change token ownership', async function () {
       // check ownership of _tokenId should be change to buyer
-      (await this.LDBNFTs.ownerOf(this._tokenId)).should.be.equal(this.buyer);
+      (await this.TavernNFTs.ownerOf(this._tokenId)).should.be.equal(this.buyer);
     });
 
     it('shuould add price_count ether to seller', async function () {
@@ -219,7 +219,7 @@ contract('NFTsCrowdsale', function (accounts) {
   // events
   it('event: NewAuction', async function () {
     const _tokenId = 100;
-    await this.LDBNFTs.mint(this.seller, _tokenId);
+    await this.TavernNFTs.mint(this.seller, _tokenId);
     const { logs } = await this.NFTsCrowdsale.newAuction(this.price, _tokenId, this.startAt, this.endAt, { from: this.seller });
     logs[0].event.should.be.equal('NewAuction');
     logs[0].args.seller.should.be.equal(this.seller);
@@ -244,7 +244,7 @@ contract('NFTsCrowdsale', function (accounts) {
     // console.log(prices, tokenIds, endAts)
     const tos = new Array(tokenIds.length).fill(accounts[0]);
     // console.log('tos', tos);
-    await this.LDBNFTs.batchMint(tos, tokenIds);
+    await this.TavernNFTs.batchMint(tos, tokenIds);
     await this.NFTsCrowdsale.batchNewAuctions(prices, tokenIds, startAts, endAts);
     
     const checkNewAuctions = tokenIds.map(async tokenId => {

@@ -1,17 +1,17 @@
 pragma solidity ^0.4.24;
 
 /**
- * @title LDB Interface
+ * @title Tavern Interface
  */
 
-interface IBuilding {
+interface ITavern {
 
   function setPowerContract(address _powerContract) external;
   function influenceByToken(uint256 tokenId) external view returns(uint256);
   function levelByToken(uint256 tokenId) external view returns(uint256);
   function weightsApportion(uint256 ulevel1, uint256 ulevel2) external view returns(uint256);
 
-  function building(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256);
+  function tavern(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256);
   function isBuilt(uint256 tokenId) external view returns (bool);
 
   function build(

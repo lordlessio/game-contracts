@@ -1,8 +1,8 @@
 pragma solidity ^0.4.24;
 
 /**
-* @title - LDB's Power Algorithm
-* Power contract implements the algorithm of LDB equity attribute
+* @title - Tavern's Power Algorithm
+* Power contract implements the algorithm of Tavern equity attribute
 *
 * ██████╗   ██████╗  ██╗    ██╗ ███████╗ ██████╗  ██╗
 * ██╔══██╗ ██╔═══██╗ ██║    ██║ ██╔════╝ ██╔══██╗ ██║
@@ -21,26 +21,26 @@ pragma solidity ^0.4.24;
 */
 
 import "./IPower.sol";
-import "./IBuilding.sol";
+import "./ITavern.sol";
 import "../lib/SafeMath.sol";
 import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
 
 contract Power is Superuser, IPower{
   using SafeMath for *;
-  IBuilding public buildingContract;
+  ITavern public tavernContract;
   
   /**
-   * @dev set the LDB contract address
-   * @return building LDB contract address
+   * @dev set the Tavern contract address
+   * @return tavern Tavern contract address
    */
-  function setBuildingContract(address building) onlySuperuser external {
-    buildingContract = IBuilding(building);
+  function setTavernContract(address tavern) onlySuperuser external {
+    tavernContract = ITavern(tavern);
   }
 
   /**
    * @dev get influence by token
    * @param tokenId tokenId
-   * @return building LDB contract address
+   * @return tavern Tavern contract address
    * influence is
    */
   function influenceByToken(uint256 tokenId) external view returns(uint256){
@@ -48,19 +48,19 @@ contract Power is Superuser, IPower{
 
     uint8 popularity;
     uint256 activeness;
-    ( , , , popularity, activeness) = buildingContract.building(tokenId);
+    ( , , , popularity, activeness) = tavernContract.tavern(tokenId);
     return _influenceAlgorithm(popularity, activeness);
   }
 
   /**
-   * @dev get LDB's level by tokenId
+   * @dev get Tavern's level by tokenId
    * @param tokenId tokenId
-   * @return uint256 LDB's level
+   * @return uint256 Tavern's level
    */
   function levelByToken(uint256 tokenId) external view returns(uint256){
 
     uint256 activeness;
-    ( , , , , activeness) = buildingContract.building(tokenId);
+    ( , , , , activeness) = tavernContract.tavern(tokenId);
     return _activeness2level(activeness);
   }
 
@@ -75,10 +75,10 @@ contract Power is Superuser, IPower{
 
   uint public constant weightsApportionDecimals = 4;
   /**
-  * @dev get LDB's weightsApportion 
+  * @dev get Tavern's weightsApportion 
   * @param userLevel userLevel
   * @param lordLevel lordLevel
-  * @return uint256 LDB's weightsApportion
+  * @return uint256 Tavern's weightsApportion
   * The candy that the user rewards when completing the candy mission will be assigned to the user and the lord. 
   * The distribution ratio is determined by weightsApportion
   */

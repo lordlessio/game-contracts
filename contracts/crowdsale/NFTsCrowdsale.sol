@@ -32,7 +32,7 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, Pausable {
   /**
    * @dev new a Auction
    * @param price price in wei
-   * @param tokenId LDB's tokenid
+   * @param tokenId Tavern's tokenid
    * @param endAt auction end time
    */
   function newAuction(uint128 price, uint256 tokenId, uint256 startAt, uint256 endAt) whenNotPaused external {
@@ -46,7 +46,7 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, Pausable {
   /**
    * @dev batch New Auctions 
    * @param prices Array price in wei
-   * @param tokenIds Array LDB's tokenid
+   * @param tokenIds Array Tavern's tokenid
    * @param endAts  Array auction end time
    */
   function batchNewAuctions(uint128[] prices, uint256[] tokenIds, uint256[] startAts, uint256[] endAts) whenNotPaused external {
@@ -59,7 +59,7 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, Pausable {
 
   /**
    * @dev pay a auction by eth
-   * @param tokenId ldb tokenid
+   * @param tokenId tavern tokenid
    */
   function payByEth (uint256 tokenId) whenNotPaused external payable {
     _payByEth(tokenId); 
@@ -67,7 +67,7 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, Pausable {
 
   /**
    * @dev pay a auction by erc20 Token
-   * @param tokenId LDB's tokenid
+   * @param tokenId Tavern's tokenid
    */
   function payByErc20 (uint256 tokenId) whenNotPaused2 external {
     _payByErc20(tokenId);
@@ -75,7 +75,7 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, Pausable {
 
   /**
    * @dev cancel a auction
-   * @param tokenId LDB's tokenid
+   * @param tokenId Tavern's tokenid
    */
   function cancelAuction (uint256 tokenId) external {
     _cancelAuction(tokenId);
@@ -83,7 +83,7 @@ contract NFTsCrowdsale is NFTsCrowdsaleBase, Pausable {
 
   /**
    * @dev batch cancel auctions
-   * @param tokenIds Array LDB's tokenid
+   * @param tokenIds Array Tavern's tokenid
    */
   function batchCancelAuctions (uint256[] tokenIds) external {
     uint256 i = 0;

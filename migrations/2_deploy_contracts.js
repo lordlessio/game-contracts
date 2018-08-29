@@ -1,6 +1,6 @@
-const LDBNFTs = artifacts.require('LDBNFTs');
+const TavernNFTs = artifacts.require('TavernNFTs');
 const NFTsCrowdsale = artifacts.require('NFTsCrowdsale');
-const Building = artifacts.require('Building');
+const Tavern = artifacts.require('Tavern');
 const Power = artifacts.require('Power');
 const fs = require('fs-extra');
 
@@ -14,42 +14,42 @@ module.exports = function (deployer, network, accounts) {
 };
 
 async function liveDeploy (deployer, network, [ account0 ]) {
-  console.log('******** deploy LDBNFTs contract ********');
-  const name = 'LDB NFT';
-  const symbol = 'LDB';
-  this.LDBNFTs = await LDBNFTs.new(name, symbol, { from: account0, gas: 3712388 });
+  console.log('******** deploy TavernNFTs contract ********');
+  const name = 'Tavern NFT';
+  const symbol = 'Tavern';
+  this.TavernNFTs = await TavernNFTs.new(name, symbol, { from: account0, gas: 3712388 });
 
-  console.log('******** deploy & seting Building/Power contract ********');
-  const r = await Promise.all([ Building.new({}, { gas: 3712388 }), Power.new({}, { gas: 3712388 }) ]);
-  this.Building = r[0];
+  console.log('******** deploy & seting Tavern/Power contract ********');
+  const r = await Promise.all([ Tavern.new({}, { gas: 3712388 }), Power.new({}, { gas: 3712388 }) ]);
+  this.Tavern = r[0];
   this.Power = r[1];
   await Promise.all([
-    this.Building.setPowerContract(this.Power.address),
-    this.Power.setBuildingContract(this.Building.address),
+    this.Tavern.setPowerContract(this.Power.address),
+    this.Power.setTavernContract(this.Tavern.address),
   ]);
 
-  console.log('******** set LDBNFTs BuildingContract address ********');
-  await this.LDBNFTs.setBuildingContract(this.Building.address)
+  console.log('******** set TavernNFTs TavernContract address ********');
+  await this.TavernNFTs.setTavernContract(this.Tavern.address)
   console.log('******** deploy & seting NFTsCrowdsale contract ********');
   if (network === 'development' || network === 'coverage') {
     const erc20 = await artifacts.require('LORDLESS_TOKEN').new({},{ gas: 3712388 })
     this.config.erc20Address = erc20.address
   }
-  this.NFTsCrowdsale = await NFTsCrowdsale.new(this.LDBNFTs.address, this.config.erc20Address, this.config.eth2erc20, { gas: 3712388 });
+  this.NFTsCrowdsale = await NFTsCrowdsale.new(this.TavernNFTs.address, this.config.erc20Address, this.config.eth2erc20, { gas: 3712388 });
 
-  await this.LDBNFTs.setApprovalForAll(this.NFTsCrowdsale.address, true);
+  await this.TavernNFTs.setApprovalForAll(this.NFTsCrowdsale.address, true);
 
   // save to file
   const result = {
-    LDBNFTs: {
-      address: this.LDBNFTs.address,
-      tx: this.LDBNFTs.transactionHash,
-      abi: artifacts.require('ILDBNFTs').abi,
+    TavernNFTs: {
+      address: this.TavernNFTs.address,
+      tx: this.TavernNFTs.transactionHash,
+      abi: artifacts.require('ITavernNFTs').abi,
     },
-    Building: {
-      address: this.Building.address,
-      tx: this.Building.transactionHash,
-      abi: artifacts.require('IBuilding').abi,
+    Tavern: {
+      address: this.Tavern.address,
+      tx: this.Tavern.transactionHash,
+      abi: artifacts.require('ITavern').abi,
     },
     Power: {
       address: this.Power.address,

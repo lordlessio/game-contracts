@@ -1,5 +1,5 @@
 {
-  "name": "ldb-nft",
+  "name": "tavern-nft",
   "version": "0.0.2",
   "description": "the contract for lordless.io",
   "files": [
@@ -12,11 +12,11 @@
     "console": "truffle console",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "flattener": "truffle-flattener contracts/ldbNFT.sol > ldbNFT.flattener.sol"
+    "flattener": "truffle-flattener contracts/tavernNFT.sol > tavernNFT.flattener.sol"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lordlessio/LDB-NFT.git"
+    "url": "https://github.com/lordlessio/Tavern-NFT.git"
   },
   "keywords": [
     "lordless",
@@ -33,7 +33,7 @@
     "solium": "^1.1.7",
     "zeppelin-solidity": "^1.10.0"
   },
-  "homepage": "https://github.com/lordlessio/LDB-NFT",
+  "homepage": "https://github.com/lordlessio/game-contracts",
   "devDependencies": {
     "bignumber.js": "^4.1.0",
     "bluebird": "^3.5.1",

@@ -2,10 +2,10 @@ pragma solidity ^0.4.24;
 
 import "../../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
 import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
-import "./ILDBNFTs.sol";
+import "./ITavernNFTs.sol";
 /**
- * @title LDBNFTs - LORDLESS BUILDING NFTs Contract
- * LDBNFTs records the relationship of LDB ownership.
+ * @title TavernNFTs - LORDLESS tavern NFTs Contract
+ * TavernNFTs records the relationship of Tavern ownership.
  * 
  * ██╗      ██████╗  ██████╗  ███╗   ██╗ ███████╗ ████████╗ ███████╗ ██╗
  * ██║      ██╔══██╗ ██╔══██╗ ████╗  ██║ ██╔════╝ ╚══██╔══╝ ██╔════╝ ██║
@@ -23,24 +23,24 @@ import "./ILDBNFTs.sol";
  * code at https://github.com/lordlessio
  */
 
-interface BuildingInterface {
-  function building(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256);
+interface TavernInterface {
+  function tavern(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256);
 }
 
-contract LDBNFTs is ERC721Token, Superuser, ILDBNFTs {
+contract TavernNFTs is ERC721Token, Superuser, ITavernNFTs {
   constructor(string name, string symbol) public
     ERC721Token(name, symbol)
   { }
 
-  BuildingInterface public buildingContract;
-  uint16 public constant MAX_SUPPLY = 4000;  // LDB MAX SUPPLY
+  TavernInterface public tavernContract;
+  uint16 public constant MAX_SUPPLY = 4000;  // Tavern MAX SUPPLY
 
   /**
-   * @dev set the LDB contract address
-   * @return building LDB contract address
+   * @dev set the Tavern contract address
+   * @return tavern Tavern contract address
    */
-  function setBuildingContract(address building) onlySuperuser external {
-    buildingContract = BuildingInterface(building);
+  function setTavernContract(address tavern) onlySuperuser external {
+    tavernContract = TavernInterface(tavern);
   }
   
   function mint(address to, uint256 tokenId) onlySuperuser public {
@@ -68,16 +68,16 @@ contract LDBNFTs is ERC721Token, Superuser, ILDBNFTs {
   }
 
   /**
-   * @dev get a Building's infomation 
+   * @dev get a Tavern's infomation 
    * @param tokenId tokenId
-   * @return uint256 LDB's construction time
-   * @return int LDB's longitude value 
-   * @return int LDB's latitude value
-   * @return uint8 LDB's popularity
-   * @return uint256 LDB's activeness
+   * @return uint256 Tavern's construction time
+   * @return int Tavern's longitude value 
+   * @return int Tavern's latitude value
+   * @return uint8 Tavern's popularity
+   * @return uint256 Tavern's activeness
    */
-  function building(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256){
-    return buildingContract.building(tokenId);
+  function tavern(uint256 tokenId) external view returns (uint256, int, int, uint8, uint256){
+    return tavernContract.tavern(tokenId);
   }
 
 }

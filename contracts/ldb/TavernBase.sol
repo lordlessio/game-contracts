@@ -2,37 +2,37 @@ pragma solidity ^0.4.24;
 
 
 import "../lib/SafeMath.sol";
-import "./IBuilding.sol";
+import "./ITavern.sol";
 
-contract BuildingBase is IBuilding {
+contract TavernBase is ITavern {
   using SafeMath for *;
 
-  struct LDB {
-    uint256 initAt; // The time of ldb init
-    int longitude; // The longitude of ldb
-    int latitude; // The latitude of ldb
-    uint8 popularity; // The popularity of ldb
-    uint256 activeness; // The activeness of ldb
+  struct Tavern {
+    uint256 initAt; // The time of tavern init
+    int longitude; // The longitude of tavern
+    int latitude; // The latitude of tavern
+    uint8 popularity; // The popularity of tavern
+    uint256 activeness; // The activeness of tavern
   }
   
   uint8 public constant decimals = 16; // longitude latitude decimals
 
-  mapping(uint256 => LDB) internal tokenLDBs;
+  mapping(uint256 => Tavern) internal tokenTaverns;
   
-  function _building(uint256 _tokenId) internal view returns (uint256, int, int, uint8, uint256) {
-    LDB storage ldb = tokenLDBs[_tokenId];
+  function _tavern(uint256 _tokenId) internal view returns (uint256, int, int, uint8, uint256) {
+    Tavern storage tavern = tokenTaverns[_tokenId];
     return (
-      ldb.initAt, 
-      ldb.longitude, 
-      ldb.latitude, 
-      ldb.popularity, 
-      ldb.activeness
+      tavern.initAt, 
+      tavern.longitude, 
+      tavern.latitude, 
+      tavern.popularity, 
+      tavern.activeness
     );
   }
   
   function _isBuilt(uint256 _tokenId) internal view returns (bool){
-    LDB storage ldb = tokenLDBs[_tokenId];
-    return (ldb.initAt > 0);
+    Tavern storage tavern = tokenTaverns[_tokenId];
+    return (tavern.initAt > 0);
   }
 
   function _build(
@@ -48,10 +48,10 @@ contract BuildingBase is IBuilding {
     require(_isLatitude(_latitude));
     require(_popularity != 0);
     uint256 time = block.timestamp;
-    LDB memory ldb = LDB(
+    Tavern memory tavern = Tavern(
       time, _longitude, _latitude, _popularity, uint256(0)
     );
-    tokenLDBs[_tokenId] = ldb;
+    tokenTaverns[_tokenId] = tavern;
     emit Build(time, _tokenId, _longitude, _latitude, _popularity);
   }
   
@@ -77,11 +77,11 @@ contract BuildingBase is IBuilding {
 
   function _activenessUpgrade(uint256 _tokenId, uint256 _deltaActiveness) internal {
     require(_isBuilt(_tokenId));
-    LDB storage ldb = tokenLDBs[_tokenId];
-    uint256 oActiveness = ldb.activeness;
-    uint256 newActiveness = ldb.activeness.add(_deltaActiveness);
-    ldb.activeness = newActiveness;
-    tokenLDBs[_tokenId] = ldb;
+    Tavern storage tavern = tokenTaverns[_tokenId];
+    uint256 oActiveness = tavern.activeness;
+    uint256 newActiveness = tavern.activeness.add(_deltaActiveness);
+    tavern.activeness = newActiveness;
+    tokenTaverns[_tokenId] = tavern;
     emit ActivenessUpgrade(_tokenId, oActiveness, newActiveness);
   }
   function _batchActivenessUpgrade(uint256[] _tokenIds, uint256[] __deltaActiveness) internal {
@@ -94,8 +94,8 @@ contract BuildingBase is IBuilding {
 
   function _popularitySetting(uint256 _tokenId, uint8 _popularity) internal {
     require(_isBuilt(_tokenId));
-    uint8 oPopularity = tokenLDBs[_tokenId].popularity;
-    tokenLDBs[_tokenId].popularity = _popularity;
+    uint8 oPopularity = tokenTaverns[_tokenId].popularity;
+    tokenTaverns[_tokenId].popularity = _popularity;
     emit PopularitySetting(_tokenId, oPopularity, _popularity);
   }
 

@@ -10,7 +10,7 @@ run/
 local-test
 build
 out.sol
-ldbNFT.flattener.sol
+tavernNFT.flattener.sol
 
 # Coverage 
 coverage
