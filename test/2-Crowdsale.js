@@ -17,6 +17,7 @@ contract('NFTsCrowdsale', function (accounts) {
     this.ethPrice = parseInt(this.price / this.eth2erc20);
     this._tokenId = 1;
     this._tokenId2 = 2;
+    this._tokenId3 = 3;
     this.seller = accounts[0];
     this.buyer = accounts[1];
     this.startAt = web3.eth.getBlock('latest').timestamp;
@@ -33,9 +34,12 @@ contract('NFTsCrowdsale', function (accounts) {
     // mint erc721 token
     await this.TavernNFTs.mint(accounts[0], this._tokenId);
     await this.TavernNFTs.mint(accounts[0], this._tokenId2);
+    await this.TavernNFTs.mint(accounts[2], this._tokenId3);
     // Set Approval For Crowdsale Contract
     await this.TavernNFTs.setApprovalForAll(this.NFTsCrowdsale.address, true, { from: accounts[0] });
+    await this.TavernNFTs.setApprovalForAll(this.NFTsCrowdsale.address, true, { from: accounts[2] });
 
+    // new auction
     await this.NFTsCrowdsale.newAuction(this.price, this._tokenId, this.startAt, this.endAt, { from: this.seller });
 
     await this.erc20Token.approve(this.NFTsCrowdsale.address, 1e27, { from: this.buyer });
@@ -56,10 +60,17 @@ contract('NFTsCrowdsale', function (accounts) {
     auction[5].should.be.bignumber.equal(this._tokenId2);
   });
 
+  it('startAt shount not set success by error contract owner', async function () {
+
+    await this.NFTsCrowdsale.newAuction(this.price, this._tokenId3, this.startAt, this.endAt, { from: accounts[2] });
+    const auction = await this.NFTsCrowdsale.getAuction.call(this._tokenId2);
+    auction[3].should.be.not.bignumber.equal(this.startAt);
+    
+  });
+
   /**
    * Defray Function Test
    */
-  
   
   it('less ether pay: should revert', async function () {
     const buyer = accounts[1];
