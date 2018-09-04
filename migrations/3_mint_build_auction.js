@@ -52,4 +52,4 @@ async function liveDeploy(deployer, network, [account0]) {
     });
     i++;
   }
-}
+} 

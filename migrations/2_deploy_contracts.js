@@ -18,15 +18,14 @@ async function liveDeploy (deployer, network, [ account0 ]) {
   const name = 'Tavern NFT';
   const symbol = 'Tavern';
   this.TavernNFTs = await TavernNFTs.new(name, symbol, { from: account0, gas: 3712388 });
-
+  
   console.log('******** deploy & seting Tavern/Power contract ********');
-  const r = await Promise.all([ Tavern.new({}, { gas: 3712388 }), Power.new({}, { gas: 3712388 }) ]);
-  this.Tavern = r[0];
-  this.Power = r[1];
-  await Promise.all([
-    this.Tavern.setPowerContract(this.Power.address),
-    this.Power.setTavernContract(this.Tavern.address),
-  ]);
+  
+  this.Tavern = await Tavern.new({}, { gas: 3712388 })
+  this.Power = await Power.new({}, { gas: 3712388 })
+
+  await this.Tavern.setPowerContract(this.Power.address);
+  await this.Power.setTavernContract(this.Tavern.address);
 
   console.log('******** set TavernNFTs TavernContract address ********');
   await this.TavernNFTs.setTavernContract(this.Tavern.address)
