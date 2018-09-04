@@ -27,6 +27,8 @@ module.exports = {
     mainnet: {
       provider: new HDWalletProvider(mnemonicProd, infura_key ? `https://mainnet.infura.io/v3/${infura_key}` : 'https://mainnet.infura.io'),
       network_id: '*',
+      gas: 2000000,
+      gasPrice: 4000000000,
     },
   },
   solc: {
