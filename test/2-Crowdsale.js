@@ -60,7 +60,7 @@ contract('NFTsCrowdsale', function (accounts) {
     auction[5].should.be.bignumber.equal(this._tokenId2);
   });
 
-  it('startAt shount not set success by error contract owner', async function () {
+  it('startAt should not set success by error contract owner', async function () {
 
     await this.NFTsCrowdsale.newAuction(this.price, this._tokenId3, this.startAt, this.endAt, { from: accounts[2] });
     const auction = await this.NFTsCrowdsale.getAuction.call(this._tokenId2);
