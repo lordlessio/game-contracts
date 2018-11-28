@@ -13,12 +13,12 @@ contract('airdrop', function ([owner, account1, account2]) {
     this.Airdrop = await Airdrop.new();
     this.total = 1e27;
     this.Erc20Token.mint(this.Airdrop.address, this.total);
-    this.endAt = 2398377600 // 2046.1.1
+    // this.endAt = 2398377600 // 2046.1.1
   })
   beforeEach(async function () {
     this.pre_airdropIds = await this.Airdrop.getAirdropIds.call();
     this.pre_contract_airdropIds = await this.Airdrop.getAirdropIdsByContractAddress(this.Erc20Token.address);
-    await this.Airdrop.addAirdrop(this.Erc20Token.address, 1000, false, this.endAt);
+    await this.Airdrop.addAirdrop(this.Erc20Token.address, 1000, false);
 
     this.after_airdropIds = await this.Airdrop.getAirdropIds.call();
     this.after_contract_airdropIds = await this.Airdrop.getAirdropIdsByContractAddress.call(this.Erc20Token.address);
@@ -54,6 +54,25 @@ contract('airdrop', function ([owner, account1, account2]) {
     await this.Airdrop.verifyUser('膝盖', { from: account1, value: 1e18 });
     const user = await this.Airdrop.getUser.call(account1);
     (await web3.eth.getBalance(this.Airdrop.address)).should.be.bignumber.equal(2e16);
+  });
+  it('check verified user', async function () {
+    // const airdropId = this.after_airdropIds[0];
+    // const b = await this.Airdrop.isVerifiedUser.call(account2);
+    // console.log('b', b);
+  });
+
+  it('needed verified user', async function () {
+    // const airdropId = this.after_airdropIds[0];
+    this.Airdrop2 = await Airdrop.new();
+    this.Airdrop2.addAirdrop(this.Erc20Token.address, 2000, true);
+    const airdropId = (await this.Airdrop2.getAirdropIds.call())[0];
+    
+    await this.Airdrop2.collectAirdrop(airdropId, { from: account2 }).should.be.rejectedWith('revert');
+    await this.Airdrop2.verifyUser('account2', { from: account2, value: 1e18 });
+    this.Erc20Token.mint(this.Airdrop2.address, this.total);
+    await this.Airdrop2.collectAirdrop(airdropId, { from: account2 })
+
+    // (await web3.eth.getBalance(this.Airdrop.address)).should.be.bignumber.equal(2e16);
   });
 
   it('withdrawToken', async function () {
