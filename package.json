@@ -1,6 +1,6 @@
 {
-  "name": "tavern-nft",
-  "version": "0.0.2",
+  "name": "game-contracts",
+  "version": "0.1.1",
   "description": "the contract for lordless.io",
   "files": [
     "contracts",
