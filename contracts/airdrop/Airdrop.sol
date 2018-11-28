@@ -25,7 +25,6 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
     address contractAddress;
     uint256 countPerUser; // wei
     bool needVerifiedUser;
-    uint256 endAt;
   }
 
   uint256 public verifyFee = 2e16; // 0.02 eth
@@ -37,7 +36,7 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
   mapping (bytes32 => mapping (address => bool)) airdropIdToUserAddress;
 
 
-  function isVeifiedUser(address user) external view returns (bool){
+  function isVerifiedUser(address user) external view returns (bool){
     return userAddressToUser[user].user == user;
   }
 
@@ -60,19 +59,20 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
 
   function getAirdrop(
     bytes32 airdropId
-    ) external view returns (address, uint256, bool, uint256){
+    ) external view returns (address, uint256, bool){
     Airdrop storage airdrop = airdropIdToAirdrop[airdropId];
-    return (airdrop.contractAddress, airdrop.countPerUser, airdrop.needVerifiedUser, airdrop.endAt);
+    return (airdrop.contractAddress, airdrop.countPerUser, airdrop.needVerifiedUser);
   }
   
   function updateVeifyFee(uint256 fee) external onlyOwnerOrSuperuser{
     verifyFee = fee;
+    emit UpdateVeifyFee(fee);
   }
 
   function verifyUser(string name) external payable {
-    require(this.isVeifiedUser(sender), "Is Veified User");
-    uint256 _ethAmount = msg.value;
     address sender = msg.sender;
+    require(!this.isVerifiedUser(sender), "Is Verified User");
+    uint256 _ethAmount = msg.value;
     require(_ethAmount >= verifyFee, "LESS FEE");
     uint256 payExcess = _ethAmount.sub(verifyFee);
     if(payExcess > 0) {
@@ -87,9 +87,10 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
     );
 
     userAddressToUser[sender] = _user;
+    emit VerifyUser(msg.sender);
   }
 
-  function addAirdrop(address contractAddress, uint256 countPerUser, bool needVerifiedUser, uint256 endAt) external onlyOwnerOrSuperuser{
+  function addAirdrop(address contractAddress, uint256 countPerUser, bool needVerifiedUser) external onlyOwnerOrSuperuser{
     bytes32 airdropId = keccak256(
       abi.encodePacked(block.timestamp, contractAddress, countPerUser, needVerifiedUser)
     );
@@ -97,35 +98,39 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
     Airdrop memory _airdrop = Airdrop(
       contractAddress,
       countPerUser,
-      needVerifiedUser,
-      endAt
+      needVerifiedUser
     );
     airdropIdToAirdrop[airdropId] = _airdrop;
     airdropIds.push(airdropId);
     contractAddressToAirdropId[contractAddress].push(airdropId);
-    
+    emit AddAirdrop(contractAddress, countPerUser, needVerifiedUser);
   }
 
   function collectAirdrop(bytes32 airdropId) external {
 
     Airdrop storage _airdrop = airdropIdToAirdrop[airdropId];
     if (_airdrop.needVerifiedUser) {
-      require(this.isVeifiedUser(msg.sender));
+      require(this.isVerifiedUser(msg.sender));
     }
     
     require(!this.isCollected(msg.sender, airdropId), "The same Airdrop can only be collected once per address.");
     ERC20Interface erc20 = ERC20Interface(_airdrop.contractAddress);
     erc20.transfer(msg.sender, _airdrop.countPerUser);
     airdropIdToUserAddress[airdropId][msg.sender] = true;
+    emit CollectAirdrop(airdropId, msg.sender);
   }
 
   function withdrawToken(address contractAddress, address to) external onlyOwnerOrSuperuser {
     ERC20Interface erc20 = ERC20Interface(contractAddress);
-    erc20.transfer(to, erc20.balanceOf(address(this)));
+    uint256 balance = erc20.balanceOf(address(this));
+    erc20.transfer(to, balance);
+    emit WithdrawToken(contractAddress, to, balance);
   }
 
   function withdrawEth(address to) external onlySuperuser {
-    to.transfer(address(this).balance);
+    uint256 balance = address(this).balance;
+    to.transfer(balance);
+    emit WithdrawEth(to, balance);
   }
 
 }
