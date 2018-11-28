@@ -1,5 +1,4 @@
-[![](https://olxvlcccu.qnssl.com/blog/quxh5.png?imageslim)](https://lordless.io)
-
+[![](https://olxvlcccu.qnssl.com/blog/5zzdv.png?imageslim)](https://lordless.io)
 
 <div style="display: flex;align-items: center;" align="left">
   <a href="https://lordless.io" target="__blank">
