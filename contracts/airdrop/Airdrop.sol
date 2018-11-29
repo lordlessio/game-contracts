@@ -1,5 +1,26 @@
 pragma solidity ^0.4.24;
 
+/**
+ * @title -Airdrop
+ * every erc20 token can doAirdrop here 
+ * Contact us for further cooperation support@lordless.io
+ *
+ *  █████╗  ██╗ ██████╗  ██████╗  ██████╗   ██████╗  ██████╗
+ * ██╔══██╗ ██║ ██╔══██╗ ██╔══██╗ ██╔══██╗ ██╔═══██╗ ██╔══██╗
+ * ███████║ ██║ ██████╔╝ ██║  ██║ ██████╔╝ ██║   ██║ ██████╔╝
+ * ██╔══██║ ██║ ██╔══██╗ ██║  ██║ ██╔══██╗ ██║   ██║ ██╔═══╝
+ * ██║  ██║ ██║ ██║  ██║ ██████╔╝ ██║  ██║ ╚██████╔╝ ██║
+ * ╚═╝  ╚═╝ ╚═╝ ╚═╝  ╚═╝ ╚═════╝  ╚═╝  ╚═╝  ╚═════╝  ╚═╝
+ *
+ * ---
+ * POWERED BY
+ * ╦   ╔═╗ ╦═╗ ╔╦╗ ╦   ╔═╗ ╔═╗ ╔═╗      ╔╦╗ ╔═╗ ╔═╗ ╔╦╗
+ * ║   ║ ║ ╠╦╝  ║║ ║   ║╣  ╚═╗ ╚═╗       ║  ║╣  ╠═╣ ║║║
+ * ╩═╝ ╚═╝ ╩╚═ ═╩╝ ╩═╝ ╚═╝ ╚═╝ ╚═╝       ╩  ╚═╝ ╩ ╩ ╩ ╩
+ * game at http://lordless.games
+ * code at https://github.com/lordlessio
+ */
+
 import "../../node_modules/zeppelin-solidity/contracts/ownership/Superuser.sol";
 import "../../node_modules/zeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "../lib/SafeMath.sol";
