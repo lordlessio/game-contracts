@@ -55,6 +55,7 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
   mapping (address => bytes32[]) contractAddressToAirdropId;
   mapping (bytes32 => Airdrop) airdropIdToAirdrop;
   mapping (bytes32 => mapping (address => bool)) airdropIdToUserAddress;
+  mapping (address => uint256) contractAddressToAirdropCount;
 
 
   function isVerifiedUser(address user) external view returns (bool){
@@ -71,6 +72,11 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
   function getAirdropIds()external view returns(bytes32[]){
     return airdropIds;
   }
+
+  function tokenTotalClaim(address contractAddress)external view returns(uint256){
+    return contractAddressToAirdropCount[contractAddress];
+  }
+
   function getUser(
     address userAddress
     ) external view returns (address, string, uint256 ,uint256){
@@ -127,7 +133,7 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
     emit AddAirdrop(contractAddress, countPerUser, needVerifiedUser);
   }
 
-  function collectAirdrop(bytes32 airdropId) external whenNotPaused {
+  function claim(bytes32 airdropId) external whenNotPaused {
 
     Airdrop storage _airdrop = airdropIdToAirdrop[airdropId];
     if (_airdrop.needVerifiedUser) {
@@ -138,7 +144,10 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
     ERC20Interface erc20 = ERC20Interface(_airdrop.contractAddress);
     erc20.transfer(msg.sender, _airdrop.countPerUser);
     airdropIdToUserAddress[airdropId][msg.sender] = true;
-    emit CollectAirdrop(airdropId, msg.sender);
+    // update to
+    contractAddressToAirdropCount[_airdrop.contractAddress] = 
+      contractAddressToAirdropCount[_airdrop.contractAddress].add(_airdrop.countPerUser);
+    emit Claim(airdropId, msg.sender);
   }
 
   function withdrawToken(address contractAddress, address to) external onlyOwnerOrSuperuser {

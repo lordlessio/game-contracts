@@ -22,7 +22,7 @@ interface IAirdrop {
   function updateVeifyFee(uint256 fee) external;
   function verifyUser(string name) external payable;
   function addAirdrop (address contractAddress, uint256 countPerUser, bool needVerifiedUser) external;
-  function collectAirdrop(bytes32 airdropId) external;
+  function claim(bytes32 airdropId) external;
   function withdrawToken(address contractAddress, address to) external;
   function withdrawEth(address to) external;
 
@@ -45,7 +45,7 @@ interface IAirdrop {
     bool needVerifiedUser
   );
 
-  event CollectAirdrop (
+  event Claim (
     bytes32 airdropId,
     address user
   );
