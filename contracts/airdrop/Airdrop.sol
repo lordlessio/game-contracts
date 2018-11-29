@@ -127,7 +127,7 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
     emit AddAirdrop(contractAddress, countPerUser, needVerifiedUser);
   }
 
-  function collectAirdrop(bytes32 airdropId) external {
+  function collectAirdrop(bytes32 airdropId) external whenNotPaused{
 
     Airdrop storage _airdrop = airdropIdToAirdrop[airdropId];
     if (_airdrop.needVerifiedUser) {
