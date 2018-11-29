@@ -55,11 +55,6 @@ contract('airdrop', function ([owner, account1, account2]) {
     const user = await this.Airdrop.getUser.call(account1);
     (await web3.eth.getBalance(this.Airdrop.address)).should.be.bignumber.equal(2e16);
   });
-  it('check verified user', async function () {
-    // const airdropId = this.after_airdropIds[0];
-    // const b = await this.Airdrop.isVerifiedUser.call(account2);
-    // console.log('b', b);
-  });
 
   it('needed verified user', async function () {
     // const airdropId = this.after_airdropIds[0];
@@ -73,6 +68,13 @@ contract('airdrop', function ([owner, account1, account2]) {
     await this.Airdrop2.collectAirdrop(airdropId, { from: account2 })
 
     // (await web3.eth.getBalance(this.Airdrop.address)).should.be.bignumber.equal(2e16);
+  });
+
+  it('update verifyFee success', async function () {
+    // const airdropId = this.after_airdropIds[0];
+    const verifyFee = 3e16
+    await this.Airdrop.updateVeifyFee(verifyFee);
+    (await this.Airdrop.verifyFee.call()).should.be.bignumber.equal(verifyFee);
   });
 
   it('withdrawToken', async function () {

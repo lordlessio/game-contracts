@@ -90,7 +90,7 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
     emit UpdateVeifyFee(fee);
   }
 
-  function verifyUser(string name) external payable {
+  function verifyUser(string name) external payable whenNotPaused {
     address sender = msg.sender;
     require(!this.isVerifiedUser(sender), "Is Verified User");
     uint256 _ethAmount = msg.value;
@@ -127,7 +127,7 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
     emit AddAirdrop(contractAddress, countPerUser, needVerifiedUser);
   }
 
-  function collectAirdrop(bytes32 airdropId) external whenNotPaused{
+  function collectAirdrop(bytes32 airdropId) external whenNotPaused {
 
     Airdrop storage _airdrop = airdropIdToAirdrop[airdropId];
     if (_airdrop.needVerifiedUser) {
