@@ -27,7 +27,24 @@ This repo is the smart contract source code for the LORDLESS game.
 * [Power](contracts/tavern/Power.sol)
 * [Airdrop](contracts/Airdrop/Airdrop.sol)
 
+## Mainnet
+[0x63b55c54cd4709b80b434de938986c7da5dd6cb5#code](https://etherscan.io/address/0x63b55c54cd4709b80b434de938986c7da5dd6cb5)
 
+**Power**
+
+[0xffbe258e9de5269a8855f41a41178ddc202d27bb#code](https://etherscan.io/address/0xffbe258e9de5269a8855f41a41178ddc202d27bb)
+
+**Crowdsale**
+
+[0x744a31ede5422355d9c2bd8c44c710404336ca84#code](https://etherscan.io/address/0x744a31ede5422355d9c2bd8c44c710404336ca84)
+
+**TavernNFTs**
+
+[0x15820072729d045ec5232ba3bd060ec5df38e09a#code](https://etherscan.io/address/0x15820072729d045ec5232ba3bd060ec5df38e09a)
+
+**Airdrop**
+
+[0x35223bc965dbd91b41ddf1f540e8c7e475853551](https://etherscan.io/address/0x35223bc965dbd91b41ddf1f540e8c7e475853551)
 ## Development 
    
 ```sh
