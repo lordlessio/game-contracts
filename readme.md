@@ -19,7 +19,7 @@
 ### LORDLESS Smart Contracts
 This repo is the smart contract source code for the LORDLESS game.
 
-### Development
+## Development
 ```sh
 
 npm install 
@@ -60,7 +60,7 @@ truffle deploy --network <network> --reset
 
 **Airdrop**
 [0x35223bc965dbd91b41ddf1f540e8c7e475853551](https://etherscan.io/address/0x35223bc965dbd91b41ddf1f540e8c7e475853551)
-## Development 
+
 
 ## Ropsten
 
