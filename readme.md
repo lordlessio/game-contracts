@@ -25,6 +25,7 @@ This repo is the smart contract source code for the LORDLESS game.
 * [Market](contracts/crowdsale/NFTsCrowdsale.sol)
 * [Tavern](contracts/tavern/TavernBase.sol)
 * [Power](contracts/tavern/Power.sol)
+* [Airdrop](contracts/Airdrop/Airdrop.sol)
 
 
 ## Development 
