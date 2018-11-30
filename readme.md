@@ -19,6 +19,23 @@
 ### LORDLESS Smart Contracts
 This repo is the smart contract source code for the LORDLESS game.
 
+### Development
+```sh
+
+npm install 
+# or
+yarn install
+
+
+# test
+# start your testrpc
+npm run test
+
+# deploy 
+truffle deploy --network <network> --reset 
+
+```
+
 ## Related contracts
 
 * [ERC-721](contracts/nft/TavernNFTs.sol)
@@ -44,24 +61,24 @@ This repo is the smart contract source code for the LORDLESS game.
 **Airdrop**
 [0x35223bc965dbd91b41ddf1f540e8c7e475853551](https://etherscan.io/address/0x35223bc965dbd91b41ddf1f540e8c7e475853551)
 ## Development 
-   
-```sh
 
-npm install 
-# or
-yarn install
+## Ropsten
 
+**Tavern**
+[0x94a0998c466744b53db002ff4d29cfcdb0aea6c6](https://ropsten.etherscan.io/address/0x94a0998c466744b53db002ff4d29cfcdb0aea6c6)
 
-# test
-# start your testrpc
-npm run test
+**Power**
+[0xea08874e12eae69f592c721ea0243d56d76c4f80](https://ropsten.etherscan.io/address/0xea08874e12eae69f592c721ea0243d56d76c4f80)
 
-# deploy 
-truffle deploy --network <network> --reset 
+**Crowdsale**
+[0xee301e417e8e802089fccec365f3e0416cfd083b](https://ropsten.etherscan.io/address/0xee301e417e8e802089fccec365f3e0416cfd083b)
 
-```
-   
-[host]: Web Service API
+**TavernNFTs**
+[0x9a059a2dd2e3c025a123f2ae65cd85bf73d9db5e](https://ropsten.etherscan.io/address/0x9a059a2dd2e3c025a123f2ae65cd85bf73d9db5e)
+
+**Airdrop**
+[0xb71e2f2af27bcac476eefb418e56869067009997](https://ropsten.etherscan.io/address/0xb71e2f2af27bcac476eefb418e56869067009997)
+
 
 
 ### Community
