@@ -44,40 +44,16 @@ truffle deploy --network <network> --reset
 * [Power](contracts/tavern/Power.sol)
 * [Airdrop](contracts/Airdrop/Airdrop.sol)
 
-## Mainnet
 
-**Tavern**
-[0x63b55c54cd4709b80b434de938986c7da5dd6cb5](https://etherscan.io/address/0x63b55c54cd4709b80b434de938986c7da5dd6cb5)
+## Deployed
 
-**Power**
-[0xffbe258e9de5269a8855f41a41178ddc202d27bb](https://etherscan.io/address/0xffbe258e9de5269a8855f41a41178ddc202d27bb)
-
-**Crowdsale**
-[0x744a31ede5422355d9c2bd8c44c710404336ca84](https://etherscan.io/address/0x744a31ede5422355d9c2bd8c44c710404336ca84)
-
-**TavernNFTs**
-[0x15820072729d045ec5232ba3bd060ec5df38e09a](https://etherscan.io/address/0x15820072729d045ec5232ba3bd060ec5df38e09a)
-
-**Airdrop**
-[0x35223bc965dbd91b41ddf1f540e8c7e475853551](https://etherscan.io/address/0x35223bc965dbd91b41ddf1f540e8c7e475853551)
-
-
-## Ropsten
-
-**Tavern**
-[0x94a0998c466744b53db002ff4d29cfcdb0aea6c6](https://ropsten.etherscan.io/address/0x94a0998c466744b53db002ff4d29cfcdb0aea6c6)
-
-**Power**
-[0xea08874e12eae69f592c721ea0243d56d76c4f80](https://ropsten.etherscan.io/address/0xea08874e12eae69f592c721ea0243d56d76c4f80)
-
-**Crowdsale**
-[0xee301e417e8e802089fccec365f3e0416cfd083b](https://ropsten.etherscan.io/address/0xee301e417e8e802089fccec365f3e0416cfd083b)
-
-**TavernNFTs**
-[0x9a059a2dd2e3c025a123f2ae65cd85bf73d9db5e](https://ropsten.etherscan.io/address/0x9a059a2dd2e3c025a123f2ae65cd85bf73d9db5e)
-
-**Airdrop**
-[0xb71e2f2af27bcac476eefb418e56869067009997](https://ropsten.etherscan.io/address/0xb71e2f2af27bcac476eefb418e56869067009997)
+| Contract \ ENV | Mainnet                                                      | Ropsten                                                      |
+| -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Tavern         | [0x63b55c54cd4709b80b434de938986c7da5dd6cb5](https://etherscan.io/address/0x63b55c54cd4709b80b434de938986c7da5dd6cb5) | [0x94a0998c466744b53db002ff4d29cfcdb0aea6c6](https://ropsten.etherscan.io/address/0x94a0998c466744b53db002ff4d29cfcdb0aea6c6) |
+| Power          | [0xffbe258e9de5269a8855f41a41178ddc202d27bb](https://etherscan.io/address/0xffbe258e9de5269a8855f41a41178ddc202d27bb) | [0xea08874e12eae69f592c721ea0243d56d76c4f80](https://ropsten.etherscan.io/address/0xea08874e12eae69f592c721ea0243d56d76c4f80) |
+| Crowdsale      | [0x744a31ede5422355d9c2bd8c44c710404336ca84](https://etherscan.io/address/0x744a31ede5422355d9c2bd8c44c710404336ca84) | [0xee301e417e8e802089fccec365f3e0416cfd083b](https://ropsten.etherscan.io/address/0xee301e417e8e802089fccec365f3e0416cfd083b) |
+| TavernNFTs     | [0x15820072729d045ec5232ba3bd060ec5df38e09a](https://etherscan.io/address/0x15820072729d045ec5232ba3bd060ec5df38e09a) | [0x9a059a2dd2e3c025a123f2ae65cd85bf73d9db5e](https://ropsten.etherscan.io/address/0x9a059a2dd2e3c025a123f2ae65cd85bf73d9db5e) |
+| Airdrop        | [0x35223bc965dbd91b41ddf1f540e8c7e475853551](https://etherscan.io/address/0x35223bc965dbd91b41ddf1f540e8c7e475853551) | [0xb71e2f2af27bcac476eefb418e56869067009997](https://ropsten.etherscan.io/address/0xb71e2f2af27bcac476eefb418e56869067009997) |
 
 
 
