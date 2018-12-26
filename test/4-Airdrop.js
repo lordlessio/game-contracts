@@ -1,4 +1,4 @@
-const Airdrop = artifacts.require('Airdrop');
+const Airdrop = artifacts.require('Airdrop_1');
 const Erc20TokenMock = artifacts.require('LORDLESS_TOKEN');
 const BigNumber = web3.BigNumber;
 

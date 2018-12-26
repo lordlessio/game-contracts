@@ -27,11 +27,11 @@ import "../lib/SafeMath.sol";
 import "./IAirdrop.sol";
 
 contract ERC20Interface {
-  function transfer(address to, uint tokens) public returns (bool success);
-  function transferFrom(address from, address to, uint tokens) public returns (bool success);
-  function balanceOf(address tokenOwner) public view returns (uint balance);
+  function transfer(address to, uint tokens) public returns (bool);
+  function transferFrom(address from, address to, uint tokens) public returns (bool);
+  function balanceOf(address tokenOwner) public view returns (uint);
 }
-contract Airdrop is Superuser, Pausable, IAirdrop {
+contract Airdrop_1 is Superuser, Pausable, IAirdrop {
 
   using SafeMath for *;
 
@@ -102,7 +102,7 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
     uint256 _ethAmount = msg.value;
     require(_ethAmount >= verifyFee, "LESS FEE");
     uint256 payExcess = _ethAmount.sub(verifyFee);
-    if(payExcess > 0) {
+    if (payExcess > 0) {
       sender.transfer(payExcess);
     }
     
@@ -117,7 +117,8 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
     emit VerifyUser(msg.sender);
   }
 
-  function addAirdrop(address contractAddress, uint256 countPerUser, bool needVerifiedUser) external onlyOwnerOrSuperuser{
+  function addAirdrop(
+    address contractAddress, uint256 countPerUser, bool needVerifiedUser) external onlyOwnerOrSuperuser{
     bytes32 airdropId = keccak256(
       abi.encodePacked(block.timestamp, contractAddress, countPerUser, needVerifiedUser)
     );
@@ -140,7 +141,9 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
       require(this.isVerifiedUser(msg.sender));
     }
     
-    require(!this.isCollected(msg.sender, airdropId), "The same Airdrop can only be collected once per address.");
+    require(
+      !this.isCollected(msg.sender, airdropId),
+      "The same Airdrop can only be collected once per address.");
     ERC20Interface erc20 = ERC20Interface(_airdrop.contractAddress);
     erc20.transfer(msg.sender, _airdrop.countPerUser);
     airdropIdToUserAddress[airdropId][msg.sender] = true;
@@ -164,3 +167,4 @@ contract Airdrop is Superuser, Pausable, IAirdrop {
   }
 
 }
+ 

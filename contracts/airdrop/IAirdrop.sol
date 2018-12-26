@@ -10,6 +10,7 @@ interface IAirdrop {
   function isCollected(address user, bytes32 airdropId) external view returns (bool);
   function getAirdropIds()external view returns(bytes32[]);
   function getAirdropIdsByContractAddress(address contractAddress)external view returns(bytes32[]);
+  function tokenTotalClaim(address contractAddress)external view returns(uint256);
   function getUser(address userAddress) external view returns (
     address,
     string,
