@@ -30,7 +30,7 @@ interface IAirdrop_2 {
       bool
   );
 
-  function addAirdrop() external;
+  function addAirdrop(uint256 seed) external;
 
   function start(
     bytes32 airdropId

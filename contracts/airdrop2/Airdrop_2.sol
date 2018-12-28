@@ -128,9 +128,9 @@ contract Airdrop_2 is Superuser, Pausable, IAirdrop_2 {
       );
   }
   
-  function addAirdrop() external onlyOwnerOrSuperuser {
+  function addAirdrop(uint256 seed) external onlyOwnerOrSuperuser {
     bytes32 airdropId = keccak256(
-      abi.encodePacked(block.timestamp)
+      abi.encodePacked(block.timestamp, seed)
     );
     AirdropBase memory _airdropBase = AirdropBase(
       false

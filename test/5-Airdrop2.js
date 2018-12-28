@@ -25,7 +25,7 @@ contract('airdrop', function ([owner, account1, account2]) {
     const earnEtherCount = 1e18;//1 ether
     const earnEtherProbability = 10;
 
-    await this.Airdrop.addAirdrop();
+    await this.Airdrop.addAirdrop(1);
     const airdropIds = await this.Airdrop.getAirdropIds.call();
     this.airdropId = airdropIds[0];
     await this.Airdrop.updateAirdropSpend(this.airdropId, spendTokenAddresses, spendTokenCount, spendEtherCount);
