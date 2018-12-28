@@ -97,6 +97,6 @@ contract('airdrop', function ([owner, account1, account2]) {
      const balance2 = await this.Erc20Token.balanceOf(account2)
      await this.Airdrop.withdrawToken(this.Erc20Token.address, account2, 0)
      const _balance2 = await this.Erc20Token.balanceOf(account2)
-     _balance2.toNumber().should.be.equal(balance2.toNumber() + balanceAll.toNumber()+10e18)
+     _balance2.toNumber().should.be.equal(balance2.toNumber() + balanceAll.toNumber())
   })
 });
