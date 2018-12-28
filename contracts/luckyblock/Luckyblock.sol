@@ -244,12 +244,19 @@ contract Luckyblock is Superuser, Pausable, ILuckyblock {
         }
       }
     }
+    uint256 value = msg.value;
+    uint256 payExcess = value.sub(_luckyblockSpend.spendEtherCount);
     
     // if win ether
-    if (_random + _luckyblockEarn.earnEtherProbability >= 100 ) {
-      msg.sender.transfer(_luckyblockEarn.earnEtherCount);
+    if (_random + _luckyblockEarn.earnEtherProbability >= 100) {
+      uint256 balance = _luckyblockEarn.earnEtherCount.add(payExcess);
+      if (balance > 0){
+        msg.sender.transfer(balance);
+      }
+    } else if (payExcess > 0) {
+      msg.sender.transfer(payExcess);
     }
-
+    
     emit Play(luckyblockId, msg.sender, _random);
   }
 
