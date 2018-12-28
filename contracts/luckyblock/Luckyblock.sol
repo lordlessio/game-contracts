@@ -61,10 +61,8 @@ contract Luckyblock is Superuser, Pausable, ILuckyblock {
     int earnEtherProbability;
   }
 
-  uint256 public verifyFee = 2e16; // 0.02 eth
   bytes32[] public luckyblockIds; //
 
-  mapping (address => User) public userAddressToUser;
   mapping (address => bytes32[]) contractAddressToLuckyblockId;
 
   mapping (bytes32 => LuckyblockEarn) luckyblockIdToLuckyblockEarn;
