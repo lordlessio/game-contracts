@@ -1,21 +1,21 @@
 pragma solidity ^0.4.24;
 
 /**
- * @title -airdrop Interface
+ * @title -luckyblock Interface
  */
 
-interface IAirdrop_2 {
+interface ILuckyblock{
 
-  function getAirdropSpend(
-    bytes32 airdropId
+  function getLuckyblockSpend(
+    bytes32 luckyblockId
   ) external view returns (
     address[],
     uint256[],
     uint256
   ); 
 
-  function getAirdropEarn(
-    bytes32 airdropId
+  function getLuckyblockEarn(
+    bytes32 luckyblockId
     ) external view returns (
     address[],
     uint256[],
@@ -24,31 +24,31 @@ interface IAirdrop_2 {
     int
   );
 
-  function getAirdropBase(
-    bytes32 airdropId
+  function getLuckyblockBase(
+    bytes32 luckyblockId
     ) external view returns (
       bool
   );
 
-  function addAirdrop(uint256 seed) external;
+  function addLuckyblock(uint256 seed) external;
 
   function start(
-    bytes32 airdropId
+    bytes32 luckyblockId
   ) external;
 
   function stop(
-    bytes32 airdropId
+    bytes32 luckyblockId
   ) external;
 
-  function updateAirdropSpend(
-    bytes32 airdropId,
+  function updateLuckyblockSpend(
+    bytes32 luckyblockId,
     address[] spendTokenAddresses, 
     uint256[] spendTokenCount,
     uint256 spendEtherCount
   ) external;
 
-  function updateAirdropEarn (
-    bytes32 airdropId,
+  function updateLuckyblockEarn (
+    bytes32 luckyblockId,
     address[] earnTokenAddresses,
     uint256[] earnTokenCount,
     int[] earnTokenProbability, // (0 - 100)
@@ -56,8 +56,8 @@ interface IAirdrop_2 {
     int earnEtherProbability
   ) external;
 
-  function getAirdropIds()external view returns(bytes32[]);
-  function claim(bytes32 airdropId) external payable;
+  function getLuckyblockIds()external view returns(bytes32[]);
+  function play(bytes32 luckyblockId) external payable;
   function withdrawToken(address contractAddress, address to, uint256 balance) external;
   function withdrawEth(address to, uint256 balance) external;
 
@@ -66,8 +66,8 @@ interface IAirdrop_2 {
 
   /* Events */
 
-  event Claim (
-    bytes32 indexed airdropId,
+  event Play (
+    bytes32 indexed luckyblockId,
     address user,
     uint8 random
   );
