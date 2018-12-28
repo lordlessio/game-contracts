@@ -20,7 +20,7 @@ contract('airdrop', function ([owner, account1, account2]) {
     const spendEtherCount = 1e17;// 0.1 ether
 
     const earnTokenAddresses = [this.Erc20Token.address];
-    const earnTokenCount = [0]; // 10 LESS
+    const earnTokenCount = [10e18]; // 10 LESS
     const earnTokenProbability = [90]; // (0 - 100)
     const earnEtherCount = 1e18;//1 ether
     const earnEtherProbability = 10;
@@ -47,9 +47,9 @@ contract('airdrop', function ([owner, account1, account2]) {
     const airdropEarn = await this.Airdrop.getAirdropEarn.call(this.airdropId)
     const airdropSpend = await this.Airdrop.getAirdropSpend.call(this.airdropId)
 
-    console.log(airdropBase,'\n---');
-    console.log(airdropEarn,'\n---');
-    console.log(airdropSpend,'\n---');
+    // console.log(airdropBase,'\n---');
+    // console.log(airdropEarn,'\n---');
+    // console.log(airdropSpend,'\n---');
 
     
   });
@@ -63,11 +63,40 @@ contract('airdrop', function ([owner, account1, account2]) {
       to: this.Airdrop.address
     });
     const airdropSpend = await this.Airdrop.getAirdropSpend.call(this.airdropId)
-    console.log(await this.Erc20Token.balanceOf(this.Airdrop.address))
-    const log = await this.Airdrop.claim(this.airdropId, {
+    await this.Airdrop.claim(this.airdropId, {
       value: airdropSpend[2].toNumber()
     });
-    console.log(log.logs[0].args);
+  })
 
+  it('withdraw eth', async function () {
+    // withdraw eth
+     
+     const balance1 = await web3.eth.getBalance(account2)
+     await this.Airdrop.withdrawEth(account2, 1e17)
+     const _balance1 = await web3.eth.getBalance(account2)
+     _balance1.toNumber().should.be.equal(balance1.toNumber() + 1e17)
+
+    // withdraw all eth
+     const balanceAll = await web3.eth.getBalance(this.Airdrop.address)
+     const balance2 = await web3.eth.getBalance(account2)
+     await this.Airdrop.withdrawEth(account2, 0)
+     const _balance2 = await web3.eth.getBalance(account2)
+     _balance2.toNumber().should.be.equal(balance2.toNumber() + balanceAll.toNumber())
+  })
+
+  it('withdraw erc20', async function () {
+    // withdraw erc20
+     
+     const balance1 = await this.Erc20Token.balanceOf(account2)
+     await this.Airdrop.withdrawToken(this.Erc20Token.address, account2, 10e18)
+     const _balance1 = await this.Erc20Token.balanceOf(account2)
+     _balance1.toNumber().should.be.equal(balance1.toNumber() + 10e18)
+
+    // withdraw all erc20
+     const balanceAll = await this.Erc20Token.balanceOf(this.Airdrop.address)
+     const balance2 = await this.Erc20Token.balanceOf(account2)
+     await this.Airdrop.withdrawToken(this.Erc20Token.address, account2, 0)
+     const _balance2 = await this.Erc20Token.balanceOf(account2)
+     _balance2.toNumber().should.be.equal(balance2.toNumber() + balanceAll.toNumber()+10e18)
   })
 });

@@ -58,7 +58,7 @@ contract Airdrop_2 is Superuser, Pausable, IAirdrop_2 {
     uint256[] earnTokenCount;
     int[] earnTokenProbability; // (0 - 100)
     uint256 earnEtherCount;
-    uint256 earnEtherProbability;
+    int earnEtherProbability;
   }
 
   uint256 public verifyFee = 2e16; // 0.02 eth
@@ -105,7 +105,7 @@ contract Airdrop_2 is Superuser, Pausable, IAirdrop_2 {
       uint256[],
       int[],
       uint256,
-      uint256
+      int
     ) {
     AirdropEarn storage _airdropEarn = airdropIdToAirdropEarn[airdropId];
     return (
@@ -171,7 +171,7 @@ contract Airdrop_2 is Superuser, Pausable, IAirdrop_2 {
     uint256[] earnTokenCount,
     int[] earnTokenProbability, // (0 - 100)
     uint256 earnEtherCount,
-    uint256 earnEtherProbability
+    int earnEtherProbability
     ) external onlyOwnerOrSuperuser {
     AirdropEarn memory _airdropEarn = AirdropEarn(
       earnTokenAddresses,
@@ -205,6 +205,10 @@ contract Airdrop_2 is Superuser, Pausable, IAirdrop_2 {
           _airdropSpend.spendTokenAddresses[i]
         ).allowance(address(msg.sender), address(this)) >= _airdropSpend.spendTokenCount[i]
       );
+
+      // transfer erc20 token
+      ERC20Interface(_airdropEarn.earnTokenAddresses[i])
+        .transferFrom(msg.sender, address(this), _airdropSpend.spendTokenCount[i]);
     }
 
     // check sender's ether balance 
@@ -228,18 +232,14 @@ contract Airdrop_2 is Superuser, Pausable, IAirdrop_2 {
     // earn erc20
     for (uint8 k = 0; k < _airdropEarn.earnTokenAddresses.length; k++){
       // if win erc20
-      if (_random + 1 > (100 - _airdropEarn.earnTokenProbability[k])) {
+      if (_random + _airdropEarn.earnTokenProbability[k] >= 100) {
         ERC20Interface(_airdropEarn.earnTokenAddresses[k])
           .transfer(msg.sender, _airdropEarn.earnTokenCount[k]);
-      } else {
-        // fail
-        ERC20Interface(_airdropEarn.earnTokenAddresses[k])
-          .transferFrom(msg.sender, address(this), _airdropSpend.spendTokenCount[k]);
       }
     }
     
     // if win ether
-    if (_random + 1 > (100 - _airdropEarn.earnEtherProbability)) {
+    if (_random + _airdropEarn.earnEtherProbability >= 100 ) {
       msg.sender.transfer(_airdropEarn.earnEtherCount);
     }
 

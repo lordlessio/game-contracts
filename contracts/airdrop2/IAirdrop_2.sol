@@ -21,7 +21,7 @@ interface IAirdrop_2 {
     uint256[],
     int[],
     uint256,
-    uint256
+    int
   );
 
   function getAirdropBase(
@@ -53,7 +53,7 @@ interface IAirdrop_2 {
     uint256[] earnTokenCount,
     int[] earnTokenProbability, // (0 - 100)
     uint256 earnEtherCount,
-    uint256 earnEtherProbability
+    int earnEtherProbability
   ) external;
 
   function getAirdropIds()external view returns(bytes32[]);
