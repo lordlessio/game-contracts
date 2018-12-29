@@ -189,12 +189,11 @@ contract Luckyblock is Superuser, Pausable, ILuckyblock {
     
     require(!_luckyblockBase.ended, "luckyblock is ended");
 
-    // check spend
-    
+    // check sender's ether balance 
     require(msg.value >= _luckyblockSpend.spendEtherCount, "sender value not enough");
 
-    // check sender's ether balance 
-    if (_luckyblockEarn.earnTokenAddresses[0] != address(0x0)) {
+    // check spend
+    if (_luckyblockSpend.spendTokenAddresses[0] != address(0x0)) {
       for (uint8 i = 0; i < _luckyblockSpend.spendTokenAddresses.length; i++) {
 
         // check sender's erc20 balance 
@@ -211,13 +210,14 @@ contract Luckyblock is Superuser, Pausable, ILuckyblock {
         );
 
         // transfer erc20 token
-        ERC20Interface(_luckyblockEarn.earnTokenAddresses[i])
+        ERC20Interface(_luckyblockSpend.spendTokenAddresses[i])
           .transferFrom(msg.sender, address(this), _luckyblockSpend.spendTokenCount[i]);
         }
     }
     
     // check earn erc20
-    if (_luckyblockEarn.earnTokenAddresses[0] != address(0x0)) {
+    if (_luckyblockEarn.earnTokenAddresses[0] !=
+      address(0x0)) {
       for (uint8 j= 0; j < _luckyblockEarn.earnTokenAddresses.length; j++) {
         // check sender's erc20 balance 
         uint256 earnTokenCount = _luckyblockEarn.earnTokenCount[j];
@@ -237,7 +237,8 @@ contract Luckyblock is Superuser, Pausable, ILuckyblock {
     // earn erc20
     for (uint8 k = 0; k < _luckyblockEarn.earnTokenAddresses.length; k++){
       // if win erc20
-      if (_luckyblockEarn.earnTokenAddresses[0] != address(0x0)){
+      if (_luckyblockEarn.earnTokenAddresses[0]
+        != address(0x0)){
         if (_random + _luckyblockEarn.earnTokenProbability[k] >= 100) {
           ERC20Interface(_luckyblockEarn.earnTokenAddresses[k])
             .transfer(msg.sender, _luckyblockEarn.earnTokenCount[k]);

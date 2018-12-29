@@ -11,7 +11,7 @@ contract('luckyblock', function ([owner, account1, account2]) {
   before(async function(){
     this.Erc20Token = await Erc20TokenMock.new();
     this.Luckyblock = await Luckyblock.new();
-    this.total = 1e27;
+    this.total = 1e22;
     await this.Erc20Token.mint(this.Luckyblock.address, this.total);
     await this.Erc20Token.approve(this.Luckyblock.address, 1e64);
     
@@ -19,9 +19,9 @@ contract('luckyblock', function ([owner, account1, account2]) {
     const spendTokenCount = [1e18]; // 1 LESS
     const spendEtherCount = 1e17;// 0.1 ether
 
-    const earnTokenAddresses = [this.Erc20Token.address];
-    const earnTokenCount = [10e18]; // 10 LESS
-    const earnTokenProbability = [90]; // (0 - 100)
+    const earnTokenAddresses = ["0x0000000000000000000000000000000000000000"];
+    const earnTokenCount = []; // 10 LESS
+    const earnTokenProbability = []; // (0 - 100)
     const earnEtherCount = 1e18;//1 ether
     const earnEtherProbability = 10;
 
@@ -92,7 +92,7 @@ contract('luckyblock', function ([owner, account1, account2]) {
      const _balance1 = await this.Erc20Token.balanceOf(account2)
      _balance1.toNumber().should.be.equal(balance1.toNumber() + 10e18)
 
-    // withdraw all erc20
+    // // withdraw all erc20
      const balanceAll = await this.Erc20Token.balanceOf(this.Luckyblock.address)
      const balance2 = await this.Erc20Token.balanceOf(account2)
      await this.Luckyblock.withdrawToken(this.Erc20Token.address, account2, 0)
